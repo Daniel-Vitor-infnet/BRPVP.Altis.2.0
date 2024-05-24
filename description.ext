@@ -1,0 +1,1592 @@
+/*
+==========================================================
+THIS FILE WAS MADE BY DONNOVAN FROM BRAZIL
+check BRPVP_lisence.txt FOR THE LISENCE
+
+MORE INFORMATION:
+http://www.brpvp.com
+http://www.brpvp.com.br
+
+DONNOVAN ON STEAM: 
+https://steamcommunity.com/profiles/76561197975554637/
+==========================================================
+*/
+
+class Header {
+	gameType = Survive;
+	minPlayers = 1;
+	maxPlayers = 200;
+};
+showHUD[] =
+{
+	1,	// Scripted HUD (same as showHUD command)
+	1,	// Vehicle and unit info
+	0,	// Vehicle radar [HIDDEN]
+	0,	// Vehicle compass [HIDDEN]
+	1,	// Tank direction indicator
+	0,	// Commanding menu
+	1,	// Group info bar
+	1,	// HUD weapon cursors
+	1,	// Vehicle display panels
+	0,	// "x killed by y" systemChat messages
+	1	// force show drawIcon3D icons
+};
+corpseManagerMode = 0;
+unsafeCVL = 0;
+author = $STR_brpvp_team;
+onLoadMission = $STR_brpvp;
+onLoadIntro = $STR_brpvp;
+onLoadName = $STR_brpvp;
+loadScreen = "brpvp_logo.paa";
+joinUnassigned = 0;
+respawnDelay = 5;
+respawn = 3;
+disabledAI = 1;
+enableDebugConsole = 1;
+respawnOnStart = 0;
+onPauseScript = "onPauseScript.sqf";
+disableRandomization[] = {};
+respawnTemplates[] = {};
+saving = 0;
+enableItemsDropping = 0;
+skipLobby = 1;
+respawnButton = 0;
+respawnDialog = 0;
+onLoadIntroTime = false;
+onLoadMissionTime = false;
+class CfgSounds {
+	sounds[] = {};
+	class opening {
+		sound[] = {"BRP_sons\opening.ogg",0.6,1};
+		titles[] = {};
+	};
+	class constructing {
+		sound[] = {"BRP_sons\constructing.ogg",1,1};
+		titles[] = {};
+	};
+	class achou_loot {
+		sound[] = {"BRP_sons\achou_loot.ogg",1,1};
+		titles[] = {};
+	};
+	class tema {
+		sound[] = {"BRP_sons\tema.ogg",1,1};
+		titles[] = {};
+	};
+	class heal {
+		sound[] = {"BRP_sons\heal.ogg",1,1};
+		titles[] = {};
+	};
+	class semtiro {
+		sound[] = {"BRP_sons\semtiro.ogg",1,1};
+		titles[] = {};
+	};
+	class comtiro {
+		sound[] = {"BRP_sons\comtiro.ogg",1,1};
+		titles[] = {};
+	};
+	class batida {
+		sound[] = {"BRP_sons\batida.ogg",1,1};
+		titles[] = {};
+	};
+	class hint {
+		sound[] = {"BRP_sons\hint.ogg",0.5,1};
+		titles[] = {};
+	};
+	class hint2 {
+		sound[] = {"BRP_sons\hint2.ogg",1,1};
+		titles[] = {};
+	};
+	class abrevault {
+		sound[] = {"BRP_sons\abrevault.ogg",1,1};
+		titles[] = {};
+	};
+	class fechavault {
+		sound[] = {"BRP_sons\fechavault.ogg",0.8,1};
+		titles[] = {};
+	};
+	class negocio {
+		sound[] = {"BRP_sons\negocio.ogg",0.4,1};
+		titles[] = {};
+	};
+	class granted {
+		sound[] = {"BRP_sons\granted.ogg",0.5,1};
+		titles[] = {};
+	};
+	class ugranted {
+		sound[] = {"BRP_sons\ubber_granted.ogg",0.5,1};
+		titles[] = {};
+	};
+	class erro {
+		sound[] = {"BRP_sons\erro.ogg",1,1};
+		titles[] = {};
+	};
+	class radarbip {
+		sound[] = {"BRP_sons\radarbip.ogg",0.5,1};
+		titles[] = {};
+	};
+	class ciclo {
+		sound[] = {"BRP_sons\ciclo.ogg",0.4,1};
+		titles[] = {};
+	};
+	class sirene {
+		sound[] = {"BRP_sons\sirene.ogg",1,1};
+		titles[] = {};
+	};
+	class elevador {
+		sound[] = {"BRP_sons\elevador.ogg",1,1};
+		titles[] = {};
+	};
+	class destroy {
+		sound[] = {"BRP_sons\destroy.ogg",1,1};
+		titles[] = {};
+	};
+	class bulldozer {
+		sound[] = {"BRP_sons\bulldozer.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_spawn {
+		sound[] = {"BRP_sons\zombie_spawn.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_plus {
+		sound[] = {"BRP_sons\zombie_plus.ogg",0.25,1.15};
+		titles[] = {};
+	};
+	class zombie_minus {
+		sound[] = {"BRP_sons\zombie_minus.ogg",0.25,0.85};
+		titles[] = {};
+	};
+	class eletric_spark {
+		sound[] = {"BRP_sons\eletric_spark.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_1 {
+		sound[] = {"BRP_sons\disabled4.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_2 {
+		sound[] = {"BRP_sons\disabled5.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_3 {
+		sound[] = {"BRP_sons\disabled6.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_4 {
+		sound[] = {"BRP_sons\disabled7.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_5 {
+		sound[] = {"BRP_sons\zumbi_1.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_6 {
+		sound[] = {"BRP_sons\zumbi_2.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_7 {
+		sound[] = {"BRP_sons\zumbi_3.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_8 {
+		sound[] = {"BRP_sons\zumbi_4.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_9 {
+		sound[] = {"BRP_sons\zumbi_5.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_10 {
+		sound[] = {"BRP_sons\zumbi_6.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_11 {
+		sound[] = {"BRP_sons\zumbi_7.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_12 {
+		sound[] = {"BRP_sons\zumbi_8.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_13 {
+		sound[] = {"BRP_sons\zumbi_9.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_14 {
+		sound[] = {"BRP_sons\zumbi_10.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_15 {
+		sound[] = {"BRP_sons\zumbi_11.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_16 {
+		sound[] = {"BRP_sons\zumbi_12.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_17 {
+		sound[] = {"BRP_sons\zumbi_13.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_18 {
+		sound[] = {"BRP_sons\zumbi_14.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_19 {
+		sound[] = {"BRP_sons\zumbi_15.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_20 {
+		sound[] = {"BRP_sons\zumbi_16.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_21 {
+		sound[] = {"BRP_sons\zumbi_17.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_22 {
+		sound[] = {"BRP_sons\zumbi_18.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_23 {
+		sound[] = {"BRP_sons\zumbi_19.ogg",1,1};
+		titles[] = {};
+	};
+	class zombie_snd_24 {
+		sound[] = {"BRP_sons\zumbi_20.ogg",1,1};
+		titles[] = {};
+	};
+	class jumper {
+		sound[] = {"BRP_sons\jumper.ogg",1,1};
+		titles[] = {};
+	};
+	class turret_alert {
+		sound[] = {"BRP_sons\turret_alert.ogg",0.25,1};
+		titles[] = {};
+	};
+	class fedidex {
+		sound[] = {"BRP_sons\fedidex.ogg",1,1};
+		titles[] = {};
+	};
+	class fedidex_start {
+		sound[] = {"BRP_sons\fedidex_start.ogg",1,1};
+		titles[] = {};
+	};
+	class delivered {
+		sound[] = {"BRP_sons\delivered.ogg",1,1};
+		titles[] = {};
+	};
+	class crazy {
+		sound[] = {"BRP_sons\crazy.ogg",1,1};
+		titles[] = {};
+	};
+	class backpack {
+		sound[] = {"BRP_sons\backpack.ogg",1,1};
+		titles[] = {};
+	};
+	class radio_beep {
+		sound[] = {"BRP_sons\radio_beep.ogg",0.5,1};
+		titles[] = {};
+	};
+	class lock_car {
+		sound[] = {"BRP_sons\lock_car.ogg",1,1};
+		titles[] = {};
+	};
+	class unlock_car {
+		sound[] = {"BRP_sons\unlock_car.ogg",1,1};
+		titles[] = {};
+	};
+	class shazam {
+		sound[] = {"BRP_sons\shazam.ogg",1,1};
+		titles[] = {};
+	};
+	class woohoo {
+		sound[] = {"BRP_sons\woohoo.ogg",1,1};
+		titles[] = {};
+	};
+	class drilling {
+		sound[] = {"BRP_sons\drilling.ogg",0.65,1};
+		titles[] = {};
+	};
+	class drilling_b {
+		sound[] = {"BRP_sons\drilling_b.ogg",0.65,1};
+		titles[] = {};
+	};
+	class drill_small {
+		sound[] = {"BRP_sons\drill_small.ogg",0.5,1};
+		titles[] = {};
+	};
+	class drill_small_b {
+		sound[] = {"BRP_sons\drill_small_b.ogg",0.5,1};
+		titles[] = {};
+	};
+	class pickaxe {
+		sound[] = {"BRP_sons\pickaxe.ogg",1,1};
+		titles[] = {};
+	};
+	class ricochet {
+		sound[] = {"BRP_sons\ricochet.ogg",1,1};
+		titles[] = {};
+	};
+	class ricochet_turret {
+		sound[] = {"BRP_sons\ricochet_turret.ogg",0.65,1};
+		titles[] = {};
+	};
+	class jump_player {
+		sound[] = {"BRP_sons\jump_02.ogg",0.65,1};
+		titles[] = {};
+	};
+	class jump_01 {
+		sound[] = {"BRP_sons\jump_01.ogg",1,1};
+		titles[] = {};
+	};
+	class jump_02 {
+		sound[] = {"BRP_sons\jump_02.ogg",1,1};
+		titles[] = {};
+	};
+	class jump_03 {
+		sound[] = {"BRP_sons\jump_03.ogg",1,1};
+		titles[] = {};
+	};
+	class car_alarm_01 {
+		sound[] = {"BRP_sons\car_alarm_01.ogg",0.75,1};
+		titles[] = {};
+	};
+	class car_alarm_02 {
+		sound[] = {"BRP_sons\car_alarm_02.ogg",0.75,1};
+		titles[] = {};
+	};
+	class car_alarm_03 {
+		sound[] = {"BRP_sons\car_alarm_03.ogg",0.75,1};
+		titles[] = {};
+	};
+	class wolf {
+		sound[] = {"BRP_sons\wolf.ogg",1,1};
+		titles[] = {};
+	};
+	class lock_pick_ok {
+		sound[] = {"BRP_sons\lock_pick_ok.ogg",2,1};
+		titles[] = {};
+	};
+	class lock_pick_ok_music {
+		sound[] = {"BRP_sons\lock_pick_ok_music.ogg",1,1};
+		titles[] = {};
+	};
+	class lock_pick_not_ok {
+		sound[] = {"BRP_sons\lock_pick_not_ok.ogg",2,1};
+		titles[] = {};
+	};
+	class lock_pick_alarm {
+		sound[] = {"BRP_sons\lock_pick_alarm.ogg",1,1};
+		titles[] = {};
+	};
+	class invasion_alarm {
+		sound[] = {"BRP_sons\invasion_alarm.ogg",1,1};
+		titles[] = {};
+	};
+	class admin_msg {
+		sound[] = {"BRP_sons\admin_msg.ogg",1,1};
+		titles[] = {};
+	};
+	class round_reward {
+		sound[] = {"BRP_sons\round_reward.ogg",1,1};
+		titles[] = {};
+	};
+	class round_end {
+		sound[] = {"BRP_sons\round_end.ogg",1,1};
+		titles[] = {};
+	};
+	class radio1 {
+		sound[] = {"BRP_sons\radio1.ogg",0.5,1};
+		titles[] = {};
+	};
+	class radio2 {
+		sound[] = {"BRP_sons\radio2.ogg",0.5,1};
+		titles[] = {};
+	};
+	class radio3 {
+		sound[] = {"BRP_sons\radio3.ogg",0.5,1};
+		titles[] = {};
+	};
+	class radio4 {
+		sound[] = {"BRP_sons\radio4.ogg",0.5,1};
+		titles[] = {};
+	};
+	class radio5 {
+		sound[] = {"BRP_sons\radio5.ogg",0.5,1};
+		titles[] = {};
+	};
+	class radio6 {
+		sound[] = {"BRP_sons\radio6.ogg",0.5,1};
+		titles[] = {};
+	};
+	class radio7 {
+		sound[] = {"BRP_sons\radio7.ogg",0.5,1};
+		titles[] = {};
+	};
+	class radioS1 {
+		sound[] = {"BRP_sons\radioS1.ogg",1,1};
+		titles[] = {};
+	};
+	class radioS2 {
+		sound[] = {"BRP_sons\radioS2.ogg",1,1};
+		titles[] = {};
+	};
+	class radioS3 {
+		sound[] = {"BRP_sons\radioS3.ogg",1,1};
+		titles[] = {};
+	};
+	class radioS4 {
+		sound[] = {"BRP_sons\radioS4.ogg",1,1};
+		titles[] = {};
+	};
+	class radioS5 {
+		sound[] = {"BRP_sons\radioS5.ogg",1,1};
+		titles[] = {};
+	};
+	class radioS6 {
+		sound[] = {"BRP_sons\radioS6.ogg",1,1};
+		titles[] = {};
+	};
+	class fail {
+		sound[] = {"BRP_sons\fail.ogg",0.6,1};
+		titles[] = {};
+	};
+	class clock_tick {
+		sound[] = {"BRP_sons\clock_tick.ogg",0.6,1};
+		titles[] = {};
+	};
+	class hackWait {
+		sound[] = {"BRP_sons\hackWait.ogg",1,1};
+		titles[] = {};
+	};
+	class hackFail {
+		sound[] = {"BRP_sons\hackFail.ogg",1,1};
+		titles[] = {};
+	};
+	class hackAddLine {
+		sound[] = {"BRP_sons\hackAddLine.ogg",1,1};
+		titles[] = {};
+	};
+	class hackAddCounter {
+		sound[] = {"BRP_sons\hackAddCounter.ogg",1,1};
+		titles[] = {};
+	};
+	class hackBeep {
+		sound[] = {"BRP_sons\hackBeep.ogg",1,1};
+		titles[] = {};
+	};
+	class buttom_on {
+		sound[] = {"BRP_sons\buttom_on.ogg",1,1};
+		titles[] = {};
+	};
+	class buttom_off {
+		sound[] = {"BRP_sons\buttom_off.ogg",1,1};
+		titles[] = {};
+	};
+	class identifier {
+		sound[] = {"BRP_sons\identifier.ogg",1,1};
+		titles[] = {};
+	};
+	class transport_win {
+		sound[] = {"BRP_sons\transport_win.ogg",1,1};
+		titles[] = {};
+	};
+	class remote_control {
+		sound[] = {"BRP_sons\remote_control.ogg",1,1};
+		titles[] = {};
+	};
+	class remote_control_cant {
+		sound[] = {"BRP_sons\remote_control.ogg",1,0.8};
+		titles[] = {};
+	};
+	class remote_control_off {
+		sound[] = {"BRP_sons\remote_control.ogg",1,0.6};
+		titles[] = {};
+	};
+	class fight {
+		sound[] = {"BRP_sons\fight.ogg",2,1};
+		titles[] = {};
+	};
+	class fanfare {
+		sound[] = {"BRP_sons\fanfare.ogg",2.5,1};
+		titles[] = {};
+	};
+	class digging {
+		sound[] = {"BRP_sons\digging.ogg",2,1};
+		titles[] = {};
+	};
+	class rare_item_found {
+		sound[] = {"BRP_sons\rare_item_found.ogg",1.25,1};
+		titles[] = {};
+	};
+	class bus_move {
+		sound[] = {"BRP_sons\bus_move.ogg",1.2,1};
+		titles[] = {};
+	};
+	class teleport {
+		sound[] = {"BRP_sons\teleport.ogg",1,1};
+		titles[] = {};
+	};
+	class mine_detector_01 {
+		sound[] = {"BRP_sons\mine_detector_01.ogg",1,1};
+		titles[] = {};
+	};
+	class mine_detector_02 {
+		sound[] = {"BRP_sons\mine_detector_02.ogg",1,1};
+		titles[] = {};
+	};
+	class mine_detector_03 {
+		sound[] = {"BRP_sons\mine_detector_03.ogg",1,1};
+		titles[] = {};
+	};
+	class mine_detector_04 {
+		sound[] = {"BRP_sons\mine_detector_04.ogg",1,1};
+		titles[] = {};
+	};
+	class mine_detector_05 {
+		sound[] = {"BRP_sons\mine_detector_05.ogg",1,1};
+		titles[] = {};
+	};
+	class hydraulic_jack_set {
+		sound[] = {"BRP_sons\hydraulic_jack_set.ogg",1,1};
+		titles[] = {};
+	};
+	class hydraulic_jack {
+		sound[] = {"BRP_sons\hydraulic_jack.ogg",1,1};
+		titles[] = {};
+	};
+	class z_blood_bag_use {
+		sound[] = {"BRP_sons\z_blood_bag_use.ogg",1,1};
+		titles[] = {};
+	};
+	class scanner {
+		sound[] = {"BRP_sons\scanner.ogg",1,1};
+		titles[] = {};
+	};
+	class fuel_gallon {
+		sound[] = {"BRP_sons\fuel_gallon.ogg",1,1};
+		titles[] = {};
+	};
+	class BRPVP_farming_ok {
+		sound[] = {"BRP_sons\farming_ok.ogg",1,1};
+		titles[] = {};
+	};
+	class BRPVP_farming_fail {
+		sound[] = {"BRP_sons\farming_fail.ogg",1,1};
+		titles[] = {};
+	};
+	class BRPVP_equip_pickaxe {
+		sound[] = {"BRP_sons\pickaxe_use.ogg",1,1};
+		titles[] = {};
+	};
+	class BRPVP_equip_axe {
+		sound[] = {"BRP_sons\axe_use.ogg",1,1};
+		titles[] = {};
+	};
+	class BRPVP_equip_cutter {
+		sound[] = {"BRP_sons\cutter_use.ogg",1,1};
+		titles[] = {};
+	};
+	class BRPVP_equip_shovel {
+		sound[] = {"BRP_sons\shovel_use.ogg",1,1};
+		titles[] = {};
+	};
+	class Land_DieselGroundPowerUnit_01_F_SND {
+		sound[] = {"BRP_sons\oven_use.ogg",1,1};
+		titles[] = {};
+	};
+	class Land_WoodenCounter_01_F_SND {
+		sound[] = {"BRP_sons\workbench_use.ogg",1,1};
+		titles[] = {};
+	};
+	class Land_WoodenPlanks_01_F_SND {
+		sound[] = {"BRP_sons\worker_use.ogg",1,1};
+		titles[] = {};
+	};
+	class freeze_floor {
+		sound[] = {"BRP_sons\freeze_floor.ogg",1,1};
+		titles[] = {};
+	};
+	class mobius_attack {
+		sound[] = {"BRP_sons\mobius_attack.ogg",2,1};
+		titles[] = {};
+	};
+	class mobius_damage {
+		sound[] = {"BRP_sons\mobius_damage.ogg",2,1};
+		titles[] = {};
+	};
+	class mobius_death {
+		sound[] = {"BRP_sons\mobius_death.ogg",1,1};
+		titles[] = {};
+	};
+	class hulk_drink {
+		sound[] = {"BRP_sons\hulk_drink.ogg",2,1};
+		titles[] = {};
+	};
+	class hulk_get_veh {
+		sound[] = {"BRP_sons\hulk_get_veh.ogg",2,1};
+		titles[] = {};
+	};
+	class hulk_release {
+		sound[] = {"BRP_sons\hulk_release.ogg",2,1};
+		titles[] = {};
+	};
+	class hulk_sucumbed {
+		sound[] = {"BRP_sons\hulk_sucumbed.ogg",2,1};
+		titles[] = {};
+	};
+	class kill_msg {
+		sound[] = {"BRP_sons\kill_msg.ogg",0.4,1};
+		titles[] = {};
+	};
+	class error2 {
+		sound[] = {"BRP_sons\error2.ogg",1,1};
+		titles[] = {};
+	};
+	class monster {
+		sound[] = {"BRP_sons\monster.ogg",1,1};
+		titles[] = {};
+	};
+	class portuguese_click_orange {
+		sound[] = {"BRP_sons\portuguese_click_orange.ogg",1,1};
+		titles[] = {};
+	};
+	class garden_shears {
+		sound[] = {"BRP_sons\garden_shears.ogg",2,1};
+		titles[] = {};
+	};
+	class jump_wall {
+		sound[] = {"BRP_sons\jump_wall.ogg",1,1};
+		titles[] = {};
+	};
+	class alarm {
+		sound[] = {"BRP_sons\alarm.ogg",0.5,1};
+		titles[] = {};
+	};
+	class BRPVP_drinking {
+		sound[] = {"BRP_sons\drinking.ogg",1,1};
+		titles[] = {};
+	};
+	class BRPVP_eating {
+		sound[] = {"BRP_sons\eating.ogg",1,1};
+		titles[] = {};
+	};
+	class BRPVP_dead_by_starve {
+		sound[] = {"BRP_sons\dead_by_starve.ogg",1,1};
+		titles[] = {};
+	};
+	class BRPVP_stomach {
+		sound[] = {"BRP_sons\stomach.ogg",1,1};
+		titles[] = {};
+	};
+	class from_magus {
+		sound[] = {"BRP_sons\from_magus.ogg",1,1};
+		titles[] = {};
+	};
+	class to_magus {
+		sound[] = {"BRP_sons\to_magus.ogg",0.6,1};
+		titles[] = {};
+	};
+	class bag_soldier {
+		sound[] = {"BRP_sons\bag_soldier.ogg",1,1};
+		titles[] = {};
+	};
+	class base_mine {
+		sound[] = {"BRP_sons\base_mine.ogg",2,1};
+		titles[] = {};
+	};
+	class defuse_win {
+		sound[] = {"BRP_sons\defuse_win.ogg",1,1};
+		titles[] = {};
+	};
+	class monster_01 {
+		sound[] = {"BRP_sons\monster_01.ogg",1,1};
+		titles[] = {};
+	};
+	class monster_02 {
+		sound[] = {"BRP_sons\monster_02.ogg",1,1};
+		titles[] = {};
+	};
+	class monster_03 {
+		sound[] = {"BRP_sons\monster_03.ogg",1,1};
+		titles[] = {};
+	};
+	class monster_04 {
+		sound[] = {"BRP_sons\monster_04.ogg",1,1};
+		titles[] = {};
+	};
+	class error3 {
+		sound[] = {"BRP_sons\error3.ogg",1,1};
+		titles[] = {};
+	};
+	class punch1 {
+		sound[] = {"BRP_sons\punch1.ogg",1,1};
+		titles[] = {};
+	};
+	class drama1 {
+		sound[] = {"BRP_sons\drama1.ogg",1,1};
+		titles[] = {};
+	};
+	class hmg_blast {
+		sound[] = {"BRP_sons\hmg_blast.ogg",1,1};
+		titles[] = {};
+	};
+	class xp_change {
+		sound[] = {"BRP_sons\xp_change.ogg",1,1};
+		titles[] = {};
+	};
+	class tension {
+		sound[] = {"BRP_sons\tension.ogg",1,1};
+		titles[] = {};
+	};
+	class duke_rearm {
+		sound[] = {"BRP_sons\duke_rearm.ogg",1,1};
+		titles[] = {};
+	};
+	class disabled12 {
+		sound[] = {"BRP_sons\disabled12.ogg",1,1};
+		titles[] = {};
+	};
+	class xray {
+		sound[] = {"BRP_sons\xray.ogg",1,1};
+		titles[] = {};
+	};
+	class fakeFail {
+		sound[] = {"BRP_sons\fake_fail.ogg",1,1};
+		titles[] = {};
+	};
+	class magnet {
+		sound[] = {"BRP_sons\magnet.ogg",1,1};
+		titles[] = {};
+	};
+	class spark {
+		sound[] = {"BRP_sons\spark.ogg",1,1};
+		titles[] = {};
+	};
+	class spark_super {
+		sound[] = {"BRP_sons\spark_super.ogg",4,1};
+		titles[] = {};
+	};
+	class lars_hit1 {
+		sound[] = {"BRP_sons\lars_hit1.ogg",3,1};
+		titles[] = {};
+	};
+	class lars_hit2 {
+		sound[] = {"BRP_sons\lars_hit2.ogg",3,1};
+		titles[] = {};
+	};
+	class lars_hit3 {
+		sound[] = {"BRP_sons\lars_hit3.ogg",3,1};
+		titles[] = {};
+	};
+	class lars_hit4 {
+		sound[] = {"BRP_sons\lars_hit4.ogg",3,1};
+		titles[] = {};
+	};
+	class lars_dead {
+		sound[] = {"BRP_sons\lars_dead.ogg",1,1};
+		titles[] = {};
+	};
+	class laser {
+		sound[] = {"BRP_sons\laser.ogg",3,1};
+		titles[] = {};
+	};
+	class news {
+		sound[] = {"BRP_sons\news.ogg",1,1};
+		titles[] = {};
+	};
+	class lars_shield_on {
+		sound[] = {"BRP_sons\lars_shield_on.ogg",5,1};
+		titles[] = {};
+	};
+	class lars_shield_off {
+		sound[] = {"BRP_sons\lars_shield_off.ogg",5,1};
+		titles[] = {};
+	};
+	class dome_ray {
+		sound[] = {"BRP_sons\dome_ray.ogg",4,1};
+		titles[] = {};
+	};
+	class c4_destroy {
+		sound[] = {"BRP_sons\c4_destroy.ogg",1,1};
+		titles[] = {};
+	};
+	class veh_xp {
+		sound[] = {"BRP_sons\veh_xp.ogg",1,1};
+		titles[] = {};
+	};
+	class uber_pack_init {
+		sound[] = {"BRP_sons\uber_pack_init.ogg",2,1};
+		titles[] = {};
+	};
+	class uber_pack {
+		sound[] = {"BRP_sons\uber_pack.ogg",2,1};
+		titles[] = {};
+	};
+	class uber_pack_end {
+		sound[] = {"BRP_sons\uber_pack_end.ogg",2,1};
+		titles[] = {};
+	};
+	class upack_alarm {
+		sound[] = {"BRP_sons\upack_alarm.ogg",1,1};
+		titles[] = {};
+	};
+	class boxe {
+		sound[] = {"BRP_sons\boxe.ogg",1,1};
+		titles[] = {};
+	};
+	class upper_cut {
+		sound[] = {"BRP_sons\upper_cut.ogg",1,1};
+		titles[] = {};
+	};
+	class engage {
+		sound[] = {"BRP_sons\engage.ogg",1,1};
+		titles[] = {};
+	};
+	class bus_stop_signal {
+		sound[] = {"BRP_sons\bus_stop_signal.ogg",1,1};
+		titles[] = {};
+	};
+	class bus_move_fade_out {
+		sound[] = {"BRP_sons\bus_move_fade_out.ogg",1,1};
+		titles[] = {};
+	};
+	class logo_01 {
+		sound[] = {"BRP_sons\logo_01.ogg",1,1};
+		titles[] = {};
+	};
+	class alert {
+		sound[] = {"BRP_sons\alert.ogg",1,1};
+		titles[] = {};
+	};
+	class disabled13 {
+		sound[] = {"BRP_sons\disabled13.ogg",1,1};
+		titles[] = {};
+	};
+	class into_zed_01 {
+		sound[] = {"BRP_sons\into_zed_01.ogg",1,1};
+		titles[] = {};
+	};
+	class into_zed_02 {
+		sound[] = {"BRP_sons\into_zed_02.ogg",1,1};
+		titles[] = {};
+	};
+	class into_zed_03 {
+		sound[] = {"BRP_sons\into_zed_03.ogg",1,1};
+		titles[] = {};
+	};
+	class into_zed_04 {
+		sound[] = {"BRP_sons\into_zed_04.ogg",1,1};
+		titles[] = {};
+	};
+	class into_zed_05 {
+		sound[] = {"BRP_sons\into_zed_05.ogg",1,1};
+		titles[] = {};
+	};
+	class into_zed_06 {
+		sound[] = {"BRP_sons\into_zed_06.ogg",1,1};
+		titles[] = {};
+	};
+	class into_zed_07 {
+		sound[] = {"BRP_sons\into_zed_07.ogg",1,1};
+		titles[] = {};
+	};
+	class into_zed_08 {
+		sound[] = {"BRP_sons\into_zed_08.ogg",1,1};
+		titles[] = {};
+	};
+	class self_revive {
+		sound[] = {"BRP_sons\self_revive.ogg",4,1};
+		titles[] = {};
+	};
+	class revive_thunder {
+		sound[] = {"BRP_sons\revive_thunder.ogg",1.5,1};
+		titles[] = {};
+	};
+	class intro_champion {
+		sound[] = {"BRP_sons\intro_champion.ogg",1,1};
+		titles[] = {};
+	};
+	class intro_parachute_1 {
+		sound[] = {"BRP_sons\intro_parachute_1.ogg",1.5,1};
+		titles[] = {};
+	};
+	class body_change {
+		sound[] = {"BRP_sons\body_change.ogg",1,1};
+		titles[] = {};
+	};
+	class body_change_moan {
+		sound[] = {"BRP_sons\body_change_moan.ogg",1,1};
+		titles[] = {};
+	};
+	class jump_hit_ground {
+		sound[] = {"BRP_sons\jump_hit_ground.ogg",1.5,1};
+		titles[] = {};
+	};
+	class bush_reveal {
+		sound[] = {"BRP_sons\bush_reveal.ogg",2,1};
+		titles[] = {};
+	};
+	class zed_death {
+		sound[] = {"BRP_sons\zed_death.ogg",1,1};
+		titles[] = {};
+	};
+	class skydive {
+		sound[] = {"BRP_sons\skydive.ogg",1.5,1};
+		titles[] = {};
+	};
+	class jattack_alarm {
+		sound[] = {"BRP_sons\upack_alarm.ogg",0.5,1};
+		titles[] = {};
+	};
+	class plus_torque {
+		sound[] = {"BRP_sons\plus_torque.ogg",0.8,1};
+		titles[] = {};
+	};
+	class possession {
+		sound[] = {"BRP_sons\possession.ogg",1,1};
+		titles[] = {};
+	};
+	class missing_punch {
+		sound[] = {"BRP_sons\missing_punch.ogg",1,1};
+		titles[] = {};
+	};
+	class march {
+		sound[] = {"BRP_sons\march.ogg",0.8,1};
+		titles[] = {};
+	};
+	class wet_walk {
+		sound[] = {"BRP_sons\wet_walk.ogg",1,1};
+		titles[] = {};
+	};
+	class water_sound {
+		sound[] = {"BRP_sons\water_sound.ogg",1,1};
+		titles[] = {};
+	};
+	class water_sound_off {
+		sound[] = {"BRP_sons\water_sound_off.ogg",1,1};
+		titles[] = {};
+	};
+	class chinese_click_orange {
+		sound[] = {"BRP_sons\chinese_click_orange.ogg",1,1};
+		titles[] = {};
+	};
+	class russian_click_orange {
+		sound[] = {"BRP_sons\russian_click_orange.ogg",1,1};
+		titles[] = {};
+	};
+	class english_click_orange {
+		sound[] = {"BRP_sons\english_click_orange.ogg",1,1};
+		titles[] = {};
+	};
+	class fuse {
+		sound[] = {"BRP_sons\fuse.ogg",1,1};
+		titles[] = {};
+	};
+	class haunt_house {
+		sound[] = {"BRP_sons\haunt_house.ogg",1,1};
+		titles[] = {};
+	};
+	class bush_reveal_jesus {
+		sound[] = {"BRP_sons\bush_reveal_jesus.ogg",1,1};
+		titles[] = {};
+	};
+	class cry {
+		sound[] = {"BRP_sons\cry.ogg",1,1};
+		titles[] = {};
+	};
+	class haunt_house_sinister {
+		sound[] = {"BRP_sons\haunt_house_sinister.ogg",1,1};
+		titles[] = {};
+	};
+	class trench {
+		sound[] = {"BRP_sons\trench.ogg",1,1};
+		titles[] = {};
+	};
+	class box_upgrade {
+		sound[] = {"BRP_sons\box_upgrade.ogg",1,1};
+		titles[] = {};
+	};
+	class danger {
+		sound[] = {"BRP_sons\danger.ogg",1,1};
+		titles[] = {};
+	};
+	class child_danger {
+		sound[] = {"BRP_sons\child_danger.ogg",1,1};
+		titles[] = {};
+	};
+	class minerva_sound {
+		sound[] = {"BRP_sons\minerva_sound.ogg",3,1};
+		titles[] = {};
+	};
+	class revive_protection {
+		sound[] = {"BRP_sons\revive_protection.ogg",1.5,1};
+		titles[] = {};
+	};
+	class elevator {
+		sound[] = {"BRP_sons\elevator.ogg",1,1};
+		titles[] = {};
+	};
+	class special_climb {
+		sound[] = {"BRP_sons\special_climb.ogg",0.75,1};
+		titles[] = {};
+	};
+	class special_climb_jump {
+		sound[] = {"BRP_sons\special_climb_jump.ogg",1,1};
+		titles[] = {};
+	};
+	class special_climb_end {
+		sound[] = {"BRP_sons\special_climb_end.ogg",1,1};
+		titles[] = {};
+	};
+	class money_penalty {
+		sound[] = {"BRP_sons\bush_reveal.ogg",1,1};
+		titles[] = {};
+	};
+	class uber_pack_reverse {
+		sound[] = {"BRP_sons\uber_pack.ogg",2,2};
+		titles[] = {};
+	};
+	class hamburger {
+		sound[] = {"BRP_sons\hamburger.ogg",1.25,1};
+		titles[] = {};
+	};
+	class raid_training_magus {
+		sound[] = {"BRP_sons\raid_training_magus.ogg",1,1};
+		titles[] = {};
+	};
+	class raid_training_real_veh {
+		sound[] = {"BRP_sons\raid_training_real_veh.ogg",1.25,1};
+		titles[] = {};
+	};
+	class base_bomb_hit {
+		sound[] = {"BRP_sons\base_bomb_hit.ogg",1.5,1};
+		titles[] = {};
+	};
+	class welcome_portuguese {
+		sound[] = {"BRP_sons\welcome_portuguese.ogg",1,1};
+		titles[] = {};
+	};
+	class sbot_death {
+		sound[] = {"BRP_sons\sbot_death.ogg",1.25,1};
+		titles[] = {};
+	};
+	class lars_kripto {
+		sound[] = {"BRP_sons\lars_kripto.ogg",1.75,1};
+		titles[] = {};
+	};
+	class turret_die {
+		sound[] = {"BRP_sons\turret_die.ogg",1.75,1};
+		titles[] = {};
+	};
+	class atomic_bomb {
+		sound[] = {"BRP_sons\atomic_bomb.ogg",5,1};
+		titles[] = {};
+	};
+	class fry1 {
+		sound[] = {"BRP_sons\fry1.ogg",1,1};
+		titles[] = {};
+	};
+	class fry2 {
+		sound[] = {"BRP_sons\fry2.ogg",1,1};
+		titles[] = {};
+	};
+	class fry3 {
+		sound[] = {"BRP_sons\fry3.ogg",1,1};
+		titles[] = {};
+	};
+	class fry4 {
+		sound[] = {"BRP_sons\fry4.ogg",1,1};
+		titles[] = {};
+	};
+	class fry5 {
+		sound[] = {"BRP_sons\fry5.ogg",1,1};
+		titles[] = {};
+	};
+	class blind {
+		sound[] = {"BRP_sons\blind.ogg",2,1};
+		titles[] = {};
+	};
+	class flame {
+		sound[] = {"BRP_sons\flame.ogg",1.75,1};
+		titles[] = {};
+	};
+	class disabled14 {
+		sound[] = {"BRP_sons\disabled14.ogg",1,1};
+		titles[] = {};
+	};
+	class atomic_bomb_preparing {
+		sound[] = {"BRP_sons\atomic_bomb_preparing.ogg",1.75,1};
+		titles[] = {};
+	};
+	class atomic_bomb_sign {
+		sound[] = {"BRP_sons\atomic_bomb_sign.ogg",1,1};
+		titles[] = {};
+	};
+	class atomic_bomb_travel_1 {
+		sound[] = {"BRP_sons\atomic_bomb_travel_1.ogg",6,1};
+		titles[] = {};
+	};
+	class atomic_bomb_travel_2 {
+		sound[] = {"BRP_sons\atomic_bomb_travel_2.ogg",3,1};
+		titles[] = {};
+	};
+	class eye_drop {
+		sound[] = {"BRP_sons\eye_drop.ogg",1,1};
+		titles[] = {};
+	};
+	class used_vehicle {
+		sound[] = {"BRP_sons\used_vehicle.ogg",1,1};
+		titles[] = {};
+	};
+	class mammoth_rearm {
+		sound[] = {"BRP_sons\mammoth_rearm.ogg",2,1};
+		titles[] = {};
+	};
+	class peter_bomb {
+		sound[] = {"BRP_sons\peter_bomb.ogg",1.25,1};
+		titles[] = {};
+	};
+	class peter_low_hurt {
+		sound[] = {"BRP_sons\mobius_attack.ogg",5,1};
+		titles[] = {};
+	};
+	class slow_down {
+		sound[] = {"BRP_sons\slow_down.ogg",2,1};
+		titles[] = {};
+	};
+	class fast_up {
+		sound[] = {"BRP_sons\fast_up.ogg",2,1};
+		titles[] = {};
+	};
+	class peter_far_tele {
+		sound[] = {"BRP_sons\peter_far_tele.ogg",2,1};
+		titles[] = {};
+	};
+	class it_is_what_it_is {
+		sound[] = {"BRP_sons\it_is_what_it_is.ogg",3,1};
+		titles[] = {};
+	};
+	class bone_break_1 {
+		sound[] = {"BRP_sons\bone_break_1.ogg",2,1};
+		titles[] = {};
+	};
+	class bone_break_2 {
+		sound[] = {"BRP_sons\bone_break_2.ogg",2,1};
+		titles[] = {};
+	};
+	class bone_break_3 {
+		sound[] = {"BRP_sons\bone_break_3.ogg",2,1};
+		titles[] = {};
+	};
+	class bone_break_4 {
+		sound[] = {"BRP_sons\bone_break_4.ogg",2,1};
+		titles[] = {};
+	};
+	class bone_break_5 {
+		sound[] = {"BRP_sons\bone_break_5.ogg",2,1};
+		titles[] = {};
+	};
+	class bone_break_6 {
+		sound[] = {"BRP_sons\bone_break_6.ogg",2,1};
+		titles[] = {};
+	};
+	class terror_1 {
+		sound[] = {"BRP_sons\terror_1.ogg",1,1};
+		titles[] = {};
+	};
+	class terror_2 {
+		sound[] = {"BRP_sons\terror_2.ogg",1,1};
+		titles[] = {};
+	};
+	class terror_3 {
+		sound[] = {"BRP_sons\terror_3.ogg",1,1};
+		titles[] = {};
+	};
+	class terror_4 {
+		sound[] = {"BRP_sons\terror_4.ogg",1,1};
+		titles[] = {};
+	};
+	class weather_news {
+		sound[] = {"BRP_sons\weather_news.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_25 {
+		sound[] = {"BRP_sons\zumbi_21.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_26 {
+		sound[] = {"BRP_sons\zumbi_22.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_27 {
+		sound[] = {"BRP_sons\zumbi_23.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_28 {
+		sound[] = {"BRP_sons\zumbi_24.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_29 {
+		sound[] = {"BRP_sons\zumbi_25.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_30 {
+		sound[] = {"BRP_sons\zumbi_26.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_31 {
+		sound[] = {"BRP_sons\zumbi_27.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_32 {
+		sound[] = {"BRP_sons\zumbi_28.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_33 {
+		sound[] = {"BRP_sons\zumbi_29.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_34 {
+		sound[] = {"BRP_sons\zumbi_30.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_35 {
+		sound[] = {"BRP_sons\zumbi_31.ogg",1.75,1};
+		titles[] = {};
+	};
+	class zombie_snd_36 {
+		sound[] = {"BRP_sons\zumbi_32.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_37 {
+		sound[] = {"BRP_sons\zumbi_33.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_38 {
+		sound[] = {"BRP_sons\zumbi_34.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_39 {
+		sound[] = {"BRP_sons\zumbi_35.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_40 {
+		sound[] = {"BRP_sons\zumbi_36.ogg",1.75,1};
+		titles[] = {};
+	};
+	class zombie_snd_41 {
+		sound[] = {"BRP_sons\zumbi_37.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_42 {
+		sound[] = {"BRP_sons\zumbi_38.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_43 {
+		sound[] = {"BRP_sons\zumbi_39.ogg",1.75,1};
+		titles[] = {};
+	};
+	class zombie_snd_44 {
+		sound[] = {"BRP_sons\zumbi_40.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_45 {
+		sound[] = {"BRP_sons\zumbi_41.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_46 {
+		sound[] = {"BRP_sons\zumbi_42.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_47 {
+		sound[] = {"BRP_sons\zumbi_43.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_48 {
+		sound[] = {"BRP_sons\zumbi_44.ogg",2,1};
+		titles[] = {};
+	};
+	class zombie_snd_49 {
+		sound[] = {"BRP_sons\zumbi_45.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_50 {
+		sound[] = {"BRP_sons\zumbi_46.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_51 {
+		sound[] = {"BRP_sons\zumbi_47.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_52 {
+		sound[] = {"BRP_sons\zumbi_48.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_53 {
+		sound[] = {"BRP_sons\zumbi_49.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_54 {
+		sound[] = {"BRP_sons\zumbi_50.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_55 {
+		sound[] = {"BRP_sons\zumbi_51.ogg",1.25,1};
+		titles[] = {};
+	};
+	class zombie_snd_56 {
+		sound[] = {"BRP_sons\zumbi_52.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_57 {
+		sound[] = {"BRP_sons\zumbi_53.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_58 {
+		sound[] = {"BRP_sons\zumbi_54.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_59 {
+		sound[] = {"BRP_sons\zumbi_55.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_60 {
+		sound[] = {"BRP_sons\zumbi_56.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_61 {
+		sound[] = {"BRP_sons\zumbi_57.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zombie_snd_62 {
+		sound[] = {"BRP_sons\zumbi_58.ogg",1.5,1};
+		titles[] = {};
+	};
+	class zed_death_normal_1 {
+		sound[] = {"BRP_sons\zed_death_normal_1.ogg",1.75,1};
+		titles[] = {};
+	};
+	class zed_death_normal_2 {
+		sound[] = {"BRP_sons\zed_death_normal_2.ogg",1.75,1};
+		titles[] = {};
+	};
+	class zed_death_normal_3 {
+		sound[] = {"BRP_sons\zed_death_normal_3.ogg",1.75,1};
+		titles[] = {};
+	};
+	class zombie_snd_63 {
+		sound[] = {"BRP_sons\zumbi_59.ogg",1.5,1};
+		titles[] = {};
+	};
+	class head_items_on_ground {
+		sound[] = {"BRP_sons\head_items_on_ground.ogg",1,1};
+		titles[] = {};
+	};
+	class bone_break_7 {
+		sound[] = {"BRP_sons\bone_break_7.ogg",2,1};
+		titles[] = {};
+	};
+	class bone_break_8 {
+		sound[] = {"BRP_sons\bone_break_8.ogg",2,1};
+		titles[] = {};
+	};
+	class bone_break_9 {
+		sound[] = {"BRP_sons\bone_break_9.ogg",2,1};
+		titles[] = {};
+	};
+	class bone_break_10 {
+		sound[] = {"BRP_sons\bone_break_10.ogg",2,1};
+		titles[] = {};
+	};
+	class peter_remote_kill {
+		sound[] = {"BRP_sons\peter_remote_kill.ogg",1.2,1};
+		titles[] = {};
+	};
+	class upper_cut_2 {
+		sound[] = {"BRP_sons\upper_cut_2.ogg",1,1};
+		titles[] = {};
+	};
+	class server_loading {
+		sound[] = {"BRP_sons\server_loading.ogg",2,1};
+		titles[] = {};
+	};
+	class explosion_recharge {
+		sound[] = {"BRP_sons\explosion_recharge.ogg",1.5,1};
+		titles[] = {};
+	};
+	class rattle_01 {
+		sound[] = {"BRP_sons\rattle_01.ogg",1.5,1};
+		titles[] = {};
+	};
+	class rattle_02 {
+		sound[] = {"BRP_sons\rattle_02.ogg",1.5,1};
+		titles[] = {};
+	};
+	class rattle_03 {
+		sound[] = {"BRP_sons\rattle_03.ogg",1.5,1};
+		titles[] = {};
+	};
+	class rattle_04 {
+		sound[] = {"BRP_sons\rattle_04.ogg",1.5,1};
+		titles[] = {};
+	};
+	class veh_sabotage {
+		sound[] = {"BRP_sons\veh_sabotage.ogg",1.75,1};
+		titles[] = {};
+	};
+	class sabotage_fixed {
+		sound[] = {"BRP_sons\sabotage_fixed.ogg",1.5,1};
+		titles[] = {};
+	};
+	class intro_parachute_2 {
+		sound[] = {"BRP_sons\intro_parachute_2.ogg",1.25,1};
+		titles[] = {};
+	};
+	class voodoo_use {
+		sound[] = {"BRP_sons\voodoo_use.ogg",1.5,1};
+		titles[] = {};
+	};
+	class voodoo_maker {
+		sound[] = {"BRP_sons\voodoo_maker.ogg",1.5,1};
+		titles[] = {};
+	};
+};
+class CfgDebriefing {
+    class WaitServer {
+        title = $STR_wait_for_server;
+        subtitle = $STR_wait_for_server_st;
+        description = "";
+        pictureBackground = "";
+        picture = "watermark.paa";
+		pictureColor[] = {1,1,1,1};
+    };
+    class ServerRestart {
+        title = $STR_server_restart;
+        subtitle = "";
+        description = "";
+        pictureBackground = "";
+        picture = "watermark.paa";
+		pictureColor[] = {1,1,1,1};
+    };
+    class PlayerNotOk {
+        title = $STR_player_not_ok;
+        subtitle = $STR_wait_for_server_st;
+        description = "";
+        pictureBackground = "";
+        picture = "watermark.paa";
+		pictureColor[] = {1,1,1,1};
+    };
+    class YouIsBanned {
+        title = $STR_you_is_banned;
+        subtitle = "";
+        description = "";
+        pictureBackground = "";
+        picture = "watermark.paa";
+		pictureColor[] = {1,0.6,0.6,1};
+    };
+    class NoPlayTime {
+        title = "TEMPO DE JOGO ESGOTADO";
+        subtitle = "";
+        description = "";
+        pictureBackground = "";
+        picture = "watermark.paa";
+		pictureColor[] = {1,1,1,1};
+    };
+};
+class BRPVP_XP {
+	idd = 10710;
+	access = 0;
+	movingEnable = false;
+	onLoad = "";
+	onUnload = "";
+	enableSimulation = true;
+	class ControlsBackground {};
+	class Controls {};
+	class Objects {};
+};
+class BRPVP_CAD {
+	idd = 20813;
+	access = 0;
+	movingEnable = false;
+	onLoad = "";
+	onUnload = "";
+	enableSimulation = true;
+	class ControlsBackground {};
+	class Controls {};
+	class Objects {};
+};
+class AdmBuild {
+	idd = 13838;
+	movingEnable = false;
+	enableSimulation = true;
+	class Objects {
+ 		class AdmBuildObject {
+			idc = 83831; 
+			type = 82;
+			model = "\A3\Structures_F\Items\Food\Can_V3_F.p3d";
+			scale = 0.001;
+			direction[] = {0,0,1};
+			up[] = {0,1,0}; 
+ 			x = 0.5;
+			y = 0.5;
+			z = 0.2;
+			xBack = 0.5;
+			yBack = 0.5;
+			zBack = 1.2;
+			inBack = 1;
+			enableZoom = false;
+			zoomDuration = 0.001;
+		};
+	};
+};
+class RscTitles {
+	titles[] = {"missionintel1","missionintel2"};
+	class missionintel1 {
+		idd = -1;
+		movingEnable = 0;
+		duration = 36000;
+		fadein = 0;
+		fadeout = 0;
+		name = "missionintel1";
+		controls[] = {"Picture"};
+		class Picture {
+            x = safezoneX;
+            y = safezoneY;
+            w = safezoneW;
+            h = safezoneH;
+			text = "BRP_imagens\fake_bush.paa";
+			sizeEx = 1;
+			type = 0;
+			idc = -1;
+			style = 48;
+			colorBackground[] = {0,0,0,0};
+			colorText[] = {1,1,1,0.8};
+			font = "puristaMedium";
+		};
+	};
+	class missionintel2 {
+		idd = -1;
+		movingEnable = 0;
+		duration = 0;  
+		fadein = 0;
+		fadeout = 0;
+		name = "missionintel2";
+		controls[] = {"Picture"};
+		class Picture {
+            x = safezoneX;
+            y = safezoneY;
+            w = safezoneW;
+            h = safezoneH;
+			text = "BRP_imagens\fake_bush.paa";
+			sizeEx = 1;
+			type = 0;
+			idc = -1;
+			style = 48;
+			colorBackground[] = {0,0,0,0};
+			colorText[] = {1,1,1,0.8};
+			font = "puristaMedium";
+		};
+	};
+};

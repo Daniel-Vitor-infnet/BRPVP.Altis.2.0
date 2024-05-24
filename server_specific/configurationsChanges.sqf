@@ -1,0 +1,16 @@
+/*
+==========================================================
+THIS FILE WAS MADE BY DONNOVAN FROM BRAZIL
+check BRPVP_lisence.txt FOR THE LISENCE
+
+MORE INFORMATION:
+http://www.brpvp.com
+http://www.brpvp.com.br
+
+DONNOVAN ON STEAM: 
+https://steamcommunity.com/profiles/76561197975554637/
+==========================================================
+*/
+
+//YOU CAN OVERWRITE LOTS OF CONFIGURATIONS IN THIS FILE, SO WHEN BRPVP UPDATE YOU JUST NEED TO USE THIS FILE ON THE NEW VERSION
+//CONFIGURATIONS YOU CAN OVERWRITE ARE: ZOMBIES, LOOT, GENERAL_VARIABLES, GENERAL_VARIABLES_MAP, TRADERS POSITION, TRADER VEHICLES, ETC...
