@@ -531,8 +531,8 @@ BRPVP_blackTradersPlaces = [
 //PVE
 BRPVP_pveNoPveInRaidDaysFull = false;
 BRPVP_pveDaysWithNoSuperJumpWhenHack = 1;
-BRPVP_pveAllowSuperJump = true;
-BRPVP_pveMakeAllMapPve = false;
+BRPVP_pveAllowSuperJump = false; // Pulo da área PVE
+BRPVP_pveMakeAllMapPve = false; // Tornar o mapa PVE por completo
 BRPVP_pveMainAreasAll = [
 	[[[08529,12963,0],5000,"PVE1",10/*MUST BE 10*/]],
 	[[[12198,19523,0],5000,"PVE2",10/*MUST BE 10*/]],
@@ -599,7 +599,7 @@ BRPVP_busServiceStopPoints = [
 	[[19538.5,15446.7,0],147.08],
 	[[12539.1,14347.3,0],159.53]
 ];
-BRPVP_busServiceMaximumDistPrice = 50000;
+BRPVP_busServiceMaximumDistPrice = 50000; //Ônibus, Distância máxima Preço
 
 //LEST WEST WALL SEGMENTS
 BRPVP_lestWestWallSegments = [

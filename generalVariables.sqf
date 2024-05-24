@@ -19,15 +19,16 @@ https://steamcommunity.com/profiles/76561197975554637/
 //VERSION
 BRPVP_buildVersion = "V141 B7";
 
-//ADMINS AND MODERATORS LISTS
+//ADMINS Lista
 BRPVP_admins = [
-	"76561197975554637" //DONNOVAN (please don't remove)
+	"76561198339254954", 
+	"76561197975554637"  //DONNOVAN (Não remover)
 ];
 BRPVP_moderators = [];
 BRPVP_adminsModeratorsCanKillPlayersWithWeapons = true;
-BRPVP_showAdminInfo = false;
+BRPVP_showAdminInfo = false; // Mostrar lista de adm (eu acho)
 BRPVP_adminsStartsWithAllPerks = true;
-BRPVP_useMySqlDatabase = true;
+BRPVP_useMySqlDatabase = false;
 
 //HC
 BRPVP_useHC = false;
@@ -45,9 +46,9 @@ BRPVP_raidWeekDaysDayHours = [
 	[[0,24]], //DAY 5
 	[[0,24]]  //DAY 6 SATURDAY
 ];
-BRPVP_raidWeekDaysDisableConstruction = false; //DISABLE CONSTRUCTION ON RAID DAYS
-BRPVP_raidNoConstructionOnBaseIfRaidStarted = true;
-BRPVP_raidNoConstructionOnBaseIfRaidStartedTime = 1800; //TIME IN SECONDS PLAYERS CAN'T CONSTRUCT OR FLY IN BASE SINCE LAST RAID ACTION
+BRPVP_raidWeekDaysDisableConstruction = false; //DESATIVAR A CONSTRUÇÃO EM DIAS DE RAID
+BRPVP_raidNoConstructionOnBaseIfRaidStarted = true; //Nenhuma construção na base se o raid for iniciado
+BRPVP_raidNoConstructionOnBaseIfRaidStartedTime = 1800; //TEMPO EM SEGUNDOS QUE OS JOGADORES NÃO PODEM CONSTRUIR OU VOAR NA BASE DESDE A ÚLTIMA AÇÃO DE ATAQUE
 
 //RAID CONFIG EXAMPLE: RAID OS SATURDAY AND SUNDAY FROM 20H TO 24H (8PM TO 12AM). BUILD DISABLED ON RAID DAYS.
 //BRPVP_raidWeekDays = [0,6];
@@ -1360,10 +1361,10 @@ BRPVP_stayOnlineMoneyRewardExtraValor = 300000;
 BRPVP_sellPricesMultiplier = 0.15; //PLAYER SELL PRICES CUT
 BRPVP_sellMultVeh = 0.4; //SELL PERCENTAGE OF TRADER VEHICLES AND UNPRICED FEDIDEX VEHICLES
 BRPVP_sellMultVehPricedFedidex = 0.6; //SELL PERCENTAGE OF PRICED FEDIDEX VEHICLES
-BRPVP_restartTimes = [4,8,12,16,20,24]; //RESTART HOURS IN 24H FORMAT
-BRPVP_restartWarnings = [30,20,15,10,5,4,3,2,1]; //RESTART WARNINGS TO BE SHOW X MINUTES BEFORE RESTART (X <= 30)
-BRPVP_tempoDeVeiculoTemporarioNascimento = 7200;
-BRPVP_veiculoTemporarioNascimento = "C_Quadbike_01_F";
+BRPVP_restartTimes = [6,12,18,24]; //REINICIAR AS HORAS NO FORMATO 24H
+BRPVP_restartWarnings = [60,30,20,10,5,3,2,1]; //AVISOS DE REINICIALIZAÇÃO A SEREM EXIBIDOS X MINUTOS ANTES DA REINICIALIZAÇÃO (X <= 30)
+BRPVP_tempoDeVeiculoTemporarioNascimento = 3600; // Tempo de veiculo temporario nascimento em segundos 
+BRPVP_veiculoTemporarioNascimento = "CUP_C_Golf4_kitty_Civ"; // Carro de nascimento
 BRPVP_renewLootTime = 900;
 BRPVP_fullMoonNights = true;
 BRPVP_fullMoonNightsChance = 0.5;
@@ -1375,10 +1376,10 @@ BRPVP_patrolAIGroups = [
 	(configFile >> "CfgGroups" >> "Indep" >> "IND_C_F" >> "Infantry")
 ];
 
-//MORE CONFIGURATION
-BRPVP_startingMoney = 500000;
-BRPVP_startingMoneyOnBank = 5000000;
-BRPVP_towLandVehiclePrice = 50000;
+//Configurações para entrada inicial no servidor
+BRPVP_startingMoney = 15000;
+BRPVP_startingMoneyOnBank = 115000;
+BRPVP_towLandVehiclePrice = 5000;
 BRPVP_marketPricesMultiply = 1;
 BRPVP_marketPricesMultiplyVeh = [1,0];
 

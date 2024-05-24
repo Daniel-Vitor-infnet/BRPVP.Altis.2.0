@@ -4698,13 +4698,14 @@
 				<German>Du kannst Spieler innerhalb eines PVP-Bereichs nicht verletzen</German>
 			</Key>
 			<Key ID="str_quad_time">
-				<Original>This quadricycle will remains for %1 seconds!</Original>
-				<English>This quadricycle will remains for %1 seconds!</English>
-				<Portuguese>Este quadriciclo dura %1 segundos!</Portuguese>
-				<Russian>Квадроцикл исчезнет через %1 секунд!</Russian>
-				<Chinesesimp>这辆初始沙滩车只会存在 %1 秒!</Chinesesimp>
-				<Chinese>这辆初始沙滩车只会存在 %1 秒!</Chinese>
-				<German>Dieses Spawn-Fahrzeug wird in %1 sekunden Verschwinden!!!</German>
+                <Original>Este veículo dura %1 segundos!</Original>
+                <English>This vehicle lasts %1 seconds!</English>
+                <Portuguese>Este veículo dura %1 segundos!</Portuguese>
+                <Russian>Этот транспорт исчезнет через %1 секунд!</Russian>
+                <Chinesesimp>这辆车将持续 %1 秒!</Chinesesimp>
+                <Chinese>这辆车将持续 %1 秒!</Chinese>
+                <German>Dieses Fahrzeug wird in %1 Sekunden verschwinden!</German>
+                <France>Ce véhicule dure %1 secondes!</France>
 			</Key>
 			<Key ID="str_radar_deactived">
 				<Original>Radar deactived...</Original>
