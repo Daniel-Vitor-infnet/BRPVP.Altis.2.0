@@ -6566,9 +6566,8 @@ BRPVP_menu = [
 			if (_x call BRPVP_menuVar2 && _x getVariable ["own",-1] isEqualTo BRPVP_menuVar4) then {_amgCustom append (_x getVariable ["amg",[0,[]]] select 1);};
 		} forEach nearestObjects [BRPVP_stuff,BRPVP_menuVar1,BRPVP_stuff getVariable ["brpvp_flag_radius",0],true];
 		_amgCustom arrayIntersect _amgCustom;
-		BRPVP_pegaNomePeloIdBd1 = [_amgCustom,player,true];
 		BRPVP_pegaNomePeloIdBd1Retorno = nil;
-		publicVariableServer "BRPVP_pegaNomePeloIdBd1";
+		[_amgCustom,player,true] remoteExecCall ["BRPVP_pegaNomePeloIdBd1",2];
 		waitUntil {!isNil "BRPVP_pegaNomePeloIdBd1Retorno"};
 		BRPVP_menuOpcoes = BRPVP_pegaNomePeloIdBd1Retorno select 0;
 		BRPVP_menuExecutaParam = BRPVP_pegaNomePeloIdBd1Retorno select 1;
@@ -7871,14 +7870,18 @@ BRPVP_menu = [
 
 	//MENU 123
 	{
+		BRPVP_menuSleep = 0;
 		BRPVP_menuTipo = 2;
-		_owners = [];
-		_ownersCount = [];
+		BRPVP_menuCorSelecao = "#FF3333";
+		BRPVP_menuTipoImagem = 1; //0 - NENHUMA | 1 - FIXA | 2 - UMA POR OPCAO
+		BRPVP_menuImagem = "<img size='4.0' align='center' image='"+BRPVP_imagePrefix+"BRP_imagens\interface\control_center.paa'/>";
+		private _owners = [];
+		private _ownersCount = [];
 		{
 			if (_x call BRPVP_menuVar2) then {
-				_own = _x getVariable ["own",-1];
-				if (_own > -1) then {
-					_idx = _owners find _own;
+				private _own = _x getVariable ["own",-1];
+				if (_own isNotEqualTo -1) then {
+					private _idx = _owners find _own;
 					if (_idx isEqualTo -1) then {
 						_owners pushBack _own;
 						_ownersCount pushBack 1;
@@ -7888,9 +7891,8 @@ BRPVP_menu = [
 				};
 			};
 		} forEach nearestObjects [BRPVP_stuff,BRPVP_menuVar1,BRPVP_stuff getVariable ["brpvp_flag_radius",0],true];
-		BRPVP_pegaNomePeloIdBd1 = [_owners,player,true];
 		BRPVP_pegaNomePeloIdBd1Retorno = nil;
-		publicVariableServer "BRPVP_pegaNomePeloIdBd1";
+		[_owners,player,true] remoteExecCall ["BRPVP_pegaNomePeloIdBd1",2];
 		waitUntil {!isNil "BRPVP_pegaNomePeloIdBd1Retorno"};
 		BRPVP_pegaNomePeloIdBd1Retorno params ["_tabName","_tabId"];
 		_tabNameX = [];
