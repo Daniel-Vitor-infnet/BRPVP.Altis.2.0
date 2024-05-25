@@ -15453,6 +15453,35 @@
                 <German>Hubschrauber</German>
                 <France>Hélicoptère</France>
 			</Key>
+			<Key ID="civil">
+				<Original>Civilian</Original>
+				<English>Civilian</English>
+				<Portuguese>Civil</Portuguese>
+				<Russian>Гражданский</Russian>
+				<Chinesesimp>民用</Chinesesimp>
+				<Chinese>民用</Chinese>
+				<German>Zivilist</German>
+			</Key>
+			<Key ID="passeio">
+				<Original>Passeio</Original>
+                <English>Leisure</English>
+                <Portuguese>Passeio</Portuguese>
+                <Russian>Прогулка</Russian>
+                <Chinesesimp>休闲</Chinesesimp>
+                <Chinese>休閒</Chinese>
+                <German>Freizeit</German>
+                <France>Promenade</France>
+			</Key>
+			<Key ID="simples">
+				<Original>Simples</Original>
+                <English>Simple</English>
+                <Portuguese>Simples</Portuguese>
+                <Russian>Простой</Russian>
+                <Chinesesimp>简单</Chinesesimp>
+                <Chinese>簡單</Chinese>
+                <German>Einfach</German>
+                <France>Simple</France>
+			</Key>
 		</Container>
 	</Package>
 </Project>
