@@ -780,15 +780,34 @@ if (BRPVP_checaExistenciaPlayerBdRetorno in ["nao_ta_no_bd","no_bd_e_morto"]) th
 						_player addVest "Police_SoldierVest";
 
 						// Arma Principal
-						//_mP = selectRandom getArray (configFile >> "CfgWeapons" >> _aP >> "magazines"); Arma Principal
-						_aP = selectRandom ["CUP_arifle_M16A1GL_FS"]; // Lugar para arma Principal
-					    _mP1 = "CUP_20Rnd_556x45_Stanag_Tracer_Red"; // Tipo de pente (arma Principal)
-						_player addWeapon _aP;
+						//_mP = selectRandom getArray (configFile >> "CfgWeapons" >> _aP >> "magazines"); Pente padrão
+						_aP = selectRandom ["CUP_arifle_M16A1GL_FS"]; // Selecionar arma
+					    _mP1 = "CUP_20Rnd_556x45_Stanag_Tracer_Red"; // Tipo de pente 
+						_player addWeapon _aP; 
+						_player addPrimaryWeaponItem _mP1; // Pente na arma
 						_player addMagazine _mP1;
 						_player addMagazine _mP1;
 						_player addMagazine _mP1;
 						_player addMagazine _mP1;
-						_player addMagazine _mP1;
+
+						// Equipamentos para a arma principal
+						_player addPrimaryWeaponItem "optic_Arco_blk_F"; // Mira
+
+
+						// Arma Secundaria
+						_sP = selectRandom ["CUP_hgun_P30L_od"]; // Selecionar arma
+					    _mS1 = "CUP_17Rnd_9x19_P30L"; // Tipo de pente 
+						_player addWeapon _sP;
+						_player addHandgunItem _mS1; // Pente na arma
+						_player addMagazine _mS1;
+						_player addMagazine _mS1;
+						_player addMagazine _mS1;
+						_player addMagazine _mS1;
+						_player addMagazine _mS1;
+
+						// Equipamentos para a arma secundária
+						_player addHandgunItem "CUP_muzzle_snds_M9"; // silenciador
+
 
 						// Equipamentos
 						_player linkItem "rhsusf_ANPVS_14"; // Night vision
@@ -864,15 +883,30 @@ if (BRPVP_checaExistenciaPlayerBdRetorno in ["nao_ta_no_bd","no_bd_e_morto"]) th
 					player addVest "Police_SoldierVest";
 
 					// Arma Principal
-					//_mP = selectRandom getArray (configFile >> "CfgWeapons" >> _aP >> "magazines"); pente padrão da arma Principal
-					_aP = selectRandom ["CUP_arifle_M16A1GL_FS"]; // Lugar para arma Principal 
-					_mP1 = "CUP_20Rnd_556x45_Stanag_Tracer_Red"; // Tipo de pente (arma Principal)
+					//_mP = selectRandom getArray (configFile >> "CfgWeapons" >> _aP >> "magazines"); pente padrão da arma 
+					_aP = selectRandom ["CUP_arifle_M16A1GL_FS"]; // Seleciona arma
+					_mP1 = "CUP_20Rnd_556x45_Stanag_Tracer_Red"; // Tipo de pente 
 					player addWeapon _aP;
+					player addPrimaryWeaponItem _mP1; // Pente na arma
 					player addMagazine _mP1;
 					player addMagazine _mP1;
 					player addMagazine _mP1;
 					player addMagazine _mP1;
-					player addMagazine _mP1;
+
+					// Arma Secundaria
+					_sP = selectRandom ["CUP_hgun_P30L_od"]; // Seleciona arma
+					_mS1 = "CUP_17Rnd_9x19_P30L"; // Tipo de pente 
+					player addWeapon _sP;
+					player addHandgunItem _mS1; // Pente na arma
+					player addMagazine _mS1;
+					player addMagazine _mS1;
+					player addMagazine _mS1;
+					player addMagazine _mS1;
+					player addMagazine _mS1;
+
+					// Equipamentos para a arma secundária
+					player addHandgunItem "CUP_muzzle_snds_M9"; // silenciador
+
 
 					// Equipamentos
 					player linkItem "rhsusf_ANPVS_14"; // Night Vision
