@@ -775,19 +775,24 @@ if (BRPVP_checaExistenciaPlayerBdRetorno in ["nao_ta_no_bd","no_bd_e_morto"]) th
 			if (!BRPVP_bornWithDeadItemsThisRound) then {
 				if (_clone isEqualTo "") then {
 					if (BRPVP_bornWithItems) then {
+						// Roupas
 						_player addBackpack selectRandom ["Police_Messenger_Bag"];
 						_player addVest "Police_SoldierVest";
-						_aP = selectRandom ["CUP_arifle_M16A1GL_FS"]; // Lugar para arma Principal
+
+						// Arma Principal
 						//_mP = selectRandom getArray (configFile >> "CfgWeapons" >> _aP >> "magazines"); Arma Principal
+						_aP = selectRandom ["CUP_arifle_M16A1GL_FS"]; // Lugar para arma Principal
 					    _mP1 = "CUP_20Rnd_556x45_Stanag_Tracer_Red"; // Tipo de pente (arma Principal)
-						_player addMagazine _mP1;
-						_player addMagazine _mP1;
-						_player addMagazine _mP1;
-						_player addMagazine _mP1;
-						_player addMagazine _mP1;
 						_player addWeapon _aP;
-						_player linkItem "rhsusf_ANPVS_14";
-						_player addWeapon "rhsusf_bino_m24_ARD";
+						_player addMagazine _mP1;
+						_player addMagazine _mP1;
+						_player addMagazine _mP1;
+						_player addMagazine _mP1;
+						_player addMagazine _mP1;
+
+						// Equipamentos
+						_player linkItem "rhsusf_ANPVS_14"; // Night vision
+						_player addWeapon "rhsusf_bino_m24_ARD"; // Binoculos
 						_player addItem "FirstAidKit";
 					};
 				} else {
@@ -854,19 +859,24 @@ if (BRPVP_checaExistenciaPlayerBdRetorno in ["nao_ta_no_bd","no_bd_e_morto"]) th
 		if (!BRPVP_bornWithDeadItemsThisRound) then {
 			if (_clone isEqualTo "") then {
 				if (BRPVP_bornWithItems) then {
+					// Roupas
 					player addBackpack selectRandom ["Police_Messenger_Bag"];
 					player addVest "Police_SoldierVest";
-					_aP = selectRandom ["CUP_arifle_M16A1GL_FS"]; // Lugar para arma Principal 
+
+					// Arma Principal
 					//_mP = selectRandom getArray (configFile >> "CfgWeapons" >> _aP >> "magazines"); pente padrão da arma Principal
+					_aP = selectRandom ["CUP_arifle_M16A1GL_FS"]; // Lugar para arma Principal 
 					_mP1 = "CUP_20Rnd_556x45_Stanag_Tracer_Red"; // Tipo de pente (arma Principal)
-					player addMagazine _mP1;
-					player addMagazine _mP1;
-					player addMagazine _mP1;
-					player addMagazine _mP1;
-					player addMagazine _mP1;
 					player addWeapon _aP;
-					player linkItem "rhsusf_ANPVS_14";
-					player addWeapon "rhsusf_bino_m24_ARD";
+					player addMagazine _mP1;
+					player addMagazine _mP1;
+					player addMagazine _mP1;
+					player addMagazine _mP1;
+					player addMagazine _mP1;
+
+					// Equipamentos
+					player linkItem "rhsusf_ANPVS_14"; // Night Vision
+					player addWeapon "rhsusf_bino_m24_ARD"; // Binoculos
 					player addItem "FirstAidKit";
 				};
 			} else {
