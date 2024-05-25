@@ -203,7 +203,7 @@ if (BRPVP_checaExistenciaPlayerBdRetorno isEqualTo "no_bd_e_vivo") then {
 	_inventario = _resultadoCompilado select 0 select 0;
 	
 	//ASSIGNED PLAYER
-	{if (_x iskindOf ["Binocular",configFile >> "CfgWeapons"]) then {player addWeapon _x;} else {player linkItem _x;};} forEach (_inventario select 0);
+	{if (_x iskindOf ["rhsusf_bino_m24_ARD",configFile >> "CfgWeapons"]) then {player addWeapon _x;} else {player linkItem _x;};} forEach (_inventario select 0);
 
 	//ADICIONA VEST PARA RECEBER MAGAZINES DAS ARMAS
 	player addBackpack "B_Carryall_oli";
@@ -778,19 +778,20 @@ if (BRPVP_checaExistenciaPlayerBdRetorno in ["nao_ta_no_bd","no_bd_e_morto"]) th
 						_player addBackpack selectRandom ["Police_Messenger_Bag"];
 						_player addVest "Police_SoldierVest";
 						_aP = selectRandom ["CUP_arifle_M16A1GL_FS"]; // Lugar para arma Principal
-						_mP = selectRandom getArray (configFile >> "CfgWeapons" >> _aP >> "magazines");
-						_player addMagazine _mP;
-						_player addMagazine _mP;
-						_player addMagazine _mP;
-						_player addMagazine _mP;
-						_player addMagazine _mP;
+						//_mP = selectRandom getArray (configFile >> "CfgWeapons" >> _aP >> "magazines"); Arma Principal
+					    _mP1 = "CUP_20Rnd_556x45_Stanag_Tracer_Red"; // Tipo de pente (arma Principal)
+						_player addMagazine _mP1;
+						_player addMagazine _mP1;
+						_player addMagazine _mP1;
+						_player addMagazine _mP1;
+						_player addMagazine _mP1;
 						_player addWeapon _aP;
-						_player linkItem "NVGoggles";
-						_player addWeapon "Binocular";
+						_player linkItem "rhsusf_ANPVS_14";
+						_player addWeapon "rhsusf_bino_m24_ARD";
 						_player addItem "FirstAidKit";
 					};
 				} else {
-					if (BRPVP_bornWithItems) then {if (hmd _player isEqualTo "") then {_player linkItem "NVGoggles";};};
+					if (BRPVP_bornWithItems) then {if (hmd _player isEqualTo "") then {_player linkItem "rhsusf_ANPVS_14";};};
 				};
 			};
 
@@ -856,19 +857,20 @@ if (BRPVP_checaExistenciaPlayerBdRetorno in ["nao_ta_no_bd","no_bd_e_morto"]) th
 					player addBackpack selectRandom ["Police_Messenger_Bag"];
 					player addVest "Police_SoldierVest";
 					_aP = selectRandom ["CUP_arifle_M16A1GL_FS"]; // Lugar para arma Principal 
-					_mP = selectRandom getArray (configFile >> "CfgWeapons" >> _aP >> "magazines");
-					player addMagazine _mP;
-					player addMagazine _mP;
-					player addMagazine _mP;
-					player addMagazine _mP;
-					player addMagazine _mP;
+					//_mP = selectRandom getArray (configFile >> "CfgWeapons" >> _aP >> "magazines"); pente padrão da arma Principal
+					_mP1 = "CUP_20Rnd_556x45_Stanag_Tracer_Red"; // Tipo de pente (arma Principal)
+					player addMagazine _mP1;
+					player addMagazine _mP1;
+					player addMagazine _mP1;
+					player addMagazine _mP1;
+					player addMagazine _mP1;
 					player addWeapon _aP;
-					player linkItem "NVGoggles";
-					player addWeapon "Binocular";
+					player linkItem "rhsusf_ANPVS_14";
+					player addWeapon "rhsusf_bino_m24_ARD";
 					player addItem "FirstAidKit";
 				};
 			} else {
-				if (BRPVP_bornWithItems) then {if (hmd player isEqualTo "") then {player linkItem "NVGoggles";};};
+				if (BRPVP_bornWithItems) then {if (hmd player isEqualTo "") then {player linkItem "rhsusf_ANPVS_14";};};
 			};
 		};
 
