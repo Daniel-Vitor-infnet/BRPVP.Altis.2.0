@@ -243,7 +243,7 @@ BRPVP_CbrnSuits = [
 BRPVP_personalVaultCargoSize = 7500;
 BRPVP_baseTurretNoSeeSearchTime = 25;
 
-BRPVP_lostMoneyWhenDieUse = true;
+BRPVP_lostMoneyWhenDieUse = false; // Morrer perde dinheiro no banco
 //PERCENTAGE OF THE BANK MONEY TO LOST WHEN DIE MIN
 BRPVP_lostMoneyWhenDieMinPercentage = 0.0025;
 //PERCENTAGE OF THE BANK MONEY TO LOST WHEN DIE MAX

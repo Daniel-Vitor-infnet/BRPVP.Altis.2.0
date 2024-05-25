@@ -5929,7 +5929,7 @@ BRPVP_escolheModaPlayer = {
 
     // Inverte a lógica para que o comportamento padrão seja false
     if (_this) then {
-        player forceAddUniform "Police_Pilot_Coveralls"; // Especifica o uniforme desejado
+        player forceAddUniform "GDC_Player_1"; // Especifica o uniforme desejado
         player addHeadGear "Police_Beret"; // Especifica o capacete desejado
     } else {
         private _uniformes = [
