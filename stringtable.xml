@@ -15393,6 +15393,66 @@
 				<Czech></Czech>
 				<Italian></Italian>
 			</Key>
+			<Key ID="staff">
+				<Original>Staff</Original>
+                <English>Staff</English>
+                <Portuguese>Staff</Portuguese>
+                <Russian>Персонал</Russian>
+                <Chinesesimp>员工</Chinesesimp>
+                <Chinese>員工</Chinese>
+                <German>Personal</German>
+                <France>Personnel</France>
+			</Key>
+			<Key ID="classicos">
+				<Original>Clássicos</Original>
+                <English>Classics</English>
+                <Portuguese>Clássicos</Portuguese>
+                <Russian>Классические</Russian>
+                <Chinesesimp>经典</Chinesesimp>
+                <Chinese>經典</Chinese>
+                <German>Klassisch</German>
+                <France>Classiques</France>
+			</Key>
+			<Key ID="esportivos">
+				<Original>Esportivos</Original>
+                <English>Sportive</English>
+                <Portuguese>Esportivos</Portuguese>
+                <Russian>Спортивный</Russian>
+                <Chinesesimp>运动</Chinesesimp>
+                <Chinese>運動</Chinese>
+                <German>Sportlich</German>
+                <France>Sportif</France>
+			</Key>
+			<Key ID="pesados">
+				<Original>Pesados</Original>
+                <English>Heavy</English>
+                <Portuguese>Pesados</Portuguese>
+                <Russian>Тяжелые</Russian>
+                <Chinesesimp>重型</Chinesesimp>
+                <Chinese>重型</Chinese>
+                <German>Schwer</German>
+                <France>Lourds</France>
+			</Key>
+			<Key ID="descaracterizados">
+				<Original>Descaracterizados</Original>
+                <English>Unmarked</English>
+                <Portuguese>Descaracterizados</Portuguese>
+                <Russian>Немаркированные</Russian>
+                <Chinesesimp>未标记</Chinesesimp>
+                <Chinese>未標記</Chinese>
+                <German>Unmarkiert</German>
+                <France>Non marqués</France>
+			</Key>
+			<Key ID="helicoptero">
+				<Original>Helicóptero</Original>
+                <English>Helicopter</English>
+                <Portuguese>Helicóptero</Portuguese>
+                <Russian>Вертолёт</Russian>
+                <Chinesesimp>直升机</Chinesesimp>
+                <Chinese>直升機</Chinese>
+                <German>Hubschrauber</German>
+                <France>Hélicoptère</France>
+			</Key>
 		</Container>
 	</Package>
 </Project>
