@@ -5913,89 +5913,95 @@ BRPVP_removeTodosIconesLocais = {
 	if (_this isEqualTo "in_out") then {BRPVP_iconesLocaisInOut = [];};
 	if (_this isEqualTo "trader") then {BRPVP_iconesLocaisTrader = [];};
 };
+
+// Roupas de spawn
 BRPVP_escolheModaPlayer = {
-	//NUDA PLAYER (TIRA TUDO DELE)
-	{player removeMagazine _x;} forEach  magazines player;
-	{player removeWeapon _x;} forEach weapons player;
-	{player removeItem _x;} forEach items player;
-	removeAllAssignedItems player;
-	removeBackpackGlobal player;
-	removeUniform player;
-	removeVest player;
-	removeHeadGear player;
-	removeGoggles player;
-	
-	//VESTE PLAYER CASO PARAMETRO SEJA TRUE
-	if (_this) then {
-		private _uniformes = [
-			"U_C_Man_casual_1_F",
-			"U_C_Man_casual_2_F",
-			"U_C_Man_casual_3_F",
-			"U_C_Man_casual_4_F",
-			"U_C_Man_casual_5_F",
-			"U_C_Man_casual_6_F",
-			"U_I_C_Soldier_Bandit_1_F",
-			"U_I_C_Soldier_Bandit_2_F",
-			"U_I_C_Soldier_Bandit_3_F",
-			"U_I_C_Soldier_Bandit_4_F",
-			"U_I_C_Soldier_Bandit_5_F",
-			"U_B_GEN_Soldier_F",
-			"U_I_C_Soldier_Para_4_F",
-			"U_I_C_Soldier_Para_5_F",
-			"U_C_ArtTShirt_01_v1_F",
-			"U_C_ArtTShirt_01_v2_F",
-			"U_C_ArtTShirt_01_v3_F",
-			"U_C_ArtTShirt_01_v4_F",
-			"U_C_ArtTShirt_01_v5_F",
-			"U_C_ArtTShirt_01_v6_F",
-			"U_C_FormalSuit_01_Black_F",
-			"U_C_FormalSuit_01_Blue_F",
-			"U_C_FormalSuit_01_Gray_F",
-			"U_C_FormalSuit_01_Khaki_F",
-			"U_C_FormalSuit_01_tshirt_gray_F",
-			"CUP_U_C_Labcoat_03",
-			"CUP_U_C_Tracksuit_04",
-			"CUP_U_C_Citizen_03",
-			"CUP_U_C_Labcoat_01",
-			"CUP_U_C_Suit_01",
-			"CUP_U_C_Mechanic_01",
-			"CUP_U_C_Priest_01",
-			"CUP_U_C_racketeer_01",
-			"CUP_U_C_Rocker_01"
-		] select {_x call BRPVP_classExists};
-		private _caps = [
-			"H_Bandanna_mcamo",
-			"H_Bandanna_surfer",
-			"H_Hat_blue",
-			"H_Hat_tan",
-			"H_StrawHat_dark",
-			"H_Bandanna_surfer_grn",
-			"H_Cap_surfer",
-			"CUP_H_C_Policecap_01",
-			"CUP_H_C_Fireman_Helmet_01",
-			"CUP_H_C_Beret_01",
-			"CUP_H_C_Ushanka_02",
-			"CUP_H_C_Beanie_03",
-			"CUP_H_TKI_Lungee_Open_02",
-			"CUP_H_TKI_Lungee_Open_02",
-			"CUP_H_TKI_Pakol_1_01",
-			"CUP_H_TKI_SkullCap_01",
-			"CUP_H_TKI_SkullCap_01"
-		] select {_x call BRPVP_classExists};
-		private _oculosTipos = ["G_Diving"];
-		
-		//ESCOLHE MODA
-		private _moda = floor random 1000;
-		private _uniforme = _uniformes select (_moda mod count _uniformes);
-		private _cap = _caps select (_moda mod count _caps);
-		private _oculos = _oculosTipos select (_moda mod count _oculosTipos);
-		
-		//APLICA MODA
-		player forceAddUniform _uniforme;
-		if (_moda mod 5 isNotEqualTo 0) then {player addHeadGear _cap;};
-		if (_moda mod 4 isEqualTo 0) then {player addGoggles _oculos;};
-	};
+    // NUDA PLAYER (TIRA TUDO DELE)
+    {player removeMagazine _x;} forEach magazines player;
+    {player removeWeapon _x;} forEach weapons player;
+    {player removeItem _x;} forEach items player;
+    removeAllAssignedItems player;
+    removeBackpackGlobal player;
+    removeUniform player;
+    removeVest player;
+    removeHeadGear player;
+    removeGoggles player;
+
+    // Inverte a lógica para que o comportamento padrão seja false
+    if (_this) then {
+        player forceAddUniform "Police_Pilot_Coveralls"; // Especifica o uniforme desejado
+        player addHeadGear "Police_Beret"; // Especifica o capacete desejado
+    } else {
+        private _uniformes = [
+            "U_C_Man_casual_1_F",
+            "U_C_Man_casual_2_F",
+            "U_C_Man_casual_3_F",
+            "U_C_Man_casual_4_F",
+            "U_C_Man_casual_5_F",
+            "U_C_Man_casual_6_F",
+            "U_I_C_Soldier_Bandit_1_F",
+            "U_I_C_Soldier_Bandit_2_F",
+            "U_I_C_Soldier_Bandit_3_F",
+            "U_I_C_Soldier_Bandit_4_F",
+            "U_I_C_Soldier_Bandit_5_F",
+            "U_B_GEN_Soldier_F",
+            "U_I_C_Soldier_Para_4_F",
+            "U_I_C_Soldier_Para_5_F",
+            "U_C_ArtTShirt_01_v1_F",
+            "U_C_ArtTShirt_01_v2_F",
+            "U_C_ArtTShirt_01_v3_F",
+            "U_C_ArtTShirt_01_v4_F",
+            "U_C_ArtTShirt_01_v5_F",
+            "U_C_ArtTShirt_01_v6_F",
+            "U_C_FormalSuit_01_Black_F",
+            "U_C_FormalSuit_01_Blue_F",
+            "U_C_FormalSuit_01_Gray_F",
+            "U_C_FormalSuit_01_Khaki_F",
+            "U_C_FormalSuit_01_tshirt_gray_F",
+            "CUP_U_C_Labcoat_03",
+            "CUP_U_C_Tracksuit_04",
+            "CUP_U_C_Citizen_03",
+            "CUP_U_C_Labcoat_01",
+            "CUP_U_C_Suit_01",
+            "CUP_U_C_Mechanic_01",
+            "CUP_U_C_Priest_01",
+            "CUP_U_C_racketeer_01",
+            "CUP_U_C_Rocker_01"
+        ] select {_x call BRPVP_classExists};
+        private _caps = [
+            "H_Bandanna_mcamo",
+            "H_Bandanna_surfer",
+            "H_Hat_blue",
+            "H_Hat_tan",
+            "H_StrawHat_dark",
+            "H_Bandanna_surfer_grn",
+            "H_Cap_surfer",
+            "CUP_H_C_Policecap_01",
+            "CUP_H_C_Fireman_Helmet_01",
+            "CUP_H_C_Beret_01",
+            "CUP_H_C_Ushanka_02",
+            "CUP_H_C_Beanie_03",
+            "CUP_H_TKI_Lungee_Open_02",
+            "CUP_H_TKI_Lungee_Open_02",
+            "CUP_H_TKI_Pakol_1_01",
+            "CUP_H_TKI_SkullCap_01",
+            "CUP_H_TKI_SkullCap_01"
+        ] select {_x call BRPVP_classExists};
+        private _oculosTipos = ["G_Diving"];
+        
+        // ESCOLHE MODA
+        private _moda = floor random 1000;
+        private _uniforme = _uniformes select (_moda mod count _uniformes);
+        private _cap = _caps select (_moda mod count _caps);
+        private _oculos = _oculosTipos select (_moda mod count _oculosTipos);
+        
+        // APLICA MODA
+        player forceAddUniform _uniforme;
+        if (_moda mod 5 isNotEqualTo 0) then {player addHeadGear _cap;};
+        if (_moda mod 4 isEqualTo 0) then {player addGoggles _oculos;};
+    };
 };
+
 BRPVP_pegaEstadoPlayer = {
 	//ARMAS (P,S,G)
 	_armaPriNome = primaryWeapon _this;
