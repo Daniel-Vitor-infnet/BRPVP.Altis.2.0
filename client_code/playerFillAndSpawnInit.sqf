@@ -771,13 +771,13 @@ if (BRPVP_checaExistenciaPlayerBdRetorno in ["nao_ta_no_bd","no_bd_e_morto"]) th
 		[player,_clone] spawn {
 			params ["_player","_clone"];
 
-			//PUT ITEMS ON PLAYER
+			//Itens inicias 1
 			if (!BRPVP_bornWithDeadItemsThisRound) then {
 				if (_clone isEqualTo "") then {
 					if (BRPVP_bornWithItems) then {
-						_player addBackpack selectRandom ["B_AssaultPack_blk","B_AssaultPack_khk","B_AssaultPack_rgr","B_AssaultPack_sgg","B_AssaultPack_dgtl"];
-						_player addVest "V_Press_F";
-						_aP = selectRandom ["hgun_Pistol_heavy_01_F"];
+						_player addBackpack selectRandom ["Police_Messenger_Bag"];
+						_player addVest "Police_SoldierVest";
+						_aP = selectRandom ["CUP_arifle_M16A1GL_FS"]; // Lugar para arma Principal
 						_mP = selectRandom getArray (configFile >> "CfgWeapons" >> _aP >> "magazines");
 						_player addMagazine _mP;
 						_player addMagazine _mP;
@@ -849,13 +849,13 @@ if (BRPVP_checaExistenciaPlayerBdRetorno in ["nao_ta_no_bd","no_bd_e_morto"]) th
 		//LIGA MODO ADMIN CASO SEJA UM ADMIN
 		if (BRPVP_isAdminOrModerator) then {BRPVP_onMapSingleClick = BRPVP_adminMapaClique;} else {BRPVP_onMapSingleClick = BRPVP_padMapaClique;};
 		
-		//ADD INITIAL LOOT
+		//Itens inicias 2
 		if (!BRPVP_bornWithDeadItemsThisRound) then {
 			if (_clone isEqualTo "") then {
 				if (BRPVP_bornWithItems) then {
-					player addBackpack selectRandom ["B_AssaultPack_blk","B_AssaultPack_khk","B_AssaultPack_rgr","B_AssaultPack_sgg","B_AssaultPack_dgtl"];
-					player addVest "V_Press_F";
-					_aP = selectRandom ["hgun_Pistol_heavy_01_F"];
+					player addBackpack selectRandom ["Police_Messenger_Bag"];
+					player addVest "Police_SoldierVest";
+					_aP = selectRandom ["CUP_arifle_M16A1GL_FS"]; // Lugar para arma Principal 
 					_mP = selectRandom getArray (configFile >> "CfgWeapons" >> _aP >> "magazines");
 					player addMagazine _mP;
 					player addMagazine _mP;
