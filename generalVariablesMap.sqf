@@ -435,7 +435,7 @@ BRPVP_travelingAidPlaces = [
 BRPVP_carrierMissPosLim = [750,1250];
 BRPVP_carrierMissPosBorder = 1000;
 
-//RANDOM RESPAWN
+//RANDOM RESPAWN spawn
 BRPVP_useRandomRespawnAllways = false;
 BRPVP_useRandomRespawnWhenSuicide = false;
 BRPVP_useRandomRespawnPlacesToChoose = 10;
