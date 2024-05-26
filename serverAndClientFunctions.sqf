@@ -9403,7 +9403,7 @@ BRPVP_atomicBombCodeAllClients = {
 	if (_type isEqualTo "normal") then {
 		private _smokeMult = BRPVP_atomicBombSmokeMult;
 
-		//RUN SOUND, SHAKE AND BLIND LIGHT
+		//EXECUTAR SOM, TREMER E CEGAR A LUZ
 		[_posAGL,_hObj,3000,45] spawn BRPVP_earthQuake;
 		[_posASL,4000,1000,_playerId,_player] spawn BRPVP_lightBlind;
 
