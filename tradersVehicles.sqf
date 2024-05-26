@@ -50,26 +50,26 @@ https://steamcommunity.com/profiles/76561197975554637/
 //
 BRPVP_tudoA3 = [
 ///------------------------Clássicos
-    ["ADMIN",localize "staff",localize "classicos","EM_Police_CrownVic","CrownVic",0],
-	["ADMIN",localize "staff",localize "classicos","EM_Police_Charger","Charger",0],
-	["ADMIN",localize "staff",localize "classicos","EM_Police_Explorer","Explorer",0],
-	["ADMIN",localize "staff",localize "classicos","EM_Police_Taurus","Taurus",0],
+    ["ADMIN",localize "staff",localize "classicos","EM_Police_CrownVic","CrownVic",0]
+  //["ADMIN",localize "staff",localize "classicos","EM_Police_Charger","Charger",0],
+  //["ADMIN",localize "staff",localize "classicos","EM_Police_Explorer","Explorer",0],
+  //["ADMIN",localize "staff",localize "classicos","EM_Police_Taurus","Taurus",0],
 ///------------------------Esportivos
-    ["ADMIN",localize "staff",localize "esportivos","EM_Police_BMWM5","M5",0],
-	["ADMIN",localize "staff",localize "esportivos","EM_Police_BMWX6","X6",0],
+  //["ADMIN",localize "staff",localize "esportivos","EM_Police_BMWM5","M5",0],
+  //["ADMIN",localize "staff",localize "esportivos","EM_Police_BMWX6","X6",0],
   //["ADMIN",localize "staff",localize "esportivos","EM_Police_Civic","Civic",0],
-	["ADMIN",localize "staff",localize "esportivos","EM_Malibu","Malibu",0],
+  //["ADMIN",localize "staff",localize "esportivos","EM_Malibu","Malibu",0],
 ///------------------------Pesados	
-	["ADMIN",localize "staff",localize "pesados","EM_Police_Savana","Savana",0],
+  //["ADMIN",localize "staff",localize "pesados","EM_Police_Savana","Savana",0],
   //["ADMIN",localize "staff",localize "pesados","EM_Police_Raptor","Raptor",0],
-	["ADMIN",localize "staff",localize "pesados","EM_Police_F550_SWAT","F550",0],
-	["ADMIN",localize "staff",localize "pesados","EM_Police_Insurgent","Insurgent",0],
+  //["ADMIN",localize "staff",localize "pesados","EM_Police_F550_SWAT","F550",0],
+  //["ADMIN",localize "staff",localize "pesados","EM_Police_Insurgent","Insurgent",0],
 ///------------------------Descaracterizados
   //["ADMIN",localize "staff",localize "descaracterizados","EM_Police_Raptor_UM","Raptor",0],
   //["ADMIN",localize "staff",localize "descaracterizados","EM_Police_Explorer_UM","Explorer",0],
-	["ADMIN",localize "staff",localize "descaracterizados","EM_Police_Taurus_UM","Taurus",0],
-	["ADMIN",localize "staff",localize "descaracterizados","EM_Police_BMWX6_UM","X6",0],
-	["ADMIN",localize "staff",localize "descaracterizados","EM_Malibu_UM","X6",0],
+  //["ADMIN",localize "staff",localize "descaracterizados","EM_Police_Taurus_UM","Taurus",0],
+  //["ADMIN",localize "staff",localize "descaracterizados","EM_Police_BMWX6_UM","X6",0],
+  //["ADMIN",localize "staff",localize "descaracterizados","EM_Malibu_UM","X6",0],
 ///------------------------Helicópteros
-	["ADMIN",localize "staff",localize "helicoptero","EM_Police_EC635","EC635",0]
+  //["ADMIN",localize "staff",localize "helicoptero","EM_Police_EC635","EC635",0]
 ];
