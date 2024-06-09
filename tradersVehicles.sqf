@@ -50,9 +50,9 @@ https://steamcommunity.com/profiles/76561197975554637/
 //
 BRPVP_tudoA3 = [
 ///------------------------Clássicos
-    ["ADMIN",localize "staff",localize "classicos","EM_Police_CrownVic","CrownVic",0]
+    ["ADMIN",localize "staff",localize "classicos","GDC_STAFF_CrownVic","CrownVic",0]
   //["ADMIN",localize "staff",localize "classicos","EM_Police_Charger","Charger",0],
-  //["ADMIN",localize "staff",localize "classicos","EM_Police_Explorer","Explorer",0],
+  //["ADMIN",localize "staff",localize "classicos","EM_Police_Explorer","Explorer",0], 
   //["ADMIN",localize "staff",localize "classicos","EM_Police_Taurus","Taurus",0],
 ///------------------------Esportivos
   //["ADMIN",localize "staff",localize "esportivos","EM_Police_BMWM5","M5",0],
