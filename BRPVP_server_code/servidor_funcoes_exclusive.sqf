@@ -230,11 +230,12 @@ BRPVP_calcPatrimonyOnServerUsingDB = {
 	};
 
 	//SPAWN BUILDINGS
-	private _holes = [];
+	private _execAll = [];
 	{
 		private ["_veiculo","_isSO"];
 		private _modelo = _x select 4;
 		private _owner = _x select 5;
+		private _exec = _x select 9;
 		if (_modelo isEqualTo "Land_Carrier_01_base_F") then {
 			private _idxPlayer = _playersId find _owner;
 			if (_idxPlayer > -1) then {(_players select _idxPlayer) set [3,(_players select _idxPlayer select 3)+BRPVP_carrierPrice];};
@@ -245,7 +246,20 @@ BRPVP_calcPatrimonyOnServerUsingDB = {
 				(_players select _idxPlayer) set [3,(_players select _idxPlayer select 3)+_price];
 			};
 		};
+		//EXEC OBJECT CODE
+		if (_exec isNotEqualTo "") then {_execAll pushBack [_exec,_modelo,_owner];};
 	} forEach _tableLinesBuildings;
+
+	//VR PAINT PATRIMONY
+	{
+		_x params ["_txt","_modelo","_owner"];
+		if (_modelo in BRPVP_vrObjectsClasses && _txt find "'] call BRPVP_vrObjectSetTextures;" isNotEqualTo -1) then {
+			if (_owner isNotEqualTo -1) then {
+				private _idxPlayer = _playersId find _owner;
+				if (_idxPlayer isNotEqualto -1) then {(_players select _idxPlayer) set [3,(_players select _idxPlayer select 3)+BRPVP_vrObjectsPaintPrice];};
+			};
+		};
+	} forEach _execAll;
 	{
 		private _valor = _x getVariable ["mny",-1];
 		private _own = _x getVariable ["own",-1];
@@ -1419,15 +1433,15 @@ BRPVP_setTurretOperator = {
 	};
 };
 BRPVP_carrierMissCreate = {
-	params ["_pos","_id"];
+	params ["_pos","_mid"];
 	private _carrier = createVehicle ["Land_Carrier_01_base_F",ASLToATL AGLToASL _pos,[],0,"NONE"];
 	_carrier setVariable ["BIS_carrierParts",_carrier getVariable "BIS_carrierParts",true];
 	_carrier setVectorUp [0,0,1];
 	[_carrier] call BIS_fnc_Carrier01PosUpdate;
 	BRPVP_carrierMissCreateObj = _carrier;
-	if !(_id isEqualTo 2) then {_id publicVariableClient "BRPVP_carrierMissCreateObj";};
 	[_carrier,AGLToASL _pos] remoteExec ["BRPVP_carrierMissFixAndInit",0];
 	[_carrier,0] remoteExecCall ["setFeatureType",0];
+	if (_mid isNotEqualTo 2) then {_mid publicVariableClient "BRPVP_carrierMissCreateObj";};
 };
 BRPVP_markDeleteOnDB = {
 	if (BRPVP_useExtDB3) then {
@@ -2676,8 +2690,8 @@ BRPVP_salvarPlayerServidor = {
 };
 BRPVP_salvarPlayerVaultServidor = {
 	private ["_key","_resultado"];
-	_estadoVault = _this select 0;
-	_vaultIdx = _this select 1;
+	private _estadoVault = _this select 0;
+	private _vaultIdx = _this select 1;
 	if (BRPVP_useExtDB3) then {
 		_key = format ["1:%1:saveVault:%2:%3:%4:%5:%6",BRPVP_protocolo,_estadoVault select 0,_estadoVault select 1,_estadoVault select 2,_estadoVault select 3,_vaultIdx];
 		_resultado = "extDB3" callExtension _key;

@@ -15,13 +15,12 @@ https://steamcommunity.com/profiles/76561197975554637/
 scriptName "BRPVP LOOT MONITOR";
 
 BRPVP_lootActive = [];
-BRPVP_lootActiveAddFnc = {
-	(_this select 1) params ["_obj","_repeat"];
+BRPVP_lootActiveAdd = {
+	params ["_obj","_repeat"];
 	if (_obj getVariable ["brpvp_loot_repeat",-1] isEqualto -1) then {_obj setVariable ["brpvp_loot_repeat",_repeat,false];};
 	if (_obj getVariable ["ml_lock_until",0] isEqualTo 0) then {_obj setVariable ["ml_lock_until",time+60,false];};
 	BRPVP_lootActive pushBack _obj;
 };
-"BRPVP_lootActiveAdd" addPublicVariableEventHandler {_this call BRPVP_lootActiveAddFnc;};
 private _ini = time;
 BRPVP_serverLootCheck = {
 	diag_log ("[BRPVP ACTIVE LOOT] count BRPVP_lootActive = "+str count BRPVP_lootActive+".");

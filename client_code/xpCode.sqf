@@ -118,22 +118,12 @@ BRPVP_xpPerks = [
 	],
 	//JUMP
 	[
-		localize "str_xp_perks_jump",
-		100000,
-		{BRPVP_perkJump = 1;},
-		true,
-		9,
-		[0,[]],
-		[3,1],
-		[true,{BRPVP_perkJump = 0;}]
-	],
-	[
 		localize "str_xp_perks_small_climb",
 		375000,
 		{BRPVP_perkJump = 2;},
 		true,
 		10,
-		[0,[9]],
+		[0,[]],
 		[3,2],
 		[true,{BRPVP_perkJump = 1;}]
 	],
@@ -143,7 +133,7 @@ BRPVP_xpPerks = [
 		{BRPVP_perkJump = 3;},
 		true,
 		11,
-		[2000000,[9,10]],
+		[2000000,[10]],
 		[3,3],
 		[true,{BRPVP_perkJump = 2;}]
 	],
@@ -157,7 +147,7 @@ BRPVP_xpPerks = [
 		},
 		true,
 		68,
-		[2500000,[9,10,11]],
+		[2500000,[10,11]],
 		[3,4],
 		[true,{
 			BRPVP_specialClimbOn = false;
@@ -170,7 +160,7 @@ BRPVP_xpPerks = [
 		{BRPVP_superJumpBoostCfg = 4;},
 		true,
 		74,
-		[2500000,[9,10,11,68]],
+		[2500000,[10,11,68]],
 		[3,5],
 		[true,{BRPVP_superJumpBoostCfg = 1;}]
 	],
@@ -267,7 +257,7 @@ BRPVP_xpPerks = [
 		[6,2],
 		[true,{BRPVP_towLandNumber = 2;}]
 	],
-	//VIRTUAL GARAGE
+	//VIRTUAL GARAGE WAIT
 	[
 		localize "str_xp_perks_vg_half_delay",
 		150000,
@@ -308,6 +298,7 @@ BRPVP_xpPerks = [
 		[7,4],
 		[true,{BRPVP_virtualGarageEverywhere = false;}]
 	],
+	//VIRTUAL GARAGE SLOTS QUANTITY
 	[
 		format [localize "str_xp_perks_vg_x_slots",1],
 		250000,
@@ -361,7 +352,7 @@ BRPVP_xpPerks = [
 	//BANK LIMIT
 	[
 		format [localize "str_xp_perks_bank_limit",40],
-		225000,
+		300000,
 		{
 			BRPVP_totalMoneyInBank = BRPVP_totalMoneyInBank+40000000;
 			player setVariable ["brpvp_max_in_bank",BRPVP_totalMoneyInBank,true];
@@ -380,7 +371,7 @@ BRPVP_xpPerks = [
 	],
 	[
 		format [localize "str_xp_perks_bank_limit",60],
-		925000,
+		750000,
 		{
 			BRPVP_totalMoneyInBank = BRPVP_totalMoneyInBank+60000000;
 			player setVariable ["brpvp_max_in_bank",BRPVP_totalMoneyInBank,true];
@@ -393,6 +384,26 @@ BRPVP_xpPerks = [
 			true,
 			{
 				BRPVP_totalMoneyInBank = BRPVP_totalMoneyInBank-60000000;
+				player setVariable ["brpvp_max_in_bank",BRPVP_totalMoneyInBank,true];
+			}
+		],
+		[]
+	],
+	[
+		format [localize "str_xp_perks_bank_limit",100],
+		1250000,
+		{
+			BRPVP_totalMoneyInBank = BRPVP_totalMoneyInBank+100000000;
+			player setVariable ["brpvp_max_in_bank",BRPVP_totalMoneyInBank,true];
+		},
+		true,
+		78,
+		[500000,[37,38]],
+		[9,3],
+		[
+			true,
+			{
+				BRPVP_totalMoneyInBank = BRPVP_totalMoneyInBank-100000000;
 				player setVariable ["brpvp_max_in_bank",BRPVP_totalMoneyInBank,true];
 			}
 		]
@@ -416,13 +427,13 @@ BRPVP_xpPerks = [
 		47,
 		[500000,[46]],
 		[10,2],
-		[true,{BRPVP_allowLandAutoPilot = BRPVP_allowLandAutoPilotCfg*0.5;}]
+		[true,{BRPVP_dukeNukemServiceDelay = BRPVP_dukeNukemServiceDelayCfg*0.5;}]
 	],
 	//AURA ILLUMINATION
 	[
 		localize "str_xp_aura_light_lvl1",
 		300000,
-		{[300,200] call BRPVP_auraCreateLights;},
+		{[600,400] call BRPVP_auraCreateLights;},
 		true,
 		48,
 		[250000,[]],
@@ -443,7 +454,11 @@ BRPVP_xpPerks = [
 	[
 		format [localize "str_xp_super_auto_run",1],
 		250000,
-		{BRPVP_superRunSpeed = BRPVP_superRunSpeedsArray select 2;BRPVP_superRunSpeedSelected = BRPVP_superRunSpeed;},
+		{
+			BRPVP_superRunSpeed = BRPVP_superRunSpeedsArray select 2;
+			BRPVP_superRunSpeedSelected = BRPVP_superRunSpeed;
+			BRPVP_extraSecJumpForceOnSuperRun = 1.25;
+		},
 		true,
 		56,
 		[0,[]],
@@ -451,12 +466,17 @@ BRPVP_xpPerks = [
 		[true,{
 			BRPVP_superRunSpeed = BRPVP_superRunSpeedsArray select 1;
 			if (BRPVP_superRunSpeedSelected > BRPVP_superRunSpeed) then {BRPVP_superRunSpeedSelected = BRPVP_superRunSpeed;};
+			BRPVP_extraSecJumpForceOnSuperRun = 1;
 		}]
 	],
 	[
 		format [localize "str_xp_super_auto_run",2],
 		500000,
-		{BRPVP_superRunSpeed = BRPVP_superRunSpeedsArray select 3;BRPVP_superRunSpeedSelected = BRPVP_superRunSpeed;},
+		{
+			BRPVP_superRunSpeed = BRPVP_superRunSpeedsArray select 3;
+			BRPVP_superRunSpeedSelected = BRPVP_superRunSpeed;
+			BRPVP_extraSecJumpForceOnSuperRun = 1.5;
+		},
 		true,
 		57,
 		[0,[56]],
@@ -464,12 +484,17 @@ BRPVP_xpPerks = [
 		[true,{
 			BRPVP_superRunSpeed = BRPVP_superRunSpeedsArray select 2;
 			if (BRPVP_superRunSpeedSelected > BRPVP_superRunSpeed) then {BRPVP_superRunSpeedSelected = BRPVP_superRunSpeed;};
+			BRPVP_extraSecJumpForceOnSuperRun = 1.25;
 		}]
 	],
 	[
 		format [localize "str_xp_super_auto_run",3],
 		750000,
-		{BRPVP_superRunSpeed = BRPVP_superRunSpeedsArray select 5;BRPVP_superRunSpeedSelected = BRPVP_superRunSpeed;},
+		{
+			BRPVP_superRunSpeed = BRPVP_superRunSpeedsArray select 5;
+			BRPVP_superRunSpeedSelected = BRPVP_superRunSpeed;
+			BRPVP_extraSecJumpForceOnSuperRun = 1.75;
+		},
 		true,
 		58,
 		[0,[56,57]],
@@ -477,6 +502,7 @@ BRPVP_xpPerks = [
 		[true,{
 			BRPVP_superRunSpeed = BRPVP_superRunSpeedsArray select 3;
 			if (BRPVP_superRunSpeedSelected > BRPVP_superRunSpeed) then {BRPVP_superRunSpeedSelected = BRPVP_superRunSpeed;};
+			BRPVP_extraSecJumpForceOnSuperRun = 1.5;
 		}]
 	],
 	//SIXTH SENSE
@@ -571,14 +597,58 @@ BRPVP_xpPerks = [
 		true,
 		71,
 		[3000000,[55]],
-		[15,1],
+		[15,2],
 		[true,{BRPVP_fradeBigOn = false;BRPVP_fradeDistance = 11;}]
 	],
-	//VOODOO RESISTENCE
+	//PERSONAL SHIELD
+	[
+		localize "str_xp_perks_shield",
+		625000,
+		{BRPVP_personalShieldLife = 10;},
+		true,
+		20,
+		[500000,[]],
+		[16,1],
+		[true,{BRPVP_personalShieldLife = 1;}]
+	],
+	[
+		localize "str_xp_perks_shield_nokia",
+		1000000,
+		{BRPVP_personalShieldLife = 25;},
+		true,
+		80,
+		[2500000,[20]],
+		[16,2],
+		[true,{BRPVP_personalShieldLife = 10;}]
+	],
+	//AUTO OPEN DOOR
+	[
+		localize "str_aopen_door_perk",
+		250000,
+		{BRPVP_autoOpenDoorPerk = true;},
+		true,
+		75,
+		[0,[]],
+		[17,1],
+		[true,{BRPVP_autoOpenDoorPerk = false;}]
+	],
+	[
+		localize "str_aopen_door_perk_fast",
+		300000,
+		{BRPVP_autoOpenDoorSpeed = 2.75;},
+		true,
+		81,
+		[0,[75]],
+		[17,2],
+		[true,{BRPVP_autoOpenDoorSpeed = 1;}]
+	],
+	//================
+	//INDIVIDUAL PERKS
+	//================
 	[
 		localize "str_xp_perks_voodoo_resistence",
 		500000,
-		{BRPVP_voodooMinEffectTime = (BRPVP_voodooMinEffectTime max 30)/3;},
+		{BRPVP_voodooMinEffectTime = BRPVP_voodooMinEffectTime/3;},
 		true,
 		77,
 		[0,[]],
@@ -623,16 +693,6 @@ BRPVP_xpPerks = [
 		[0,[]],
 		[BRPVP_xpPerksIndividualOrder,1],
 		[true,{BRPVP_magnetBetterAttraction = false;}]
-	],
-	[
-		localize "str_aopen_door_perk",
-		250000,
-		{BRPVP_autoOpenDoorPerk = true;},
-		true,
-		75,
-		[0,[]],
-		[BRPVP_xpPerksIndividualOrder,1],
-		[true,{BRPVP_autoOpenDoorPerk = false;}]
 	],
 	[
 		format [localize "str_xp_perks_bigger_map_circle","+25%"],
@@ -797,7 +857,7 @@ BRPVP_xpPerks = [
 				private _fei = -1;
 				BRPVP_artilleryLimit set [1,(BRPVP_artilleryLimit select 1) apply {_fei = _fei+1;_x-(BRPVP_artilleryLimit select 2 select _fei)}];
 			}
-		]		
+		]
 	],
 	[
 		localize "str_xp_perks_half_farm_time", //FARM AND CRAFT TIMES
@@ -818,16 +878,6 @@ BRPVP_xpPerks = [
 		[150000,[]],
 		[BRPVP_xpPerksIndividualOrder,1],
 		[true,{BRPVP_extraFuelConsume = BRPVP_extraFuelConsume apply {_x/1.5};}]
-	],
-	[
-		localize "str_xp_perks_shield", //STRONGER PERSONAL SHIELD
-		625000,
-		{BRPVP_personalShieldLife = 10;},
-		true,
-		20,
-		[350000,[]],
-		[BRPVP_xpPerksIndividualOrder,1],
-		[true,{BRPVP_personalShieldLife = 1;}]
 	],
 	[
 		format [localize "str_xp_perks_rise_spot_limit","+5.0KK"],
@@ -886,6 +936,120 @@ BRPVP_xpPerks = [
 		[true,{BRPVP_ubberFastDescent = false;}]
 	],
 	[
+		"BRPVP Meister",
+		0,
+		{
+			player setVariable ["brpvp_is_master",true,true];
+			([player]+BRPVP_meisterLightData) remoteExec ["BRPVP_shinePlayerCode",0];
+
+			//BRPVP_personalVaultCargoSize = BRPVP_personalVaultCargoSize*2;
+			player setVariable ["brpvp_vaults_xp",BRPVP_vaultNumberCfg+4,true];
+			BRPVP_superJumpBoostCfg = 10;
+			BRPVP_playerLifeMultiplier = BRPVP_playerLifeMultiplier*2;
+			BRPVP_towLandNumber = 5;
+			[[0,1/*CAR*/],[6,1/*SHIP*/],[7,2/*LIGHT DRONE*/],[1,1/*CAR ARMORED*/],[2,1/*APC*/],[3,1/*TANK*/],[4,1/*HELI*/],[5,1/*JET*/],[8,1/*ATTACK DRONE*/]] call BRPVP_addVgSlots;
+
+			BRPVP_totalMoneyInBank = BRPVP_totalMoneyInBank+200000000;
+			player setVariable ["brpvp_max_in_bank",BRPVP_totalMoneyInBank,true];
+
+			BRPVP_dukeNukemServiceDelay = BRPVP_dukeNukemServiceDelayCfg*0.5*0.5*0.5;
+			[3000,2000] call BRPVP_auraCreateLights;
+
+			BRPVP_nitroFlyCruiseTime = 60;
+			BRPVP_nitroFlyCoolDown = 0;
+
+			BRPVP_voodooMinEffectTime = BRPVP_voodooMinEffectTime/20;
+			BRPVP_vehSabotageFixChanceEachTry = BRPVP_vehSabotageFixChanceEachTry+0.3;
+
+			//MAP CIRCLE
+			BRPVP_mapVisibleCircleSizeMultiplier = BRPVP_mapVisibleCircleSizeMultiplier*1.5;
+			BRPVP_mapVisibleRadiusCfg = BRPVP_mapVisibleCircleSizeMultiplier*((BRPVP_mapaDimensoes select 0) max (BRPVP_mapaDimensoes select 1))/(2*2.5);
+			BRPVP_mapVisibleRadiusGlow = BRPVP_mapVisibleRadiusCfg*0.02;
+			BRPVP_mapVisibleRadius = BRPVP_mapVisibleRadiusCfg;
+
+			BRPVP_skyDiveMaxFlyTime = BRPVP_skyDiveMaxFlyTime*2;
+
+			BRPVP_specialItemsRemoveTime set [36,[1]];
+			BRPVP_specialItemsRemoveTime set [37,[1]];
+			BRPVP_specialItemsRemoveTime set [38,[1]];
+
+			BRPVP_xpRadioProtection = 0.1;
+			BRPVP_artilleryLimit set [1,(BRPVP_artilleryLimit select 1) apply {_x+15}];
+			BRPVP_farmAndCraftTime = BRPVP_farmAndCraftTime/2;
+			BRPVP_extraFuelConsume = BRPVP_extraFuelConsume apply {_x*2};
+
+			BRPVP_personalShieldLife = 50;
+			BRPVP_personalShieldNeutrine = true;
+
+			BRPVP_moneyOnHandToSpot = BRPVP_moneyOnHandToSpot+25000000;
+
+			BRPVP_airVehicleResistence = BRPVP_airVehicleResistence*2;
+			BRPVP_airVehicleResistenceCollision = BRPVP_airVehicleResistenceCollision*2;
+
+			BRPVP_farmDoubleChance = 0.75;
+			BRPVP_autoOpenDoorSpeed = 4;
+			BRPVP_extraSecJumpForceOnSuperRun = 2;
+			BRPVP_superRunCollisionDestroyHouse = true;
+		},
+		true,
+		79,
+		[5000000,[1,2,3,4,5,6,7,8,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,80,81]], //9,38,79
+		[BRPVP_xpPerksIndividualOrder,1],
+		[true,{
+			player setVariable ["brpvp_is_master",false,true];
+
+			//BRPVP_personalVaultCargoSize = BRPVP_personalVaultCargoSize/2;
+			player setVariable ["brpvp_vaults_xp",BRPVP_vaultNumberCfg+3,true];
+			BRPVP_superJumpBoostCfg = 4;
+			BRPVP_playerLifeMultiplier = BRPVP_playerLifeMultiplier/2;
+			BRPVP_towLandNumber = 3;
+			[[0,-1/*CAR*/],[6,-1/*SHIP*/],[7,-2/*LIGHT DRONE*/],[1,-1/*CAR ARMORED*/],[2,-1/*APC*/],[3,-1/*TANK*/],[4,-1/*HELI*/],[5,-1/*JET*/],[8,-1/*ATTACK DRONE*/]] call BRPVP_addVgSlots;
+
+			BRPVP_totalMoneyInBank = BRPVP_totalMoneyInBank-200000000;
+			player setVariable ["brpvp_max_in_bank",BRPVP_totalMoneyInBank,true];
+
+			BRPVP_dukeNukemServiceDelay = BRPVP_dukeNukemServiceDelayCfg*0.5*0.5;
+			[1500,1000] call BRPVP_auraCreateLights;
+
+			BRPVP_nitroFlyCruiseTime = 20;
+			BRPVP_nitroFlyCoolDown = 0;
+
+			BRPVP_voodooMinEffectTime = BRPVP_voodooMinEffectTime*20;
+			BRPVP_vehSabotageFixChanceEachTry = BRPVP_vehSabotageFixChanceEachTry-0.3;
+
+			//MAP CIRCLE
+			BRPVP_mapVisibleCircleSizeMultiplier = BRPVP_mapVisibleCircleSizeMultiplier/1.5;
+			BRPVP_mapVisibleRadiusCfg = BRPVP_mapVisibleCircleSizeMultiplier*((BRPVP_mapaDimensoes select 0) max (BRPVP_mapaDimensoes select 1))/(2*2.5);
+			BRPVP_mapVisibleRadiusGlow = BRPVP_mapVisibleRadiusCfg*0.02;
+			BRPVP_mapVisibleRadius = BRPVP_mapVisibleRadiusCfg;
+
+			BRPVP_skyDiveMaxFlyTime = BRPVP_skyDiveMaxFlyTime/2;
+
+			BRPVP_specialItemsRemoveTime set [36,[1]];
+			BRPVP_specialItemsRemoveTime set [37,[2]];
+			BRPVP_specialItemsRemoveTime set [38,[3]];
+
+			BRPVP_xpRadioProtection = 0.4;
+			BRPVP_artilleryLimit set [1,(BRPVP_artilleryLimit select 1) apply {_x-15}];
+			BRPVP_farmAndCraftTime = BRPVP_farmAndCraftTime*2;
+			BRPVP_extraFuelConsume = BRPVP_extraFuelConsume apply {_x/2};
+
+			BRPVP_personalShieldLife = 25;
+			BRPVP_personalShieldNeutrine = false;
+
+			BRPVP_moneyOnHandToSpot = BRPVP_moneyOnHandToSpot-25000000;
+
+			BRPVP_airVehicleResistence = BRPVP_airVehicleResistence/2;
+			BRPVP_airVehicleResistenceCollision = BRPVP_airVehicleResistenceCollision/2;
+
+			BRPVP_farmDoubleChance = 0.35;
+			BRPVP_autoOpenDoorSpeed = 2.75;
+			BRPVP_extraSecJumpForceOnSuperRun = 1.75;
+			BRPVP_superRunCollisionDestroyHouse = false;
+		}],
+		[]
+	],
+	[
 		"100% XP TO ALL",
 		0,
 		{},
@@ -896,6 +1060,130 @@ BRPVP_xpPerks = [
 		[true,{}]
 	]
 ];
+
+//SET PERKS DISABLED BY THE ADMIN F3 MENU
+{
+	_x params ["_id","_state"];
+	{if (_x select 4 isEqualTo _id) then {_x set [3,_state];};} forEach BRPVP_xpPerks;
+} forEach BRPVP_habilitiesState;
+
+BRPVP_sequencialPerks = [
+	[1,2,3,79],
+	[10,11],
+	[74,79],
+	[24,25],
+	[41,79],
+	[27,28,79],
+	[29,30,31],
+	[46,47,79],
+	[48,49,79],
+	[56,57,58,79],
+	[61,62,63],
+	[64,65,66,79],
+	[55,71],
+	[77,79],
+	[76,79],
+	[67,79],
+	[59,79],
+	[43,79],
+	[12,79],
+	[13,79],
+	[17,79],
+	[18,79],
+	[19,79],
+	[20,80,79],
+	[51,79],
+	[53,79],
+	[75,81,79]
+];
+
+//CREATE LIST OF PERKS IDS THAT NEED EXTRA TREATMENT TO TURN ON/OFF
+private _sequencialPerksOneElement = [];
+{_sequencialPerksOneElement append _x;} forEach BRPVP_sequencialPerks;
+_sequencialPerksOneElement = _sequencialPerksOneElement arrayIntersect _sequencialPerksOneElement;
+
+//CREATE ARRAY WITH ALL PERKS TO DISABLE
+private _allPerksId = [];
+private _allPerksIdx = [];
+private _perkRemove = [];
+private _perkRemoveIdx = [];
+{
+	private _ok = _x select 3;
+	private _id = _x select 4;
+	if (_ok) then {
+		if ((_id in BRPVP_perksForceOn || _id in BRPVP_perksForceOff)) then {
+			BRPVP_xpPerks select _forEachIndex set [3,false];
+			_perkRemove pushBack _id;
+			_perkRemoveIdx pushBack _forEachIndex;
+		};
+	};
+	_allPerksId pushBack _id;
+	_allPerksIdx pushBack _forEachIndex;
+} forEachReversed BRPVP_xpPerks;
+private _perkRemoveCodeOn = _perkRemove-BRPVP_perksForceOff;
+
+//SEPARATE PERKS TO DISABLE IN SIMPLE DISABLE AND COMPLEX DISABLE
+private _perkRemoveSimple = [];
+private _perkRemoveSimpleIdx = [];
+private _perkRemoveComplex = [];
+private _perkRemoveComplexIdx = [];
+{
+	if (_x in _sequencialPerksOneElement) then {
+		_perkRemoveComplex pushBack _x;
+		_perkRemoveComplexIdx pushBack (_perkRemoveIdx select _forEachIndex);
+	} else {
+		_perkRemoveSimple pushBack _x;
+		_perkRemoveSimpleIdx pushBack (_perkRemoveIdx select _forEachIndex);
+	};
+} forEach _perkRemove;
+
+//DISABLE SIMPLE PERKS
+{
+	private _arrayElement = BRPVP_xpPerks select (_perkRemoveSimpleIdx select _forEachIndex);
+	private _id = _arrayElement select 4;
+	if (_id in _perkRemoveCodeOn) then {
+		private _code = _arrayElement select 2;
+		call _code;
+	};
+} forEach _perkRemoveSimple;
+
+//DISABLE COMPLEX PERKS
+{
+	private _arrayElement = BRPVP_xpPerks select (_perkRemoveComplexIdx select _forEachIndex);
+	private _id = _arrayElement select 4;
+	private _mySequences = BRPVP_sequencialPerks select {_id in _x};
+	_mySequences = _mySequences apply {_x+[-1]};
+	{
+		private _seq = _x;
+		private _myIdx = _seq find _id;
+		private _after = _seq select (_myIdx+1);
+		if (_after isNotEqualTo -1) then {
+			private _aChange = BRPVP_xpPerks  select (_allPerksIdx select (_allPerksId find _after));
+
+			private _myCodeOn = _arrayElement select 2;
+			private _aChangeCodeOn = _aChange select 2;
+			if !(_myCodeOn isEqualType []) then {_myCodeOn = [_myCodeOn];};
+			if (_aChangeCodeOn isEqualType []) then {_aChange set [2,_myCodeOn+_aChangeCodeOn];} else {_aChange set [2,_myCodeOn+[_aChangeCodeOn]];};
+
+			private _myCodeOff = _arrayElement select 7 select 1;
+			private _aChangeCodeOff = _aChange select 7 select 1;
+			if !(_myCodeOff isEqualType []) then {_myCodeOff = [_myCodeOff];};
+			if (_aChangeCodeOff isEqualType []) then {(_aChange select 7) set [1,_aChangeCodeOff+_myCodeOff];} else {(_aChange select 7) set [1,[_aChangeCodeOff]+_myCodeOff];};
+		};
+	} forEach _mySequences;
+} forEach _perkRemoveComplex;
+
+//REMOVE REQUERIMENTS
+{
+	private _req = _x select 5 select 1;
+	{_req deleteAt (_req find _x);} forEach _perkRemove;
+} forEach BRPVP_xpPerks;
+{
+	private _perkElement = BRPVP_xpPerks select (_perkRemoveIdx select _forEachIndex);
+	(_perkElement select 5) set [1,[]];
+} forEach _perkRemove;
+
+//CONTINUE
 private _historicalMaxXp = 5000000;
 private _multMinLim = BRPVP_xpToBuyAllPerks/_historicalMaxXp;
 BRPVP_xpPerks = BRPVP_xpPerks apply {
@@ -910,13 +1198,9 @@ BRPVP_xpPerks = BRPVP_xpPerks apply {
 		_x select 4,
 		[_minLim,_x select 5 select 1],
 		_x select 6,
-		_x select 7		
+		_x select 7
 	]
 };
-{
-	_x params ["_id","_state"];
-	{if (_x select 4 isEqualTo _id) then {_x set [3,_state];};} forEach BRPVP_xpPerks;
-} forEach BRPVP_habilitiesState;
 private _totalCost = 0;
 {_totalCost = _totalCost+(_x select 1);} forEach BRPVP_xpPerks;
 BRPVP_xpToBuyAllPerks = BRPVP_xpPriceStep*round (BRPVP_xpToBuyAllPerks/BRPVP_xpPriceStep);
@@ -934,7 +1218,7 @@ BRPVP_xpPerks = BRPVP_xpPerks apply {[_x select 1,_x]};
 BRPVP_xpPerks sort false;
 BRPVP_xpPerks = BRPVP_xpPerks apply {_x select 1};
 for "_i" from 0 to (_diffQAbs-1) do {BRPVP_xpPerks select _i set [1,(BRPVP_xpPerks select _i select 1)-_diffQSignal*BRPVP_xpPriceStep];};
-private _totalCost = 0;
+_totalCost = 0;
 {_totalCost = _totalCost+(_x select 1);} forEach BRPVP_xpPerks;
 BRPVP_xpToBuyAllPerks = _totalCost;
 BRPVP_xpPerks = BRPVP_xpPerks apply {(_x select 6)+[_x select 1]+[_x]};
@@ -1167,7 +1451,8 @@ BRPVP_xpSetPerksOnStart = {
 	_xpConsumed = 0;
 	{
 		if ((_x select 4 in _activePerks || BRPVP_allXpOn || _isAdmin) && _x select 3) then {
-			call (_x select 2);
+			private _codeOn = _x select 2;
+			if (_codeOn isEqualType []) then {{call _x;} forEach _codeOn;} else {call _codeOn;};
 			_xpConsumed = _xpConsumed+(_x select 1);
 			_activePerks pushBackUnique (_x select 4);
 		};
@@ -1224,19 +1509,19 @@ BRPVP_auraCreateLights = {
 			_light setLightColor [1,1,1];
 			_light setLightAmbient [1,1,1];
 			_light setLightUseFlare false;
-			_light setLightIntensity 15;
+			_light setLightIntensity 13;
 			_light setLightDayLight true;
 			_light setLightAttenuation [_start,0,0.01,0];
 			BRPVP_auraLight = _light;
 			//MAKE LIGHT PULSE
 			private _lastVeh = [objectParent player,BRPVP_myUAVNow] select isNull objectParent player;
 			private _lastSpec = BRPVP_spectateOn;
-			if (isNull _lastVeh) then {_light attachTo [player,[0,0,2.5]];} else {_light attachTo [_lastVeh,[0,0,2+2.5]];};
+			if (isNull _lastVeh) then {_light attachTo [player,[0,0.75,2.5]];} else {_light attachTo [_lastVeh,[0,0.75,2+2.5]];};
 			_lastVeh = str _lastVeh;
 			waitUntil {
 				private _veh = [objectParent player,BRPVP_myUAVNow] select isNull objectParent player;
 				if (str _veh isNotEqualTo _lastVeh) then {
-					if (isNull _veh) then {_light attachTo [player,[0,0,2.5]];} else {_light attachTo [_veh,[0,0,2+2.5]];};
+					if (isNull _veh) then {_light attachTo [player,[0,0.75,2.5]];} else {_light attachTo [_veh,[0,0.75,2+2.5]];};
 					_lastVeh = str _veh;
 				};
 				if (BRPVP_spectateOn isNotEqualTo _lastSpec) then {
@@ -1248,7 +1533,7 @@ BRPVP_auraCreateLights = {
 					} else {
 						_start = _this select 0;
 						_pulseMax = _this select 1;
-						_light setLightIntensity 15;
+						_light setLightIntensity 13;
 					};
 				};
 				private _dDamMult = 1-(((BRPVP_disabledDamage min 0.5)*2) max BRPVP_playerDamageForCalc)^(1/3);

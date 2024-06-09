@@ -344,6 +344,11 @@ if (isNil "BRPVP_primeiraRodadaOk") then {
 	call BRPVP_variavies;
 
 	//VARIAVEIS ONE TIME SET
+	BRPVP_superRunCollisionDestroyHouse = false;
+	BRPVP_extraSecJumpForceOnSuperRun = 1;
+	BRPVP_personalShieldNeutrine = false;
+	BRPVP_autoOpenDoorSpeed = 1;
+	BRPVP_voodooHandle = -1;
 	BRPVP_autoOpenDoorPerk = false;
 	BRPVP_srunBeachDamage = true;
 	BRPVP_minervaBotAllUnitsObjsNearSee = [];
@@ -573,7 +578,7 @@ if (isNil "BRPVP_primeiraRodadaOk") then {
 	BRPVP_xpRadioProtection = 1;
 	BRPVP_killContractsShowAction = false;
 	BRPVP_perkSeeAllAI = false;
-	BRPVP_perkJump = 0;
+	BRPVP_perkJump = 1;
 	BRPVP_carrierUseStatus = 0;
 	BRPVP_missionNearDist = -1;
 	BRPVP_missionsPos = [];
@@ -1143,7 +1148,7 @@ if (isNil "BRPVP_primeiraRodadaOk") then {
 		};
 
 		//GENERAL CHECK
-		_isLockUnlock = _isVeh && _object getVariable ["own",-1] != -1 && _object getVariable ["id_bd",-1] isNotEqualTo -1;
+		_isLockUnlock = _isVeh && _object getVariable ["own",-1] isNotEqualTo -1 && _object getVariable ["id_bd",-1] isNotEqualTo -1;
 		_locked = _object getVariable ["brpvp_locked",false];
 
 		//TRY TO USE LOCK PICK IF HOUSE AND NEEDED AND EQUIPED IN PLAYER
@@ -1248,7 +1253,7 @@ if (isNil "BRPVP_primeiraRodadaOk") then {
 		_isOpActObj = objectParent player isEqualTo _object || (player call BRPVP_controlingUAV) isEqualTo _object ; //IS OPERATING ACTION OBJECT
 		if ((_isLockUnlock && (!_locked || (_locked && _isOpActObj && !(_action in ["GetOut","Eject"])))) || (!_isLockUnlock && (_canAccess || _object isEqualTo player)) || _forceAccess) then {
 			//CANCEL TURRET ENTRANCE IN PRIVATE WHELEED APC
-			if (_action in ["GetInTurret","MoveToTurret"] && typeOf _object in BRPVP_classRemoveTurret && _object getVariable ["id_bd",-1] != -1) then {
+			if (_action in ["GetInTurret","MoveToTurret"] && typeOf _object in BRPVP_classRemoveTurret && _object getVariable ["id_bd",-1] isNotEqualTo -1) then {
 				[localize "str_apc_turret_off",3,10,677] call BRPVP_hint;
 				true
 			} else {
@@ -3303,7 +3308,7 @@ if (isNil "BRPVP_primeiraRodadaOk") then {
 							_varBase = _flag getVariable ["brpvp_nf_base",[-35,[]]];
 							if (_tickTime-(_varBase select 0) >= 60) then {
 								{
-									if (_x getVariable ["id_bd",-1] isNotEqualTo -1 && {_x isKindOf "Building"}) then {
+									if (_x getVariable ["id_bd",-1] > -1 && {_x isKindOf "Building"}) then {
 										private _so = sizeOf typeOf _x;
 										private _fdRatio = ((_x distance2D _flag) max 25)/_fRad;
 										if (_so > 45 && _fdRatio > 0.25) then {
@@ -4181,7 +4186,7 @@ if (isNil "BRPVP_primeiraRodadaOk") then {
 				if (typeOf _co isEqualTo "Land_Billboard_F") then {
 					private _distOk = player distance _co < 200;
 					private _cam = _co getVariable ["brpvp_bb_camera_fake",objNull];
-					if (_co getVariable ["id_bd",-1] isNotEqualTo -1 && _distOk && !isNull _cam) then {
+					if (_co getVariable ["id_bd",-1] > -1 && _distOk && !isNull _cam) then {
 						private _changed = _cam isNotEqualTo _mlsc || _co isNotEqualTo BRPVP_lastBbLooking;
 						if (_changed) then {
 							private _camKey = "seccam"+str (_co getVariable "id_bd");
@@ -5043,6 +5048,10 @@ if (isNil "BRPVP_primeiraRodadaOk") then {
 	if (BRPVP_forceTracersToAllPlayers) then {
 		[player,["FiredMan",{call BRPVP_forcedTracerOnPlayer;}]] remoteExecCall ["addEventHandler",BRPVP_allNoServer,true];
 	};
+
+	//SET MEISTER LIGHTS
+	private _meisters = (call BRPVP_playersList-[player]) select {_x getVariable ["brpvp_is_master",false]};
+	{([_x]+BRPVP_meisterLightData) spawn BRPVP_shinePlayerCode;} forEach _meisters;
 } else {
 	//REDEFINE VARIAVEIS	
 	call BRPVP_variavies;

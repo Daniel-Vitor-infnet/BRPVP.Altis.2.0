@@ -611,7 +611,8 @@ BRPVP_useHouseGodMode = {
 };
 BRPVP_useAntiBaseBomb = {
 	private _near = [];
-	private _vecLimit = 5;
+	//private _vecLimit = 5;
+	private _vecLimit = 7.5;
 	private _posCam = AGLToASL positionCameraToWorld [0,0,0];
 	private _posCamAGL = positionCameraToWorld [0,0,0];
 	private _nearRuineds = (nearestObjects [BRPVP_myPlayerOrUAV,[],50]) select {_x getVariable ["id_bd",-1] isNotEqualTo -1 && _posCamAGL distance _x < 0.5*(boundingBoxReal _x select 2)+_vecLimit};
@@ -2197,7 +2198,7 @@ BRPVP_usedTrench = {
 					for "_a" from 15 to 360 step 15 do {
 						private _destine = AGLToASL [(_forCenter select 0)+_rad*sin _a,(_forCenter select 1)+_rad*cos _a,_z];
 						private _lis = lineIntersectsSurfaces [_forCenter,_destine,BRPVP_myPlayerOrUAV,objNull,true,-1];
-						private _denied = _lis select {(_x select 2) isKindOf "Building" || (_x select 2) isKindOf "Wall" || (_x select 2) getVariable ["id_bd",-1] isNotEqualTo -1};
+						private _denied = _lis select {(_x select 2) isKindOf "Building" || (_x select 2) isKindOf "Wall" || (_x select 2) getVariable ["id_bd",-1] > -1};
 						private _isOk = !surfaceIsWater _destine && !isOnRoad (_destine select [0,2]);
 						if !(_denied isEqualTo [] && _isOk) exitWith {_okToDig = false;};
 					};
@@ -2675,46 +2676,30 @@ BRPVP_useMiraculousEyeDrop = {
 		false
 	} else {
 		if (player getVariable ["brpvp_blind",false]) then {
-			if (BRPVP_lightBlindRunning isNotEqualTo 0) then {
+			if (BRPVP_voodooHandle isEqualTo -1) then {
 				"erro" call BRPVP_playSound;
 				false
 			} else {
+				BRPVP_miraculousEyeDropUsing = true;
 				0 spawn {
-					if (BRPVP_lightBlindRunning isNotEqualTo 0) then {
+					"eye_drop" call BRPVP_playSound;
+					["<img shadow='0' size='3.0' image='"+BRPVP_imagePrefix+"BRP_imagens\eye_drop_begin.paa'/>",0,0.25,3,2.2,0,32657] call BRPVP_fnc_dynamicText;
+					uiSleep 2.5;
+					if (BRPVP_voodooHandle isEqualTo -1) then {
 						"erro" call BRPVP_playSound;
 						["BRPVP_miraculousEyeDrop",1] call BRPVP_sitAddItem;
+						["",0,0.25,3,2.2,0,32657] call BRPVP_fnc_dynamicText;
+						BRPVP_miraculousEyeDropUsing = false;
 					} else {
-						if (BRPVP_blindHandle isNotEqualTo -1) then {
-							"eye_drop" call BRPVP_playSound;
-							["<img shadow='0' size='3.0' image='"+BRPVP_imagePrefix+"BRP_imagens\eye_drop_begin.paa'/>",0,0.25,3,2.2,0,32657] call BRPVP_fnc_dynamicText;
-							uiSleep 2.5;
-							if (BRPVP_lightBlindRunning isNotEqualTo 0) then {
-								["",0,0.25,3,2.2,0,32657] call BRPVP_fnc_dynamicText;
-								"erro" call BRPVP_playSound;
-								["BRPVP_miraculousEyeDrop",1] call BRPVP_sitAddItem;
-							} else {
-								BRPVP_miraculousEyeDropUsing = true;
-								BRPVP_blindHandle ppEffectAdjust [1,1,0,[0,0,0,0],[1,1,1,1],[0.299,0.587,0.114,1],[-1,-1,0,0,0,0,0]];
-								BRPVP_blindHandle ppEffectCommit 3;
-								["<img shadow='0' size='3.0' image='"+BRPVP_imagePrefix+"BRP_imagens\eye_drop_end.paa'/>",0,0.25,1,3,0,32658] call BRPVP_fnc_dynamicText;
-								waitUntil {ppEffectCommitted BRPVP_blindHandle || BRPVP_lightBlindRunning isNotEqualTo 0};
-								if (BRPVP_lightBlindRunning isNotEqualTo 0) then {
-									["",0,0.25,3,2.2,0,32657] call BRPVP_fnc_dynamicText;
-									["",0,0.25,3,2.2,0,32658] call BRPVP_fnc_dynamicText;
-									"erro" call BRPVP_playSound;
-									["BRPVP_miraculousEyeDrop",1] call BRPVP_sitAddItem;
-								} else {
-									BRPVP_blindHandle ppEffectEnable false;
-									ppEffectDestroy BRPVP_blindHandle;
-									BRPVP_blindHandle = -1;
-									player setVariable ["brpvp_blind",false,true];
-									(player getVariable "id_bd") remoteExecCall ["BRPVP_blindPlayersIdRemove",2];
-								};
-								BRPVP_miraculousEyeDropUsing = false;
-							};
-						} else {
-							player setVariable ["brpvp_blind",false,true];
-						};
+						BRPVP_voodooHandle ppEffectAdjust [1,1,0,[0,0,0,0],[1,1,1,1],[0.299,0.587,0.114,1],[-1,-1,0,0,0,0,0]];
+						BRPVP_voodooHandle ppEffectCommit 3;
+						["<img shadow='0' size='3.0' image='"+BRPVP_imagePrefix+"BRP_imagens\eye_drop_end.paa'/>",0,0.25,1,3,0,32658] call BRPVP_fnc_dynamicText;
+						waitUntil {ppEffectCommitted BRPVP_voodooHandle};
+						BRPVP_voodooHandle ppEffectEnable false;
+						ppEffectDestroy BRPVP_voodooHandle;
+						BRPVP_voodooHandle = -1;
+						player setVariable ["brpvp_blind",false,true];
+						BRPVP_miraculousEyeDropUsing = false;
 					};
 				};
 				true

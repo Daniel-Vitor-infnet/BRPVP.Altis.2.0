@@ -19,43 +19,44 @@ BRPVP_criaMissaoDePredio = {
 	BRPVP_criaMissaoDePredioEspera = BRPVP_criaMissaoDePredioIdc + 1;
 	
 	//CLASSE DOS PREDIOS ONDE PODE TER MISSAO
-	_class = BRPVP_mapaRodando select 11 select 1;
+	private _class = BRPVP_mapaRodando select 11 select 1;
 
 	//SETA TIPO DE SPAWN DO PREDIO
-	_cSDentro = BRPVP_mapaRodando select 11 select 2;
+	private _cSDentro = BRPVP_mapaRodando select 11 select 2;
 
 	//PEGA PREDIOS
 	if (isNil "BRPVP_bravoMissObjs") then {
 		BRPVP_bravoMissObjs = [];
 		{
-			_buClass = _x;
-			_objs = BRPVP_centroMapa nearObjects [_buClass,20000];
+			private _buClass = _x;
+			private _objs = BRPVP_centroMapa nearObjects [_buClass,20000];
 			{
-				_obj = _x;
-				_notInRadioArea = {_obj distance (_x select 0) <= (_x select 1)+30} count BRPVP_radioAreas isEqualTo 0;
-				_notInWater = !surfaceIsWater getPosWorld _obj;
-				_noDbId = _obj getVariable ["id_bd",-1] isEqualTo -1;
-				if (typeOf _obj isEqualTo _buClass && _notInRadioArea && _notInWater && _noDbId) then {BRPVP_bravoMissObjs pushBack _obj;};
+				private _obj = _x;
+				private _notInRadioArea = {_obj distance (_x select 0) <= (_x select 1)+30} count BRPVP_radioAreas isEqualTo 0;
+				private _notInWater = !surfaceIsWater getPosWorld _obj;
+				private _noDbId = _obj getVariable ["id_bd",-1] isEqualTo -1;
+				private _notInSafezone = {(_x select 0) distanceSqr _obj <= (_x select 1)} count BRPVP_safeZonesOtherMethodQuad isEqualTo 0;
+				if (typeOf _obj isEqualTo _buClass && _notInRadioArea && _notInWater && _noDbId && _notInSafezone) then {BRPVP_bravoMissObjs pushBack _obj;};
 			} forEach _objs;
 		} forEach _class;
 	};
 		
 	//ESCOLHE PREDIO E PEGA POSICOES INTERNAS
-	_opcoes = [];
-	_siegeLocals = [];
+	private _opcoes = [];
+	private _siegeLocals = [];
 	{if (_x in [1,2]) then {_siegeLocals pushBack (BRPVP_locaisImportantes select _forEachIndex);};} forEach BRPVP_closedCityRunning;
 	BRPVP_bravoMissObjs = BRPVP_bravoMissObjs-[objNull];
 	{
-		_bu = _x;
+		private _bu = _x;
 		if (_bu getVariable ["msi",-1] isEqualTo -1) then {
-			_onSiege = false;
+			private _onSiege = false;
 			{
-				_pos = _x select 0;
-				_rad = _x select 1;
+				private _pos = _x select 0;
+				private _rad = _x select 1;
 				if (_pos distance _bu < _rad*1.125) exitWith {_onSiege = true;};
 			} forEach _siegeLocals;
 			if (!_onSiege) then {
-				_onflag = false;
+				private _onflag = false;
 				{if (_bu distance2D _x < _x call BRPVP_getFlagRadius) exitWith {_onflag = true;};} forEach BRPVP_allFlags;
 				if (!_onflag) then {_opcoes pushBack _bu;};
 			};
@@ -65,41 +66,37 @@ BRPVP_criaMissaoDePredio = {
 	_opcoes = _opcoes - [objNull];
 	if (count _opcoes isEqualTo 0) exitWith {diag_log "[BRPVP MISSBU] NO FREE BUILDINGS FOR MISSION!";};
 	diag_log "[BRPVP MISSBU] FOUND BUILDING FOR MISSION!";
-	_missBu = objNull;
-	_tempClass = + _class;
+	private _missBu = objNull;
+	private _tempClass = +_class;
 	while {isNull _missBu} do {
-		_classWanted = _tempClass call BIS_fnc_selectRandom;
+		private _classWanted = _tempClass call BIS_fnc_selectRandom;
+		private _tempArr = [];
 		_tempClass = _tempClass - [_classWanted];
-		_tempArr = [];
-		{
-			if (typeOf _x == _classWanted) then {_tempArr pushBack _x;};
-		} forEach _opcoes;
-		if (count _tempArr > 0) then {
-			_missBu = _tempArr call BIS_fnc_selectRandom;
-		};
+		{if (typeOf _x isEqualTo _classWanted) then {_tempArr pushBack _x;};} forEach _opcoes;
+		if (count _tempArr > 0) then {_missBu = _tempArr call BIS_fnc_selectRandom;};
 	};
 	_missBu setVariable ["msi",BRPVP_criaMissaoDePredioIdc,true];
 	[_missBu,false] remoteExecCall ["allowDamage",0,true];
-	_sirene = nearestObject [_missBu,"Land_Loudspeakers_F"];
+	private _sirene = nearestObject [_missBu,"Land_Loudspeakers_F"];
 	if (isNull _sirene) then {_sirene = _missBu;};
 	if (!isNull _sirene) then {[_sirene,"sirene",1250] remoteExecCall ["BRPVP_tocaSom",0];};
 	sleep 35;
-	_buAllPos = _missBu buildingPos -1;
+	private _buAllPos = _missBu buildingPos -1;
 
 	//CRIA PREMIO
-	_moneyBoxValor = BRPVP_mapaRodando select 11 select 4;
-	_moneyBoxNumber = BRPVP_mapaRodando select 11 select 5;
-	_itemBoxValor = BRPVP_mapaRodando select 11 select 6;
-	_itemBoxNumber = BRPVP_mapaRodando select 11 select 7;
-	_caixas = [];
+	private _moneyBoxValor = BRPVP_mapaRodando select 11 select 4;
+	private _moneyBoxNumber = BRPVP_mapaRodando select 11 select 5;
+	private _itemBoxValor = BRPVP_mapaRodando select 11 select 6;
+	private _itemBoxNumber = BRPVP_mapaRodando select 11 select 7;
+	private _caixas = [];
 
 	//CREATE MONEY BOX
 	for "_i" from 1 to _moneyBoxNumber do {
 		//CRIA CAIXA
-		_caixa = createVehicle ["Box_IND_Wps_F",[_missBu,5] call BRPVP_emVoltaBB,[],0,"NONE"];
+		private _caixa = createVehicle ["Box_IND_Wps_F",[_missBu,5] call BRPVP_emVoltaBB,[],0,"NONE"];
 		_caixa allowDamage false;
-		_caixas pushBack _caixa;
 		_caixa setDir random 360;
+		_caixas pushBack _caixa;
 
 		//ESVAZIA CAIXA
 		clearMagazineCargoGlobal _caixa;
@@ -114,20 +111,20 @@ BRPVP_criaMissaoDePredio = {
 	//CREATE ITEM BOX
 	for "_i" from 1 to _itemBoxNumber do {
 		//CRIA CAIXA
-		_caixa = createVehicle ["Box_IND_Wps_F",[_missBu,5] call BRPVP_emVoltaBB,[],0,"NONE"];
+		private _caixa = createVehicle ["Box_IND_Wps_F",[_missBu,5] call BRPVP_emVoltaBB,[],0,"NONE"];
 		_caixa allowDamage false;
-		_caixas pushBack _caixa;
 		_caixa setDir random 360;
+		_caixas pushBack _caixa;
 		[_caixa,_itemBoxValor,selectRandom [2,3,4,5],true,5,1] call BRPVP_createCompleteLootBox;
 	};
 
 	//COLOCA BOTS
-	_grp = createGroup [WEST,true];
-	_uLado = selectRandom BRPVP_missionWestGroups;
-	_missBotsEm = [];
+	private _grp = createGroup [WEST,true];
+	private _uLado = selectRandom BRPVP_missionWestGroups;
+	private _missBotsEm = [];
 	for "_j" from 1 to 6 do {
-		_esp = _uLado select ((_j-1) mod (count _uLado));
-		_unidade = _grp createUnit [_esp,[_missBu,3] call BRPVP_emVoltaBB,[],0,"NONE"];
+		private _esp = _uLado select ((_j-1) mod (count _uLado));
+		private _unidade = _grp createUnit [_esp,[_missBu,3] call BRPVP_emVoltaBB,[],0,"NONE"];
 		[_unidade] joinSilent _grp;
 		_missBotsEm pushBack _unidade;
 		_unidade setSkill (BRPVP_AISkill select 0 select 0);
@@ -148,7 +145,7 @@ BRPVP_criaMissaoDePredio = {
 	BRPVP_criaMissaoDePredioIdc = BRPVP_criaMissaoDePredioIdc + 1;
 	
 	//CRIA WAYPOINT PARA BOT PERMANECER NO LOCAL
-	_wp = _grp addWaypoint [_missBu,0];
+	private _wp = _grp addWaypoint [_missBu,0];
 	_wp setWaypointCompletionRadius 65;
 	_wp setWayPointType "LOITER";
 

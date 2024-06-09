@@ -180,7 +180,8 @@ BRPVP_specialItems = [
 	"BRPVP_antiAtomicBomb", //140
 	"BRPVP_mammothAmmo",
 	"BRPVP_playerLaunchSuper",
-	"BRPVP_voodooDoll"
+	"BRPVP_voodooDoll",
+	"BRPVP_goldBars"
 ];
 
 if (isServer) then {
@@ -296,6 +297,7 @@ if (isServer) then {
 		BRPVP_usePaydAccess = false;
 		BRPVP_admins pushBackUnique getPlayerUid player;
 		BRPVP_restartTimes = [];
+		BRPVP_xpToBuyAllPerks = 1000000;
 
 		private _ss = player say3D "server_loading";
 		BRPVP_stopElevatorSound = false;
@@ -846,6 +848,7 @@ if (hasInterface) then {
 		player setVariable ["brpvp_ai_simu_dist",BRPVP_aiSimuDistOnFoot,2];
 		player setVariable ["brpvp_mafiwao",[[],false],true];
 		player setVariable ["brpvp_extra_protection",false,true];
+		player setVariable ["brpvp_is_master",false,true];
 		enableRadio false;
 		enableSentences false;
 
@@ -1107,6 +1110,7 @@ if (hasInterface) then {
 			BRPVP_usePaydAccess = false;
 			BRPVP_admins pushBackUnique BRPVP_playerServerUID;
 			BRPVP_restartTimes = [];
+			BRPVP_xpToBuyAllPerks = 1000000;
 		};
 
 		if (!BRPVP_useComplexLocalBuildings) then {BRPVP_buildingHaveDoorListCVL = [];};
@@ -1236,6 +1240,7 @@ if (hasInterface) then {
 		player setVariable ["brpvp_ai_simu_dist",BRPVP_aiSimuDistOnFoot,2];
 		player setVariable ["brpvp_mafiwao",[[],false],true];
 		player setVariable ["brpvp_extra_protection",false,true];
+		player setVariable ["brpvp_is_master",false,true];
 		enableRadio false;
 		enableSentences false;
 

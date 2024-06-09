@@ -97,13 +97,13 @@ BRPVP_mobiusZombiesPercentage = 0.025; //DEFAULT: 25 IN EACH 1000 ZOMBIES ARE MO
 BRPVP_mobiusZombiesLife = 15;
 BRPVP_mobiusZombiesAmmoRepeat = 20;
 
-BRPVP_zombieKillRewardBase = 10; //ESSA É A RECOMPENSA BÁSICA (PARA ZUMBIS DE NÍVEL 1). REWARD = ZOMBIE LEVEL * BRPVP_zombieKillRewardBase.
+BRPVP_zombieKillRewardBase = 300; //THIS IS THE BASIC REWARD (FOR ZOMBIES LEVEL 1). REWARD = ZOMBIE LEVEL * BRPVP_zombieKillRewardBase.
 
-//ZUMBIS MÁXIMOS AO REDOR
-BRPVP_zombieMaxLocalPerPlayer = 5; // Zumbie Máximo local por jogador
-BRPVP_zombieMaxLocal = 15; // Zumbie Max Local
+//MAX ZOMBIES ARROUND
+BRPVP_zombieMaxLocalPerPlayer = 5;
+BRPVP_zombieMaxLocal = 10;
 
-//DISTRAÇÃO DE ZUMBIS
+//ZOMBIE DISTRACTION
 BRPVP_zombieDistanceFromSmokeToCatchAttention = 50;
 BRPVP_zombieDistractAmmo = [
 	//SLUG
@@ -182,6 +182,11 @@ BRPVP_rZedsCfgKillReward = 35000;
 BRPVP_spawnZombiesItemOnPve = true;
 BRPVP_spawnZombiesItemCoolDown = 10; //SECONDS
 BRPVP_spawnZombiesItemMaxNearZombies = 50;
+
+//ZEDS HIT SOUNDS
+BRPVP_zedsHitSoundsCfg = ["zed_hit_01","zed_hit_02","zed_hit_03","zed_hit_04","zed_hit_11","zed_hit_13","zed_hit_14","zed_hit_16","zed_hit_17","zed_hit_18"];
+BRPVP_zedsHitSoundsCycleMin = 0.1;
+BRPVP_zedsHitSoundsCycleRandom = 0.15;
 
 //================================================
 //= DON'T CHANGE THE CODE BELLOW

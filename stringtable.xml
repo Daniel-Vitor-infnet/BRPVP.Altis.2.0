@@ -4698,14 +4698,13 @@
 				<German>Du kannst Spieler innerhalb eines PVP-Bereichs nicht verletzen</German>
 			</Key>
 			<Key ID="str_quad_time">
-                <Original>Este veículo dura %1 segundos!</Original>
-                <English>This vehicle lasts %1 seconds!</English>
-                <Portuguese>Este veículo dura %1 segundos!</Portuguese>
-                <Russian>Этот транспорт исчезнет через %1 секунд!</Russian>
-                <Chinesesimp>这辆车将持续 %1 秒!</Chinesesimp>
-                <Chinese>这辆车将持续 %1 秒!</Chinese>
-                <German>Dieses Fahrzeug wird in %1 Sekunden verschwinden!</German>
-                <France>Ce véhicule dure %1 secondes!</France>
+				<Original>This quadricycle will remains for %1 seconds!</Original>
+				<English>This quadricycle will remains for %1 seconds!</English>
+				<Portuguese>Este quadriciclo dura %1 segundos!</Portuguese>
+				<Russian>Квадроцикл исчезнет через %1 секунд!</Russian>
+				<Chinesesimp>这辆初始沙滩车只会存在 %1 秒!</Chinesesimp>
+				<Chinese>这辆初始沙滩车只会存在 %1 秒!</Chinese>
+				<German>Dieses Spawn-Fahrzeug wird in %1 sekunden Verschwinden!!!</German>
 			</Key>
 			<Key ID="str_radar_deactived">
 				<Original>Radar deactived...</Original>
@@ -15254,7 +15253,7 @@
 				<Original>Set Vaults Tip</Original>
 				<English>Set Vaults Tip</English>
 				<Portuguese>Dicas dos Cofres</Portuguese>
-				<Russian>Set Vaults Tip</Russian>
+				<Russian>Установить Подсказки для Сейфов</Russian>
 				<Chinesesimp>设置保险箱标签</Chinesesimp>
 				<Chinese>设置保险箱标签</Chinese>
 				<German>Tresor bennenen</German>
@@ -15274,7 +15273,7 @@
 				<Original>World Destroyer</Original>
 				<English>World Destroyer</English>
 				<Portuguese>Destruidor de Mundos</Portuguese>
-				<Russian>World Destroyer</Russian>
+				<Russian>Сотона!</Russian>
 				<Chinesesimp>World Destroyer</Chinesesimp>
 				<Chinese>World Destroyer</Chinese>
 				<German>Welt Zerstört (Atom-Bomben)</German>
@@ -15284,7 +15283,7 @@
 				<Original>World Destroyer (Atomic Bombs)</Original>
 				<English>World Destroyer (Atomic Bombs)</English>
 				<Portuguese>Destruidor de Mundos (Bombas Atômicas)</Portuguese>
-				<Russian>World Destroyer (Atomic Bombs)</Russian>
+				<Russian>Сотона! (Атомны бомбашки)</Russian>
 				<Chinesesimp>World Destroyer (Atomic Bombs)</Chinesesimp>
 				<Chinese>World Destroyer (Atomic Bombs)</Chinese>
 				<German>Welt Zerstört (Atom-Bomben)</German>
@@ -15294,7 +15293,7 @@
 				<Original>Super Player Launch</Original>
 				<English>SuperPlayer Launch</English>
 				<Portuguese>Super Lançamento do Player</Portuguese>
-				<Russian>Super Запуск Игрока</Russian>
+				<Russian>Улучшеный Запуск Игрока</Russian>
 				<Chinesesimp>Super 弹射玩家</Chinesesimp>
 				<Chinese>Super 弹射玩家</Chinese>
 				<German>Super Spieler Katapult</German>
@@ -15304,7 +15303,7 @@
 				<Original>Sabotage Vehicle $ %1K</Original>
 				<English>Sabotage Vehicle $ %1K</English>
 				<Portuguese>Sabotar Veículo $ %1K</Portuguese>
-				<Russian>Sabotage Vehicle $ %1K</Russian>
+				<Russian>Саботировать Технику $ %1K</Russian>
 				<Chinesesimp>Sabotage Vehicle $ %1K</Chinesesimp>
 				<Chinese>Sabotage Vehicle $ %1K</Chinese>
 				<German>Fahrzeug Sabotieren $ %1K</German>
@@ -15314,7 +15313,7 @@
 				<Original>The vehicle is already sabotaged</Original>
 				<English>The vehicle is already sabotaged</English>
 				<Portuguese>O veículo ja esta sabotado</Portuguese>
-				<Russian>The vehicle is already sabotaged</Russian>
+				<Russian>Данная Техника уже Саботирована</Russian>
 				<Chinesesimp>The vehicle is already sabotaged</Chinesesimp>
 				<Chinese>The vehicle is already sabotaged</Chinese>
 				<German>Das Fahrzeug wurde Sabotiert</German>
@@ -15324,7 +15323,7 @@
 				<Original>Fast Vehicle Sabotage Fix</Original>
 				<English>Fast Vehicle Sabotage Fix</English>
 				<Portuguese>Concerto Rápido de Sabotagem</Portuguese>
-				<Russian>Fast Vehicle Sabotage Fix</Russian>
+				<Russian>Быстрая починка Саботированной Техники</Russian>
 				<Chinesesimp>Fast Vehicle Sabotage Fix</Chinesesimp>
 				<Chinese>Fast Vehicle Sabotage Fix</Chinese>
 				<German>Sobotiertes Fahrzeug schnell Reparatur</German>
@@ -15334,7 +15333,7 @@
 				<Original>%1%2 chance to fix!</Original>
 				<English>%1%2 chance to fix!</English>
 				<Portuguese>%1%2 chance de concertar!</Portuguese>
-				<Russian>%1%2 chance to fix!</Russian>
+				<Russian>%1%2 успешности починки!</Russian>
 				<Chinesesimp>%1%2 chance to fix!</Chinesesimp>
 				<Chinese>%1%2 chance to fix!</Chinese>
 				<German>%1%2 Chance zu Reparieren!</German>
@@ -15344,7 +15343,7 @@
 				<Original>Paint VR Block</Original>
 				<English>Paint VR Block</English>
 				<Portuguese>Pintar Block VR</Portuguese>
-				<Russian>Paint VR Block</Russian>
+				<Russian>Покрасить VR Блок</Russian>
 				<Chinesesimp>Paint VR Block</Chinesesimp>
 				<Chinese>Paint VR Block</Chinese>
 				<German>VR-Block bemalen</German>
@@ -15354,7 +15353,7 @@
 				<Original>You have %1 minutes to change colors for free.</Original>
 				<English>You have %1 minutes to change colors for free.</English>
 				<Portuguese>Você tem %1 minutos para trocar as cores de graça.</Portuguese>
-				<Russian>You have %1 minutes to change colors for free.</Russian>
+				<Russian>У тебя есть %1 минут на изменение цвета VR Блока бесплатно.</Russian>
 				<Chinesesimp>You have %1 minutes to change colors for free.</Chinesesimp>
 				<Chinese>You have %1 minutes to change colors for free.</Chinese>
 				<German>Sie haben %1 Minuten Zeit, um kostenlos die Farben zu ändern.</German>
@@ -15364,7 +15363,7 @@
 				<Original>Voodoo Doll</Original>
 				<English>Voodoo Doll</English>
 				<Portuguese>Boneco Voodoo</Portuguese>
-				<Russian>Voodoo Doll</Russian>
+				<Russian>Кукла Вуду</Russian>
 				<Chinesesimp>Voodoo Doll</Chinesesimp>
 				<Chinese>Voodoo Doll</Chinese>
 				<German>Voodoo Puppe</German>
@@ -15374,113 +15373,65 @@
 				<Original>Resistance to Voodoo</Original>
 				<English>Resistance to Voodoo</English>
 				<Portuguese>Resistência ao Voodoo</Portuguese>
-				<Russian>Resistance to Voodoo</Russian>
+				<Russian>Сопротивляемость магии Вуду</Russian>
 				<Chinesesimp>Resistance to Voodoo</Chinesesimp>
 				<Chinese>Resistance to Voodoo</Chinese>
 				<German>Widerstand gegen Voodoo</German>
 				<France>Resistance au Vaudou</France>	
 			</Key>
-			<Key ID="str_free_to_use_123">
-				<Original></Original>
-				<English></English>
-				<Portuguese></Portuguese>
-				<Russian></Russian>
-				<Chinesesimp></Chinesesimp>
-				<Chinese></Chinese>
-				<German></German>
-				<French></French>
-				<Polish></Polish>
-				<Czech></Czech>
-				<Italian></Italian>
+			<Key ID="str_xp_perks_shield_nokia">
+				<Original>Nokia Personal Shield</Original>
+				<English>Nokia Personal Shield</English>
+				<Portuguese>Escudo Pessoal da Nokia</Portuguese>
+				<Russian>Nokia Personal Shield</Russian>
+				<Chinesesimp>Nokia Personal Shield</Chinesesimp>
+				<Chinese>Nokia Personal Shield</Chinese>
+				<German>Nokia Personal Shield</German>
 			</Key>
-			<Key ID="staff">
-				<Original>Staff</Original>
-                <English>Staff</English>
-                <Portuguese>Staff</Portuguese>
-                <Russian>Персонал</Russian>
-                <Chinesesimp>员工</Chinesesimp>
-                <Chinese>員工</Chinese>
-                <German>Personal</German>
-                <France>Personnel</France>
+			<Key ID="str_xp_perks_shield_neutrine">
+				<Original>Neutrine Personal Shield</Original>
+				<English>Neutrine Personal Shield</English>
+				<Portuguese>Escudo Pessoal de Neutrinos</Portuguese>
+				<Russian>Neutrine Personal Shield</Russian>
+				<Chinesesimp>Neutrine Personal Shield</Chinesesimp>
+				<Chinese>Neutrine Personal Shield</Chinese>
+				<German>Neutrine Personal Shield</German>
 			</Key>
-			<Key ID="classicos">
-				<Original>Clássicos</Original>
-                <English>Classics</English>
-                <Portuguese>Clássicos</Portuguese>
-                <Russian>Классические</Russian>
-                <Chinesesimp>经典</Chinesesimp>
-                <Chinese>經典</Chinese>
-                <German>Klassisch</German>
-                <France>Classiques</France>
+			<Key ID="str_aopen_door_perk_fast">
+				<Original>Auto Open Doors (Fast)</Original>
+				<English>Auto Open Doors (Fast)</English>
+				<Portuguese>Auto Abrir Portas (Rápido)</Portuguese>
+				<Russian>Автоматическое Открывание Дверей (Fast)</Russian>
+				<Chinesesimp>自动开门 (Fast)</Chinesesimp>
+				<Chinese>自动开门 (Fast)</Chinese>
+				<German>Automatik Türen (Fast)</German>
+				<France>Portes automatiques (Fast)</France>
 			</Key>
-			<Key ID="esportivos">
-				<Original>Esportivos</Original>
-                <English>Sportive</English>
-                <Portuguese>Esportivos</Portuguese>
-                <Russian>Спортивный</Russian>
-                <Chinesesimp>运动</Chinesesimp>
-                <Chinese>運動</Chinese>
-                <German>Sportlich</German>
-                <France>Sportif</France>
+			<Key ID="str_pmiss_gold_rush">
+				<Original>Gold Rush</Original>
+				<English>Gold Rush</English>
+				<Portuguese>Corrida do Ouro</Portuguese>
+				<Russian>Gold Rush</Russian>
+				<Chinesesimp>Gold Rush</Chinesesimp>
+				<Chinese>Gold Rush</Chinese>
+				<German>Gold Rush</German>
+				<French>Gold Rush</French>
+				<Polish>Gold Rush</Polish>
+				<Czech>Gold Rush</Czech>
+				<Italian>Gold Rush</Italian>
 			</Key>
-			<Key ID="pesados">
-				<Original>Pesados</Original>
-                <English>Heavy</English>
-                <Portuguese>Pesados</Portuguese>
-                <Russian>Тяжелые</Russian>
-                <Chinesesimp>重型</Chinesesimp>
-                <Chinese>重型</Chinese>
-                <German>Schwer</German>
-                <France>Lourds</France>
-			</Key>
-			<Key ID="descaracterizados">
-				<Original>Descaracterizados</Original>
-                <English>Unmarked</English>
-                <Portuguese>Descaracterizados</Portuguese>
-                <Russian>Немаркированные</Russian>
-                <Chinesesimp>未标记</Chinesesimp>
-                <Chinese>未標記</Chinese>
-                <German>Unmarkiert</German>
-                <France>Non marqués</France>
-			</Key>
-			<Key ID="helicoptero">
-				<Original>Helicóptero</Original>
-                <English>Helicopter</English>
-                <Portuguese>Helicóptero</Portuguese>
-                <Russian>Вертолёт</Russian>
-                <Chinesesimp>直升机</Chinesesimp>
-                <Chinese>直升機</Chinese>
-                <German>Hubschrauber</German>
-                <France>Hélicoptère</France>
-			</Key>
-			<Key ID="civil">
-				<Original>Civilian</Original>
-				<English>Civilian</English>
-				<Portuguese>Civil</Portuguese>
-				<Russian>Гражданский</Russian>
-				<Chinesesimp>民用</Chinesesimp>
-				<Chinese>民用</Chinese>
-				<German>Zivilist</German>
-			</Key>
-			<Key ID="passeio">
-				<Original>Passeio</Original>
-                <English>Leisure</English>
-                <Portuguese>Passeio</Portuguese>
-                <Russian>Прогулка</Russian>
-                <Chinesesimp>休闲</Chinesesimp>
-                <Chinese>休閒</Chinese>
-                <German>Freizeit</German>
-                <France>Promenade</France>
-			</Key>
-			<Key ID="simples">
-				<Original>Simples</Original>
-                <English>Simple</English>
-                <Portuguese>Simples</Portuguese>
-                <Russian>Простой</Russian>
-                <Chinesesimp>简单</Chinesesimp>
-                <Chinese>簡單</Chinese>
-                <German>Einfach</German>
-                <France>Simple</France>
+			<Key ID="str_item_gold_bars">
+				<Original>Gold Bars</Original>
+				<English>Gold Bars</English>
+				<Portuguese>Barras de Ouro</Portuguese>
+				<Russian>Gold Bars</Russian>
+				<Chinesesimp>Gold Bars</Chinesesimp>
+				<Chinese>Gold Bars</Chinese>
+				<German>Gold Bars</German>
+				<French>Gold Bars</French>
+				<Polish>Gold Bars</Polish>
+				<Czech>Gold Bars</Czech>
+				<Italian>Gold Bars</Italian>
 			</Key>
 		</Container>
 	</Package>

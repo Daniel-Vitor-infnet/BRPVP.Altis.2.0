@@ -327,7 +327,8 @@ ZB_walkerAcao1 = {
 								if (_tgtOrBuiPos distance _expDest > 3) then {
 									call ZB_moveTypesCode;
 								} else {
-									if (random 1 < 0.25) then {
+									private _chance = if (diag_fps > 30) then {if (_dist < 25) then {0.75} else {if (_dist < 50) then {0.5} else {if (_dist < 75) then {0.25} else {0.125};};};} else {0.25};
+									if (random 1 < _chance) then {
 										private _angle = random 360;
 										_agnt doWatch ASLtoAGL ((eyePos _agnt) vectorAdd [10*sin _angle,10*cos _angle,-1.5+random 11.5]);
 									};

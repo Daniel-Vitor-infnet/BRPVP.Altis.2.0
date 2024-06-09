@@ -1446,124 +1446,12 @@ BRPVP_constantRunFootVehicle = {
 		if (!BRPVP_constantRunOn && stance player isNotEqualTo "PRONE" && getPos player select 2 < 0.15 && _waterOk && isNull objectParent player && !BRPVP_menuExtraLigado) then {
 			BRPVP_constantRunOn = true;
 			BRPVP_constantRunSadEnd = false;
+			BRPVP_sRunMeisterChockRun = true;
+			BRPVP_srun_noMoveTime = -1;
 			0 spawn {
 				private _chockObj = objNull;
-				private _setAnimSpeed = {
-					player setAnimSpeedCoef _this;
-					[player,_this min 3] remoteExecCall ["setAnimSpeedCoef",-clientOwner];
-				};
-				private _checkPlayerFront = {
-					private _fPos = getPosASLVisual player;
-					private _dir = getDir player;
-					private _vecUp = [0.25*sin _dir,0.25*cos _dir,0];
-					private _vecDown = [0.25*sin _dir,0.25*cos _dir,0];
-					private _vecFront = [0.75*sin _dir,0.75*cos _dir,0];
-					private _lisFront1 = lineIntersectsSurfaces [_fPos vectorAdd [0,0,1.75],_fPos vectorAdd [0,0,-1.75],player,objNull,true,1,"GEOM","FIRE"];
-					private _lisFront2 = lineIntersectsSurfaces [_fPos vectorAdd _vecFront vectorAdd [0,0,1.75],_fPos vectorAdd _vecFront vectorAdd [0,0,-1.75],player,objNull,true,1,"GEOM","FIRE"];
-					if (_lisFront1 isNotEqualTo [] && _lisFront2 isNotEqualTo []) then {
-						private _dh = (_lisFront2 select 0 select 0 select 2)-(_lisFront1 select 0 select 0 select 2);
-						_vecDown set [2,_dh*(0.25/0.75)] 
-					};
-					private _one = false;
-					private _vecMult = [1,2,2,3,3,3];
-					private _vecToUse = [_vecDown,_vecDown,_vecDown,_vecUp,_vecUp,_vecUp];
-					for "_i" from 0 to 5 do {
-						private _vecNow = _vecToUse select _i;
-						private _h = 0.25+_i*(1.55/5);
-						private _fl1 = _fPos vectorAdd [0,0,_h];
-						private _fl2 = _fl1 vectorAdd (_vecNow vectorMultiply (_vecMult select _i));
-						private _lis = [_fl1,_fl2,player,objNull,"GEOM","FIRE"] call BRPVP_lis;
-						if (_lis isNotEqualTo [] && {!isNull (_lis select 0 select 2)}) exitWith {
-							_chockObj = _lis select 0 select 2;
-							_one = true;
-						};
-					};
-					private _str = str _chockObj;
-					if (_one) then {
-						if ({_str find _x > -1} count BRPVP_srunCollisionOk isNotEqualTo 0) then {
-							if ({_str find _x > -1} count BRPVP_srunCollisionOff isEqualTo 0 && _speed > 3) then {_chockObj setDamage 1;};
-							if ({_str find _x > -1} count BRPVP_srunCollisionSound isNotEqualTo 0) then {[player,["upper_cut",200,0.9+random 0.2]] remoteExecCall ["say3D",BRPVP_allNoServer];};
-							_speed = 2;
-							_speed call _setAnimSpeed;
-							"noHit"
-						} else {
-							private _vec = [1.5*sin _dir,1.5*cos _dir,0];
-							private _r = [];
-							for "_i" from 0 to 5 do {
-								private _h = 0.2+_i*(1.8/5);
-								private _fl1 = _fPos vectorAdd [0,0,_h];
-								private _fl2 = _fl1 vectorAdd _vec;
-								private _lis = [_fl1,_fl2,player,objNull,"GEOM","FIRE"] call BRPVP_lis;
-								_r pushBack (if (_lis isEqualTo []) then {false} else {if (isNull (_lis select 0 select 2)) then {false} else {true}});
-							};
-							private _lh = _r select 0 || _r select 1;
-							private _mh = _r select 2 || _r select 3;
-							private _hh = _r select 4 || _r select 5;
-							if (!_lh && !_mh && !_hh) then {"noHit"} else {if (_lh && !_mh && !_hh || !_lh && !_mh && _hh) then {"halfHit"} else {"fullHit"};};
-						};
-					} else {
-						"noHit"
-					};
-				};
-				private _runChockFall = {
-					params ["_p","_hType"];
-					[player,["upper_cut",200,0.9+random 0.2]] remoteExecCall ["say3D",BRPVP_allNoServer];
-					if (_hType isEqualTo "fullHit") then {
-						[_p,"afalpercmstpsnonwnondnon"] remoteExecCall ["switchMove",0];
-						private _d = getDir player-180;
-						private _v = 0.25*vectorMagnitude velocity player;
-						[_p,[_v*sin _d,_v*cos _d,1.75]] remoteExecCall ["setVelocity",0];
-						_this spawn {
-							params ["_p","_hType"];
-							uiSleep 0.2;
-							_p setUnconscious true;
-							private _init = time;
-							waitUntil {animationState _p isEqualTo "unconsciousrevivedefault" || !(_p call BRPVP_pAlive) || isNull _p || time-_init > 7.5};
-							if (_p call BRPVP_pAlive && !isNull _p) then {
-								_p setUnconscious false;
-								uiSleep 0.001;
-								[_p,"amovppnemstpsnonwnondnon"] remoteExecCall ["playMoveNow",0];
-							};
-						};
-					} else {
-						_p setUnconscious true;
-						_this spawn {
-							params ["_p","_hType"];
-							private _init = time;
-							waitUntil {(time-_init > 3 && getPos player select 2 < 0.25 && vectorMagnitude velocity player < 0.1) || !(_p call BRPVP_pAlive) || isNull _p};
-							if (_p call BRPVP_pAlive && !isNull _p) then {
-								_p setUnconscious false;
-								uiSleep 0.001;
-								[_p,"amovppnemstpsnonwnondnon"] remoteExecCall ["switchMove",0];
-							};
-						};
-					};
-					if (_chockObj isKindOf "CaManBase" && simulationEnabled _chockObj) then {
-						private _d = getDir _p;
-						[_chockObj,[5*sin _d,5*cos _d,3]] remoteExecCall ["playMoveNow",0];
-					};
-					if (_chockObj call BRPVP_isMotorized) then {[_chockObj,player] remoteExec ["BRPVP_applyForceLocal",2];};
-				};
-				private _okCode = {
-					private _spd = _this;
-					private _ok1 = isNull objectParent player && player call BRPVP_pAlive && getPos player select 2 < 7.5;
-					private _ok2 = true;
-					private _ok3 = !(surfaceIsWater getPosWorld player && getPosASL player select 2 < 0.125 && _spd < 4);
-					if (_spd > 2 && isNull objectParent player) then {
-						if (_spd <= 3) then {
-							if (call _checkPlayerFront isNotEqualTo "noHit") then {_ok2 = false;};
-						} else {
-							private _hType = call _checkPlayerFront;
-							if (_hType isNotEqualTo "noHit") then {
-								_ok2 = false;
-								BRPVP_constantRunSadEnd = true;
-								[player,["zombie_snd_2",300]] remoteExecCall ["say3D",BRPVP_allNoServer];
-								[player,_hType] call _runChockFall;
-							};
-						};
-					};
-					_ok1 && _ok2 && _ok3
-				};
+				private _noMoveLastPos = [0,0,0];
+
 				//INIT RUN
 				private _pOk = true;
 				private _lifeOk = lifeState player isEqualTo "HEALTHY";
@@ -1578,47 +1466,55 @@ BRPVP_constantRunFootVehicle = {
 				//WATER WALK
 				if (_superRunSpeed >= 4) then {0 spawn BRPVP_waterWalk;};
 
-				[player,"amovpercmevasnonwnondf"] remoteExecCall ["playMoveNow",0];
+				private _currWep = currentWeapon player;
+				private _runAnimation = if (_currWep isEqualTo "") then {"AmovPercMevaSnonWnonDf"} else {if (_currWep isEqualTo primaryWeapon player) then {"AmovPercMevaSlowWrflDf"} else {if (_currWep isEqualTo secondaryWeapon player) then {"AmovPercMevaSlowWlnrDf"} else {"AmovPercMevaSlowWpstDf"};};};
+				private _runAnimationEnd = if (_currWep isEqualTo "") then {"amovpercmstpsnonwnondnon"} else {if (_currWep isEqualTo primaryWeapon player) then {"amovpercmstpsraswrfldnon"} else {if (_currWep isEqualTo secondaryWeapon player) then {"amovpercmstpsraswlnrdnon"} else {"amovpercmstpsraswpstdnon"};};};
+
+				if (_currWep isEqualTo "") then {waitUntil {gestureState player in ["amovpercmstpsnonwnondnon","<none>"]};};
 				uiSleep 0.1;
-				player action ["SwitchWeapon",player,player,100];
+				[player,_runAnimation] remoteExecCall ["playMove",0];
+
+				//START RUN
 				if (_extra > 0) then {
 					private _init = diag_tickTime;
 					private _initStep = diag_tickTime;
 					waitUntil {
 						private _dlt = diag_tickTime-_init;
 						_speed = (1+_dlt/BRPVP_superRunInertiaStart) min _superRunSpeed;
-						if (animationState player isNotEqualTo "amovpercmevasnonwnondf") then {for "_i" from 1 to ceil ((BRPVP_superRunInertiaStart*(_superRunSpeed-1)-_dlt)/(0.533/(1+(_superRunSpeed-_speed)/2))) do {player playMove "amovpercmevasnonwnondf";};};
+						if (animationState player isNotEqualTo _runAnimation) then {for "_i" from 1 to ceil ((BRPVP_superRunInertiaStart*(_superRunSpeed-1)-_dlt)/(0.533/(1+(_superRunSpeed-_speed)/2))) do {player playMoveNow _runAnimation;};};
 						private _isd = diag_tickTime-_initStep;
 						if (_isd >= 0.2) then {
 							_initStep = diag_tickTime;
-							_speed call _setAnimSpeed;
+							_speed call BRPVP_srun_setAnimSpeed;
 						};
-						_pOk = _speed call _okCode;
+						_pOk = _speed call BRPVP_srun_okCode;
 						!BRPVP_constantRunOn || _speed isEqualTo _superRunSpeed || !_pOk
 					};
-					_speed call _setAnimSpeed;
+					_speed call BRPVP_srun_setAnimSpeed;
 				};
 				if (!_pOk) exitWith {
 					if (BRPVP_constantRunSadEnd) then {
 						[player,1] remoteExecCall ["setAnimSpeedCoef",0];
 						waitUntil {getPos player select 2 > 7.5 || speed player < 0.1};
 					} else {
-						player playMoveNow "amovpercmevasnonwnondf";
+						player playMoveNow _runAnimationEnd;
 						[player,1] remoteExecCall ["setAnimSpeedCoef",0];
 					};
+					BRPVP_srun_noMoveTime = -1;
 					BRPVP_constantRunOn = false;
 				};
+
 				//MANTAIN RUN
 				private _initStep = diag_tickTime;
 				waitUntil {
-					if (animationState player isNotEqualTo "amovpercmevasnonwnondf") then {for "_i" from 1 to (30/(0.533/_speed)) do {player playMove "amovpercmevasnonwnondf";};};
+					if (animationState player isNotEqualTo _runAnimation) then {for "_i" from 1 to (30/(0.533/_speed)) do {player playMoveNow _runAnimation;};};
 					private _isd = diag_tickTime-_initStep;
 					if (_isd >= 0.2) then {
-						if (_speed isNotEqualTo _superRunSpeed) then {_speed = (_speed+0.125) min _superRunSpeed};
-						player setAnimSpeedCoef _speed;
+						if (_speed isNotEqualTo _superRunSpeed) then {_speed = (_speed+0.25) min _superRunSpeed};
+						_speed call BRPVP_srun_setAnimSpeedLocal;
 						_initStep = diag_tickTime;
 					};
-					_pOk = _speed call _okCode;
+					_pOk = _speed call BRPVP_srun_okCode;
 					!BRPVP_constantRunOn || !_pOk
 				};
 				if (!_pOk) exitWith {
@@ -1626,11 +1522,13 @@ BRPVP_constantRunFootVehicle = {
 						[player,1] remoteExecCall ["setAnimSpeedCoef",0];
 						waitUntil {getPos player select 2 > 7.5 || speed player < 0.1};
 					} else {
-						player playMoveNow "amovpercmevasnonwnondf";
+						player playMoveNow _runAnimationEnd;
 						[player,1] remoteExecCall ["setAnimSpeedCoef",0];
 					};
+					BRPVP_srun_noMoveTime = -1;
 					BRPVP_constantRunOn = false;
 				};
+
 				//STOP RUN
 				private _extra = BRPVP_superRunInertiaStop*(_speed-1);
 				if (_extra > 0) then {
@@ -1640,23 +1538,218 @@ BRPVP_constantRunFootVehicle = {
 					waitUntil {
 						private _dlt = diag_tickTime-_init;
 						_speedEnd = (_speed-_dlt/BRPVP_superRunInertiaStop) max 1;
-						if (animationState player isNotEqualTo "amovpercmevasnonwnondf") then {for "_i" from 1 to ceil ((BRPVP_superRunInertiaStop*(_speed-1)-_dlt)/(0.533/(1+(_speedEnd-1)/2))) do {player playMove "amovpercmevasnonwnondf";};};
+						if (animationState player isNotEqualTo _runAnimation) then {for "_i" from 1 to ceil ((BRPVP_superRunInertiaStop*(_speed-1)-_dlt)/(0.533/(1+(_speedEnd-1)/2))) do {player playMoveNow _runAnimation;};};
 						private _isd = diag_tickTime-_initStep;
 						if (_isd >= 0.2) then {
 							_initStep = diag_tickTime;
-							_speedEnd call _setAnimSpeed;
+							_speedEnd call BRPVP_srun_setAnimSpeed;
 						};
-						_pOk = _speedEnd call _okCode;
+						_pOk = _speedEnd call BRPVP_srun_okCode;
 						private _floorBellow = lineIntersectsSurfaces [getPosASL player vectorAdd [0,0,0.25],getPosASL player vectorAdd [0,0,-125],player,objNull,true,1,"GEOM","NONE"];
 						_floorBellow = if (_floorBellow isEqualTo []) then {true} else {!isNull (_floorBellow select 0 select 2)};
 						BRPVP_constantRunOn || _speedEnd isEqualTo 1 || (surfaceIsWater getPosWorld player && !_floorBellow) || !_pOk
 					};
 				};
-				player playMoveNow "amovpercmevasnonwnondf";
+				player playMoveNow _runAnimationEnd;
 				[player,1] remoteExecCall ["setAnimSpeedCoef",0];
 			};
 		};
 	};
+};
+BRPVP_srun_setAnimSpeed = {
+	private _sMult = ((5-(getPos player select 2)) max 0)/5;
+	private _sUse = (_this*_sMult) max 1;
+	private _sUseRemote = ((_this min 3)*_sMult) max 1;
+	player setAnimSpeedCoef _sUse;
+	[player,_sUseRemote] remoteExecCall ["setAnimSpeedCoef",-clientOwner];
+};
+BRPVP_srun_setAnimSpeedLocal = {
+	private _sMult = ((5-(getPos player select 2)) max 0)/5;
+	private _sUse = (_this*_sMult) max 1;
+	player setAnimSpeedCoef _sUse;
+};
+BRPVP_srun_checkPlayerFront = {
+	private _fPos = getPosASLVisual player;
+	private _dir = getDir player;
+	private _vecUp = [0.25*sin _dir,0.25*cos _dir,0];
+	private _vecDown = [0.25*sin _dir,0.25*cos _dir,0];
+	private _vecFront = [0.75*sin _dir,0.75*cos _dir,0];
+	private _lisFront1 = lineIntersectsSurfaces [_fPos vectorAdd [0,0,1.75],_fPos vectorAdd [0,0,-1.75],player,objNull,true,1,"GEOM","FIRE"];
+	private _lisFront2 = lineIntersectsSurfaces [_fPos vectorAdd _vecFront vectorAdd [0,0,1.75],_fPos vectorAdd _vecFront vectorAdd [0,0,-1.75],player,objNull,true,1,"GEOM","FIRE"];
+	if (_lisFront1 isNotEqualTo [] && _lisFront2 isNotEqualTo []) then {
+		private _dh = (_lisFront2 select 0 select 0 select 2)-(_lisFront1 select 0 select 0 select 2);
+		_vecDown set [2,_dh*(0.25/0.75)] 
+	};
+	private _one = false;
+	private _vecMult = [2,5,5,5,5,5];
+	private _vecToUse = [_vecDown,_vecDown,_vecUp,_vecUp,_vecUp,_vecUp];
+	for "_i" from 0 to 5 do {
+		private _vecNow = _vecToUse select _i;
+		private _h = 0.25+_i*(1.55/5);
+		private _fl1 = _fPos vectorAdd [0,0,_h];
+		private _fl2 = _fl1 vectorAdd (_vecNow vectorMultiply (_vecMult select _i));
+		private _fl2Veh = _fl1 vectorAdd (_vecNow vectorMultiply (1.75*(_vecMult select _i)));
+		private _lis = [_fl1,_fl2,player,objNull,"GEOM","FIRE"] call BRPVP_lis;
+		private _lisVeh = [_fl1,_fl2Veh,player,objNull,"GEOM","FIRE"] call BRPVP_lis;
+		if (_lisVeh isNotEqualTo [] && {(_lis select 0 select 2) call BRPVP_isMotorized}) exitWith {
+			_chockObj = _lis select 0 select 2;
+			_one = true;
+		};
+		if (_lis isNotEqualTo [] && {!isNull (_lis select 0 select 2)}) exitWith {
+			_chockObj = _lis select 0 select 2;
+			_one = true;
+		};
+	};
+	private _str = str _chockObj;
+	if (_one) then {
+		if ({_str find _x > -1} count BRPVP_srunCollisionOk isNotEqualTo 0) then {
+			if ({_str find _x > -1} count BRPVP_srunCollisionOff isEqualTo 0 && _speed > 3) then {_chockObj setDamage 1;};
+			if ({_str find _x > -1} count BRPVP_srunCollisionSound isNotEqualTo 0) then {[player,["upper_cut",200,0.9+random 0.2]] remoteExecCall ["say3D",BRPVP_allNoServer];};
+			_speed = 2;
+			_speed call BRPVP_srun_setAnimSpeed;
+			["noHit",objNull]
+		} else {
+			private _vec = [1.75*sin _dir,1.75*cos _dir,0];
+			private _r = [];
+			private _frontObj = objNull;
+			private _forceFull = false;
+			for "_i" from 0 to 5 do {
+				private _h = 0.2+_i*(1.8/5);
+				private _fl1 = _fPos vectorAdd [0,0,_h];
+				private _fl2 = _fl1 vectorAdd _vec;
+				private _lis = [_fl1,_fl2,player,objNull,"GEOM","FIRE"] call BRPVP_lis;
+				private _ok = if (_lis isEqualTo []) then {false} else {if (isNull (_lis select 0 select 2)) then {false} else {true}};
+				_r pushBack _ok;
+				if (_ok && _i in [2,3]) then {_forceFull = true};
+				if (isNull _frontObj && _lis isNotEqualTo []) then {_frontObj = _lis select 0 select 2;};
+			};
+			if (_forceFull) then {
+				["fullHit",_frontObj]
+			} else {
+				private _lh = _r select 0 || _r select 1;
+				private _mh = _r select 2 || _r select 3;
+				private _hh = _r select 4 || _r select 5;
+				if (!_lh && !_mh && !_hh) then {["noHit",objNull]} else {if (_lh && !_mh && !_hh || !_lh && !_mh && _hh) then {["halfHit",_frontObj]} else {["fullHit",_frontObj]};};
+			};
+		};
+	} else {
+		["noHit",objNull]
+	};
+};
+BRPVP_srun_runChockFallArray1 = ["_p","_hTypeArray"];
+BRPVP_srun_runChockFallArray2 = ["_hType","_frontObj"];
+BRPVP_srun_runChockFall = {
+	params BRPVP_srun_runChockFallArray1;
+	_hTypeArray params BRPVP_srun_runChockFallArray2;
+	[player,["upper_cut",200,0.9+random 0.2]] remoteExecCall ["say3D",BRPVP_allNoServer];
+	if (_hType isEqualTo "fullHit") then {
+		private _realVel = velocity player;
+		//[_p,"afalpercmstpsnonwnondnon"] remoteExecCall ["switchMove",0];
+		private _d = getDir player-180;
+		private _v = 0.25*vectorMagnitude _realVel;
+		private _mult = [1,1.75] select BRPVP_superRunCollisionDestroyHouse;
+		[_p,[_v*sin _d,_v*cos _d,1.75*_mult^1.25] vectorMultiply _mult] remoteExecCall ["setVelocity",0];
+		private _destroy = BRPVP_superRunCollisionDestroyHouse && {((_frontObj isKindOf "Building" || typeOf _frontObj isEqualTo "") || (_frontObj isKindOf "CaManBase" && simulationEnabled _frontObj) || (_frontObj call BRPVP_isMotorized)) && isDamageAllowed _frontObj && (boundingBoxReal _frontObj select 2)/2 < 10 && _frontObj getVariable ["id_bd","no_db"] isEqualTo "no_db" && _frontObj getVariable ["brpvp_map_god_mode_house_id","no_db"] isEqualTo "no_db"};
+		private _ahd = getAllHitPointsDamage _frontObj;
+		if (_ahd isNotEqualTo []) then {{if (_x find "glass" isNotEqualTo -1 && {random 1 < 0.75}) then {_frontObj setHitIndex [_forEachIndex,1,true];};} forEach (_ahd select 1);};
+		if (player getVariable ["brpvp_is_master",false]) then {
+			[player,["meister_house_hit",600]] remoteExecCall ["say3D",0];
+			player setVariable ["brpvp_meister_flare_bang",7.5,true]
+		};
+		[_p,_hType,_frontObj,_destroy,_realVel] spawn {
+			params ["_p","_hType","_frontObj","_destroy","_realVel"];
+			uiSleep 0.1;
+			if (_destroy) then {
+				if (_frontObj isKindOf "CaManBase") then {
+					_frontObj setDamage [1,true,player,player];
+					[player,["zed_death",500]] remoteExecCall ["say3D",0];
+				} else {
+					if (_frontObj isKindOf "Building" || typeOf _frontObj isEqualTo "") then {
+						_frontObj setDamage [1,true,player,player];
+					} else {
+						[_frontObj,player] remoteExec ["BRPVP_applyForceLocal",2];
+						private _ahd2 = getAllHitPointsDamage _frontObj;
+						if (_ahd2 isNotEqualTo []) then {
+							private _dam = BRPVP_meisterChockOnVehicleDamage+random BRPVP_meisterChockOnVehicleDamageRandom;
+							[_frontObj,_dam,_ahd2 select 2,player] remoteExecCall ["BRPVP_meisterSetHitVehicle",_frontObj];
+						};
+					};
+				};
+			};
+			uiSleep 0.1;
+			if (!BRPVP_superRunCollisionDestroyHouse) then {
+				_p setUnconscious true;
+				private _init = time;
+				waitUntil {animationState _p isEqualTo "unconsciousrevivedefault" || !(_p call BRPVP_pAlive) || isNull _p || vectorMagnitude velocity player < 0.25 || time-_init > 7.5};
+				if (_p call BRPVP_pAlive && !isNull _p) then {
+					_p setUnconscious false;
+					uiSleep 0.001;
+					[_p,"amovppnemstpsnonwnondnon"] remoteExecCall ["playMoveNow",0];
+				};
+			};
+		};
+	} else {
+		_p setUnconscious true;
+		[_p,_hType] spawn {
+			params ["_p","_hType"];
+			private _init = time;
+			waitUntil {(time-_init > 3 && getPos player select 2 < 0.25 && vectorMagnitude velocity player < 0.25) || !(_p call BRPVP_pAlive) || isNull _p};
+			if (_p call BRPVP_pAlive && !isNull _p) then {
+				_p setUnconscious false;
+				uiSleep 0.001;
+				[_p,"amovppnemstpsnonwnondnon"] remoteExecCall ["switchMove",0];
+			};
+		};
+	};
+};
+BRPVP_sRunMeisterChockRun = true;
+BRPVP_srun_okCode = {
+	private _spd = _this;
+	private _ok1 = isNull objectParent player && player call BRPVP_pAlive && getPos player select 2 < 10;
+	private _ok2 = true;
+	private _ok3 = !(surfaceIsWater getPosWorld player && getPosASL player select 2 < 0.125 && _spd < 4);
+	private _ok4 = incapacitatedState player isNotEqualTo "UNCONSCIOUS" && animationState player find "unconscious" isEqualTo -1 && animationState player find "incapacitated" isEqualTo -1;
+	
+	private _posNow = getPosWorld player;
+	private _moveDelta = vectorMagnitude (_posNow vectorDiff _noMoveLastPos);
+	_noMoveLastPos = +_posNow;
+	private _fps = diag_fps;
+	if (_moveDelta <= 1/_fps) then {BRPVP_srun_noMoveTime = BRPVP_srun_noMoveTime+1/_fps;} else {BRPVP_srun_noMoveTime = 0;};
+	private _ok5 = BRPVP_srun_noMoveTime <= 0.25;
+	if (_spd > 2 && isNull objectParent player) then {
+		if (_spd <= 3) then {
+			if ((call BRPVP_srun_checkPlayerFront select 0) isNotEqualTo "noHit") then {_ok2 = false;};
+		} else {
+			private _hTypeArray = call BRPVP_srun_checkPlayerFront;
+			private _hType = _hTypeArray select 0;
+			if (_hType isNotEqualTo "noHit") then {
+				if (_hType isEqualTo "halfHit") then {
+					_ok2 = false;
+					BRPVP_constantRunSadEnd = true;
+					[player,["zombie_snd_2",450]] remoteExecCall ["say3D",BRPVP_allNoServer];
+					[player,_hTypeArray] call BRPVP_srun_runChockFall;
+				} else {
+					if (BRPVP_superRunCollisionDestroyHouse) then {
+						_ok2 = true;
+						if (BRPVP_sRunMeisterChockRun) then {
+							[player,["zombie_snd_2",450]] remoteExecCall ["say3D",BRPVP_allNoServer];
+							[player,_hTypeArray] call BRPVP_srun_runChockFall;
+							BRPVP_sRunMeisterChockRun = false;
+							0 spawn {uiSleep 0.5;waitUntil {!BRPVP_constantRunOn || getPos player select 2 < 0.2};BRPVP_sRunMeisterChockRun = true;};
+						};
+						//player setAnimSpeedCoef 1;
+						//[player,1] remoteExecCall ["setAnimSpeedCoef",-clientOwner];
+					} else {
+						_ok2 = false;
+						BRPVP_constantRunSadEnd = true;
+						[player,["zombie_snd_2",450]] remoteExecCall ["say3D",BRPVP_allNoServer];
+						[player,_hTypeArray] call BRPVP_srun_runChockFall;
+					};
+				};
+			};
+		};
+	};
+	_ok1 && _ok2 && _ok3 && _ok4 && _ok5
 };
 BRPVP_nitroFlyStabilityJets = {
 	private _vectorUp = vectorUp _veh;
@@ -1868,8 +1961,9 @@ BRPVP_allJumpTypes = {
 
 								BRPVP_jumpStopRunning = true;
 								[player,["jump_03",200]] remoteExecCall ["say3D",BRPVP_allNoServer];
+								private _mult = [1.25,BRPVP_extraSecJumpForceOnSuperRun] select BRPVP_constantRunOn;
 								private _vel = velocity player vectorMultiply 1.25;
-								_vel set [2,2.5];
+								_vel set [2,(2*_mult^2) min 15];
 								[player,_vel] remoteExecCall ["setVelocity",0];
 								_newHUsed spawn {
 									private _newHUsed = _this;
@@ -2406,27 +2500,44 @@ BRPVP_hackPlayerKeyPress = {
 BRPVP_colorMarkKeyPress = {
 	if (time-BRPVP_colorMarkKeyPressTime > 0.25) then {
 		BRPVP_colorMarkKeyPressTime = time;
-		private ["_idc"];
 		_retorno = true;
+		private _idc = 0;
 		if (_key isEqualTo 0x3B) then {_idc = 0;};
 		if (_key isEqualTo 0x3C) then {_idc = 1;};
 		if (_key isEqualTo 0x3D) then {_idc = 2;};
-		_setas = player getVariable ["sts",[[],[],[]]];
+		private _setas = player getVariable ["sts",[[],[],[]]];
 		if (_setas select _idc isEqualTo []) then {
 			if (visibleMap) then {
 				_setas set [_idc,(findDisplay 12 displayCtrl 51) ctrlMapScreenToWorld getMousePosition];
 				player setVariable ["sts",_setas,true];
 			} else {
-				_p1 = AGLToASL positionCameraToWorld [0,0,0];
-				_viewVec = _p1 vectorFromTo AGLToASL positionCameraToWorld [0,0,1];
-				_p2 = _p1 vectorAdd (_viewVec vectorMultiply 4800);
-				_UAV = getConnectedUAV player;
-				_lis = lineIntersectsSurfaces [_p1,_p2,vehicle player,_UAV,true,1,"GEOM","NONE"];
+				private _p1 = AGLToASL positionCameraToWorld [0,0,0];
+				private _viewVec = _p1 vectorFromTo AGLToASL positionCameraToWorld [0,0,1];
+				private _p2 = _p1 vectorAdd (_viewVec vectorMultiply 4800);
+				private _UAV = getConnectedUAV player;
+				private _lis = lineIntersectsSurfaces [_p1,_p2,vehicle player,_UAV,true,1,"VIEW","NONE"];
 				if (_lis isEqualTo []) then {
-					"erro" call BRPVP_playSound;
+					if (_p1 select 2 > 0 && _p2 select 2 < 0) then {
+						private _h1 = _p1 select 2;
+						private _h2 = _p2 select 2;
+						private _dh = _h1-_h2;
+						private _vec = (_p2 vectorDiff _p1) vectorMultiply (_h1/_dh);
+						_setas set [_idc,_p1 vectorAdd _vec];
+					} else {
+						"erro" call BRPVP_playSound;
+					};
 				} else {
-					_setas set [_idc,ASLToAGL (_lis select 0 select 0)];
-					player setVariable ["sts",_setas,true];
+					private _p3 = _lis select 0 select 0;
+					if (_p1 select 2 > 0 && _p3 select 2 < 0) then {
+						private _h1 = _p1 select 2;
+						private _h3 = _p3 select 2;
+						private _dh = _h1-_h3;
+						private _vec = (_p3 vectorDiff _p1) vectorMultiply (_h1/_dh);
+						_setas set [_idc,_p1 vectorAdd _vec];
+					} else {
+						_setas set [_idc,ASLToAGL _p3];
+						player setVariable ["sts",_setas,true];
+					};
 				};
 			};
 		} else {

@@ -17,18 +17,17 @@ https://steamcommunity.com/profiles/76561197975554637/
 //============================================
 
 //VERSION
-BRPVP_buildVersion = "V141 B7";
+BRPVP_buildVersion = "V141 B9";
 
-//ADMINS Lista
+//ADMINS AND MODERATORS LISTS
 BRPVP_admins = [
-	"76561198339254954", 
-	"76561197975554637"  //DONNOVAN (Não remover)
+	"76561197975554637" //DONNOVAN (please don't remove)
 ];
 BRPVP_moderators = [];
 BRPVP_adminsModeratorsCanKillPlayersWithWeapons = true;
-BRPVP_showAdminInfo = false; // Mostrar lista de adm (eu acho)
+BRPVP_showAdminInfo = false;
 BRPVP_adminsStartsWithAllPerks = true;
-BRPVP_useMySqlDatabase = false;
+BRPVP_useMySqlDatabase = true;
 
 //HC
 BRPVP_useHC = false;
@@ -46,9 +45,9 @@ BRPVP_raidWeekDaysDayHours = [
 	[[0,24]], //DAY 5
 	[[0,24]]  //DAY 6 SATURDAY
 ];
-BRPVP_raidWeekDaysDisableConstruction = false; //DESATIVAR A CONSTRUÇÃO EM DIAS DE RAID
-BRPVP_raidNoConstructionOnBaseIfRaidStarted = true; //Nenhuma construção na base se o raid for iniciado
-BRPVP_raidNoConstructionOnBaseIfRaidStartedTime = 1800; //TEMPO EM SEGUNDOS QUE OS JOGADORES NÃO PODEM CONSTRUIR OU VOAR NA BASE DESDE A ÚLTIMA AÇÃO DE ATAQUE
+BRPVP_raidWeekDaysDisableConstruction = false; //DISABLE CONSTRUCTION ON RAID DAYS
+BRPVP_raidNoConstructionOnBaseIfRaidStarted = true;
+BRPVP_raidNoConstructionOnBaseIfRaidStartedTime = 1800; //TIME IN SECONDS PLAYERS CAN'T CONSTRUCT OR FLY IN BASE SINCE LAST RAID ACTION
 
 //RAID CONFIG EXAMPLE: RAID OS SATURDAY AND SUNDAY FROM 20H TO 24H (8PM TO 12AM). BUILD DISABLED ON RAID DAYS.
 //BRPVP_raidWeekDays = [0,6];
@@ -58,20 +57,27 @@ BRPVP_raidNoConstructionOnBaseIfRaidStartedTime = 1800; //TEMPO EM SEGUNDOS QUE 
 //ON NO-RAID DAYS PLAYERS INSIDE BASE+EXTENSION CAN'T HURT PLAYER OUTSIDE AND VICE VERSA
 BRPVP_noRaidDayBaseExtension = 25;
 
-//ALTURA MÁXIMA DE CONSTRUÇÃO
-BRPVP_maxBuildHeight = 350; //A ALTITUDE MÍNIMA É DE 100 METROS
+//MAXIMUM BUILD HEIGHT
+BRPVP_maxBuildHeight = 350; //MIN ALTITUDE IS 100 METERS
 
-//ÁREA ABERTA DO COFRE PESSOAL
-BRPVP_openPersonalVaultAnywhere = true; //TRUE: ABERTO EM QUALQUER LUGAR, FALSE: ABERTO SOMENTE EM BASES (QUALQUER BASE) E ZONAS DE SEGURANÇA
-BRPVP_vaultNumberCfg = 1; //NÚMERO PADRÃO DE COFRES: MÍNIMO 1 E MÁXIMO 10
+//PERSONAL VAULT OPEN AREA
+BRPVP_openPersonalVaultAnywhere = false; //TRUE: OPEN ANYWHERE, FALSE: OPEN ONLY IN BASES (ANY BASE) AND SAFEZONES
+BRPVP_vaultNumberCfg = 1; //DEFAULT NUMBER OF VAULTS: MIN 1 AND MAX 10
 
 //============================================
 //= GENERAL VARIABLES
 //============================================
 
-//BRPVP_deadBodyMantainMoreExpensive = true; //PREFERÊNCIA POR MANTER O CORPO DE JOGADORES MAIS CAROS
-//BRPVP_deadBodyMantainMoreExpensiveQantity = 4; //Corpo morto mantém qualidade mais cara (eu acho)
-//BRPVP_perksForceOn = [];
+//BRPVP_deadBodyMantainMoreExpensive = true; //PREFERENCE TO MANTAIN MORE EXPENSIVE PLAYERS DEAD BODY
+//BRPVP_deadBodyMantainMoreExpensiveQantity = 2;
+
+//[max light distance,full light distance,brightness (white tint),intensity,decay (see setLightAttenuation)]
+BRPVP_meisterChockOnVehicleDamage = 0.2;
+BRPVP_meisterChockOnVehicleDamageRandom = 0.3;
+BRPVP_meisterLightData = [1000,10,0.5,6,[1,0,1,0]];
+
+BRPVP_perksForceOn = [];
+BRPVP_perksForceOff = [];
 
 BRPVP_voodooCollDown = 60; //IN MINUTES
 BRPVP_voodooMinEffectTime = 60; //IN SECONDS
@@ -83,7 +89,7 @@ BRPVP_vrObjectsPaintTasteTime = 10; //IN MINUTES
 
 BRPVP_flagSearchForMoneyInBoxToPayMaxDist = 10;
 
-BRPVP_vehSabotagePrice = 50000;
+BRPVP_vehSabotagePrice = 500000;
 BRPVP_vehSabotageFixChanceEachTry = 0.1;
 BRPVP_vehSabotageFixMaxTries = 10;
 
@@ -101,36 +107,36 @@ BRPVP_aiWithLauncherHaveMinervaLoadout = [
 	[["arifle_AK12_arid_F","","acc_flashlight","optic_Arco_arid_F",["30rnd_762x39_AK12_Arid_Mag_F",30],[],"bipod_02_F_arid"],["launch_RPG32_F","","","",["RPG32_F",1],[],""],[],["U_I_E_CBRN_Suit_01_EAF_F",[["30rnd_762x39_AK12_Arid_Mag_F",3,30]]],["V_PlateCarrierGL_wdl",[]],["B_Carryall_eaf_F",[["FirstAidKit",4],["75rnd_762x39_AK12_Arid_Mag_F",3,75]]],"","G_Blindfold_01_white_F",[],["ItemMap","","","","",""]]
 ];
 
-BRPVP_suicideCoolDownTime = 300; //Tempo para se matar (suicidio)
+BRPVP_suicideCoolDownTime = 300; //IN SECONDS
 
-BRPVP_deleteAtomicVehiclesAfterUse = true; //excluir veículos atômicos/nuclear após o uso
+BRPVP_deleteAtomicVehiclesAfterUse = true;
 
-//TEMPO DE EXCLUSÃO DE FUMAÇA/FOGO DE VEÍCULOS MORTOS (SOMENTE VEÍCULOS TERRESTRES)
-BRPVP_deadVehicleSmokeChanceToZeroEffects = 0.6;
+//DEAD VEHICLE SMOKE/FIRE DELETION TIME (LANDVEHICLE ONLY)
+BRPVP_deadVehicleSmokeChanceToZeroEffects = 0.2;
 BRPVP_deadVehicleSmokeTime = [30,40,50];
 
-//CONFIGURAÇÃO DE MUDANÇA DE CLIMA
+//WEATHER CHANGE CONFIGURATION
 BRPVP_useDynamicWeather = true;
 BRPVP_weatherInitialOvercast = 0.35;
-BRPVP_minOvercast = 0; //NUBLADO MÍNIMO (0-1)
-BRPVP_maxOvercast = 1; //NUVEM MÁXIMO QUE SERÁ ATINGIDO (0-1)
+BRPVP_minOvercast = 0; //MINIMUM OVERCAST (0-1)
+BRPVP_maxOvercast = 1; //MAXIMUM OVERCAST THAT WILL BE REACHED (0-1)
 BRPVP_weatherFogOnOvercastZero = 0;
 BRPVP_weatherFogOnOvercastOne = 0.05;
 BRPVP_minChange = 0.25;
 BRPVP_maxChange = 1;
-BRPVP_chanceToChangeWeather = 0.7; //PADRÃO É 0,5 (50%)
-BRPVP_waitIfNotChange = 600; //Espere se não mudar em segundos
-BRPVP_waitAfterChangeDone = 1200; //Aguardar após a conclusão da alteração em segundos
-BRPVP_weatherDegug = false; //MOSTRA A PREVISÃO DO TEMPO TOTAL DE MUDANÇA
+BRPVP_chanceToChangeWeather = 0.5; //DEFAULT IS 0.5 (50%)
+BRPVP_waitIfNotChange = 600; //IN SECONDS
+BRPVP_waitAfterChangeDone = 1200; //IN SECONDS
+BRPVP_weatherDegug = false; //SHOW FULL CHANGE TIME PREDICTION
 BRPVP_weatherMaxDiffToChange = 0.05;
 BRPVP_weatherChanceOfRainMin = 0;
 BRPVP_weatherChanceOfRainMax = 0.6;
-BRPVP_weatherWindMin = 0; //EM METROS/SEGUNDOS
-BRPVP_weatherWindMinWithClouds = 2; //EM METROS/SEGUNDOS
-BRPVP_weatherwindMax = 6; //EM METROS/SEGUNDOS
-BRPVP_weatherwindMaxNoClouds = 4; //EM METROS/SEGUNDOS
+BRPVP_weatherWindMin = 0; //IN METER/SECONS
+BRPVP_weatherWindMinWithClouds = 2; //IN METER/SECONS
+BRPVP_weatherwindMax = 6; //IN METER/SECONS
+BRPVP_weatherwindMaxNoClouds = 4; //IN METER/SECONS
 
-//CONFIGURAÇÃO DE GOOD PETER (ANTI-LAZARUS)
+//GOOD PETER (ANTI-LAZARUS) CONFIGURATION
 BRPVP_peterLife = 350;
 BRPVP_peterReward = 25000000;
 BRPVP_peterRewardRedKripto = 17500000;
@@ -147,12 +153,12 @@ BRPVP_GX_M82A2000_PlasmaRifleModRestartChance = 0.1;
 BRPVP_GX_M82A2000_NumberOfAiWithTheWeapon = 2;
 BRPVP_GX_M82A2000_RandomSpawnTime = 7200;
 
-BRPVP_atomicShotDisabled = false; //Tiro atômico desativado
+BRPVP_atomicShotDisabled = false;
 BRPVP_atomicShotBreakDomeProtectionChance = 0.75;
 
-BRPVP_turretDeathExplosionDelay = 0.5; //ATRASO DA EXPLOSÃO EM SEGUNDOS DA TORRETA
+BRPVP_turretDeathExplosionDelay = 0.5; //EXPLOSION DELAY IN SECONDS
 
-//CONFIGURAÇÃO DO LAZARUS
+//LAZARUS CONFIGURATION
 BRPVP_larsLife = 130;
 BRPVP_larsReward = 25000000;
 BRPVP_larsRewardRedKripto = 17500000; //REWARD IF KILLED BY RED KRIPTONITE
@@ -179,7 +185,7 @@ BRPVP_ulfanSoldierLoadouts = [
 	[["arifle_MXC_Black_F","","acc_pointer_IR","optic_Holosight_blk_F",["30Rnd_65x39_caseless_black_mag",30],[],""],[],[],["U_O_R_Gorka_01_black_F",[["FirstAidKit",1],["Chemlight_green",1,1],["30Rnd_65x39_caseless_black_mag",3,30]]],["V_PlateCarrierSpec_blk",[["MiniGrenade",5,1],["SmokeShellRed",1,1],["SmokeShellGreen",1,1],["SmokeShellBlue",1,1]]],["B_CivilianBackpack_01_Sport_Blue_F",[["30Rnd_65x39_caseless_black_mag",10,30]]],"H_Beret_EAF_01_F","G_Spectacles",[],["ItemMap","ItemGPS","","","",""]]
 ];
 
-BRPVP_minHeightParachuteOpenNormal = 100; //Altura mínima Paraquedas aberto Normal
+BRPVP_minHeightParachuteOpenNormal = 100;
 BRPVP_minHeightParachuteOpenPerk = 4;
 
 BRPVP_bigFloorHoles = [30,57];
@@ -213,7 +219,7 @@ BRPVP_pmissAiPerc = 0.625;
 //PLAYER MISSIONS 2 AI PERCENTUAL (0-1)
 BRPVP_pmiss2AiPerc = 0.625;
 
-BRPVP_safezoneProtectionOnExitTime = 10; // Tempo de proteção da safe zone
+BRPVP_safezoneProtectionOnExitTime = 10;
 
 BRPVP_playerIdListNoAutomaticMessages = [];
 
@@ -243,7 +249,7 @@ BRPVP_CbrnSuits = [
 BRPVP_personalVaultCargoSize = 7500;
 BRPVP_baseTurretNoSeeSearchTime = 25;
 
-BRPVP_lostMoneyWhenDieUse = false; // Morrer perde dinheiro no banco
+BRPVP_lostMoneyWhenDieUse = true;
 //PERCENTAGE OF THE BANK MONEY TO LOST WHEN DIE MIN
 BRPVP_lostMoneyWhenDieMinPercentage = 0.0025;
 //PERCENTAGE OF THE BANK MONEY TO LOST WHEN DIE MAX
@@ -255,12 +261,12 @@ BRPVP_lostMoneyWhenDieMaxValor = 750000;
 //LOST VALUES ARE MULTIPLE OF BRPVP_lostMoneyWhenDieStep: 50000, 100000, 150000, 200000, 250000...
 BRPVP_lostMoneyWhenDieStep = 50000;
 
-BRPVP_mapVisibleCircleSizeMultiplier = 0.9; //mapa Multiplicador do tamanho do círculo visível
+BRPVP_mapVisibleCircleSizeMultiplier = 0.9;
 BRPVP_MinervaCraterPerc = 0.5;
 BRPVP_minervaShotDisabled = false;
 BRPVP_minervaShotBreakDomeProtectionChance = 0.5;
 
-//LISTA DE VEÍCULOS COM TAMANHO DE CARGA PERSONALIZADO: [CLASSE DO VEÍCULO, NOME DO VEÍCULO (NÃO USADO), TAMANHO DE CARGA PERSONALIZADO]
+//LIST OF VEHICLES WITH CUSTOM CARGO SIZE: [VEHICLE CLASS, VEHICLE NAME (NOT USED), CUSTOM CARGO SIZE]
 BRPVP_customCargoVehiclesCfg = [
 	//NORMAL VEHICLES
 	["C_Van_01_transport_F","Truck Transport",6000],
@@ -312,7 +318,7 @@ BRPVP_customCargoVehiclesCfg = [
 	["HTNK_Grey","X-66 Mammoth",25000]
 ];
 
-BRPVP_customBaseBoxSizeUse = true; //Costumizar caixa da base
+BRPVP_customBaseBoxSizeUse = true;
 BRPVP_customBaseBoxSize = 10000;
 BRPVP_customBaseBoxSizeUpgradeUse = true;
 BRPVP_customBaseBoxSizeUpgradePrice = 500000;
@@ -546,9 +552,6 @@ BRPVP_newerDiscoveredTimeToMantain = 90; //IN SECONDS
 
 BRPVP_saveGroundItemsForOneRestart = true;
 BRPVP_shutdownServerOnRestartTimes = true;
-
-BRPVP_carrierMissDelayTime = 1800; //SECONDS - TIME TO WAIT BEFORE RANDOM CHANCE OF CARRIER MISSION SPAWNS
-BRPVP_carrierMissRandomTime = 3600; //SECONDS - THE CARRIER MISSION WILL SPAWN A RANDOM TIME FROM 0 TO 3600 SECONDS AFTER BRPVP_carrierMissDelayTime
 
 BRPVP_allowLandAutoPilot = false;
 
@@ -1361,10 +1364,10 @@ BRPVP_stayOnlineMoneyRewardExtraValor = 300000;
 BRPVP_sellPricesMultiplier = 0.15; //PLAYER SELL PRICES CUT
 BRPVP_sellMultVeh = 0.4; //SELL PERCENTAGE OF TRADER VEHICLES AND UNPRICED FEDIDEX VEHICLES
 BRPVP_sellMultVehPricedFedidex = 0.6; //SELL PERCENTAGE OF PRICED FEDIDEX VEHICLES
-BRPVP_restartTimes = [6,12,18,24]; //REINICIAR AS HORAS NO FORMATO 24H
-BRPVP_restartWarnings = [60,30,20,10,5,3,2,1]; //AVISOS DE REINICIALIZAÇÃO A SEREM EXIBIDOS X MINUTOS ANTES DA REINICIALIZAÇÃO (X <= 30)
-BRPVP_tempoDeVeiculoTemporarioNascimento = 3600; // Tempo de veiculo temporario nascimento em segundos 
-BRPVP_veiculoTemporarioNascimento = "CUP_C_Golf4_kitty_Civ"; // Carro de nascimento
+BRPVP_restartTimes = [4,8,12,16,20,24]; //RESTART HOURS IN 24H FORMAT
+BRPVP_restartWarnings = [30,20,15,10,5,4,3,2,1]; //RESTART WARNINGS TO BE SHOW X MINUTES BEFORE RESTART (X <= 30)
+BRPVP_tempoDeVeiculoTemporarioNascimento = 7200;
+BRPVP_veiculoTemporarioNascimento = "C_Quadbike_01_F";
 BRPVP_renewLootTime = 900;
 BRPVP_fullMoonNights = true;
 BRPVP_fullMoonNightsChance = 0.5;
@@ -1376,10 +1379,10 @@ BRPVP_patrolAIGroups = [
 	(configFile >> "CfgGroups" >> "Indep" >> "IND_C_F" >> "Infantry")
 ];
 
-//Configurações para entrada inicial no servidor
-BRPVP_startingMoney = 15000;
-BRPVP_startingMoneyOnBank = 115000;
-BRPVP_towLandVehiclePrice = 5000;
+//MORE CONFIGURATION
+BRPVP_startingMoney = 500000;
+BRPVP_startingMoneyOnBank = 5000000;
+BRPVP_towLandVehiclePrice = 50000;
 BRPVP_marketPricesMultiply = 1;
 BRPVP_marketPricesMultiplyVeh = [1,0];
 

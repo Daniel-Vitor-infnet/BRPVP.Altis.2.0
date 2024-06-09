@@ -203,7 +203,7 @@ if (BRPVP_checaExistenciaPlayerBdRetorno isEqualTo "no_bd_e_vivo") then {
 	_inventario = _resultadoCompilado select 0 select 0;
 	
 	//ASSIGNED PLAYER
-	{if (_x iskindOf ["rhsusf_bino_m24_ARD",configFile >> "CfgWeapons"]) then {player addWeapon _x;} else {player linkItem _x;};} forEach (_inventario select 0);
+	{if (_x iskindOf ["Binocular",configFile >> "CfgWeapons"]) then {player addWeapon _x;} else {player linkItem _x;};} forEach (_inventario select 0);
 
 	//ADICIONA VEST PARA RECEBER MAGAZINES DAS ARMAS
 	player addBackpack "B_Carryall_oli";
@@ -771,51 +771,26 @@ if (BRPVP_checaExistenciaPlayerBdRetorno in ["nao_ta_no_bd","no_bd_e_morto"]) th
 		[player,_clone] spawn {
 			params ["_player","_clone"];
 
-			//Itens inicias 1
+			//PUT ITEMS ON PLAYER
 			if (!BRPVP_bornWithDeadItemsThisRound) then {
 				if (_clone isEqualTo "") then {
 					if (BRPVP_bornWithItems) then {
-						// Roupas
-						_player addBackpack selectRandom ["Police_Messenger_Bag"];
-						_player addVest "Police_SoldierVest";
-
-						// Arma Principal
-						//_mP = selectRandom getArray (configFile >> "CfgWeapons" >> _aP >> "magazines"); Pente padrão
-						_aP = selectRandom ["CUP_arifle_M16A1GL_FS"]; // Selecionar arma
-					    _mP1 = "CUP_20Rnd_556x45_Stanag_Tracer_Red"; // Tipo de pente 
-						_player addWeapon _aP; 
-						_player addPrimaryWeaponItem _mP1; // Pente na arma
-						_player addMagazine _mP1;
-						_player addMagazine _mP1;
-						_player addMagazine _mP1;
-						_player addMagazine _mP1;
-
-						// Equipamentos para a arma principal
-						_player addPrimaryWeaponItem "optic_Arco_blk_F"; // Mira
-
-
-						// Arma Secundaria
-						_sP = selectRandom ["CUP_hgun_P30L_od"]; // Selecionar arma
-					    _mS1 = "CUP_17Rnd_9x19_P30L"; // Tipo de pente 
-						_player addWeapon _sP;
-						_player addHandgunItem _mS1; // Pente na arma
-						_player addMagazine _mS1;
-						_player addMagazine _mS1;
-						_player addMagazine _mS1;
-						_player addMagazine _mS1;
-						_player addMagazine _mS1;
-
-						// Equipamentos para a arma secundária
-						_player addHandgunItem "CUP_muzzle_snds_M9"; // silenciador
-
-
-						// Equipamentos
-						_player linkItem "rhsusf_ANPVS_14"; // Night vision
-						_player addWeapon "rhsusf_bino_m24_ARD"; // Binoculos
+						_player addBackpack selectRandom ["B_AssaultPack_blk","B_AssaultPack_khk","B_AssaultPack_rgr","B_AssaultPack_sgg","B_AssaultPack_dgtl"];
+						_player addVest "V_Press_F";
+						_aP = selectRandom ["hgun_Pistol_heavy_01_F"];
+						_mP = selectRandom getArray (configFile >> "CfgWeapons" >> _aP >> "magazines");
+						_player addMagazine _mP;
+						_player addMagazine _mP;
+						_player addMagazine _mP;
+						_player addMagazine _mP;
+						_player addMagazine _mP;
+						_player addWeapon _aP;
+						_player linkItem "NVGoggles";
+						_player addWeapon "Binocular";
 						_player addItem "FirstAidKit";
 					};
 				} else {
-					if (BRPVP_bornWithItems) then {if (hmd _player isEqualTo "") then {_player linkItem "rhsusf_ANPVS_14";};};
+					if (BRPVP_bornWithItems) then {if (hmd _player isEqualTo "") then {_player linkItem "NVGoggles";};};
 				};
 			};
 
@@ -874,47 +849,26 @@ if (BRPVP_checaExistenciaPlayerBdRetorno in ["nao_ta_no_bd","no_bd_e_morto"]) th
 		//LIGA MODO ADMIN CASO SEJA UM ADMIN
 		if (BRPVP_isAdminOrModerator) then {BRPVP_onMapSingleClick = BRPVP_adminMapaClique;} else {BRPVP_onMapSingleClick = BRPVP_padMapaClique;};
 		
-		//Itens inicias 2
+		//ADD INITIAL LOOT
 		if (!BRPVP_bornWithDeadItemsThisRound) then {
 			if (_clone isEqualTo "") then {
 				if (BRPVP_bornWithItems) then {
-					// Roupas
-					player addBackpack selectRandom ["Police_Messenger_Bag"];
-					player addVest "Police_SoldierVest";
-
-					// Arma Principal
-					//_mP = selectRandom getArray (configFile >> "CfgWeapons" >> _aP >> "magazines"); pente padrão da arma 
-					_aP = selectRandom ["CUP_arifle_M16A1GL_FS"]; // Seleciona arma
-					_mP1 = "CUP_20Rnd_556x45_Stanag_Tracer_Red"; // Tipo de pente 
+					player addBackpack selectRandom ["B_AssaultPack_blk","B_AssaultPack_khk","B_AssaultPack_rgr","B_AssaultPack_sgg","B_AssaultPack_dgtl"];
+					player addVest "V_Press_F";
+					_aP = selectRandom ["hgun_Pistol_heavy_01_F"];
+					_mP = selectRandom getArray (configFile >> "CfgWeapons" >> _aP >> "magazines");
+					player addMagazine _mP;
+					player addMagazine _mP;
+					player addMagazine _mP;
+					player addMagazine _mP;
+					player addMagazine _mP;
 					player addWeapon _aP;
-					player addPrimaryWeaponItem _mP1; // Pente na arma
-					player addMagazine _mP1;
-					player addMagazine _mP1;
-					player addMagazine _mP1;
-					player addMagazine _mP1;
-
-					// Arma Secundaria
-					_sP = selectRandom ["CUP_hgun_P30L_od"]; // Seleciona arma
-					_mS1 = "CUP_17Rnd_9x19_P30L"; // Tipo de pente 
-					player addWeapon _sP;
-					player addHandgunItem _mS1; // Pente na arma
-					player addMagazine _mS1;
-					player addMagazine _mS1;
-					player addMagazine _mS1;
-					player addMagazine _mS1;
-					player addMagazine _mS1;
-
-					// Equipamentos para a arma secundária
-					player addHandgunItem "CUP_muzzle_snds_M9"; // silenciador
-
-
-					// Equipamentos
-					player linkItem "rhsusf_ANPVS_14"; // Night Vision
-					player addWeapon "rhsusf_bino_m24_ARD"; // Binoculos
+					player linkItem "NVGoggles";
+					player addWeapon "Binocular";
 					player addItem "FirstAidKit";
 				};
 			} else {
-				if (BRPVP_bornWithItems) then {if (hmd player isEqualTo "") then {player linkItem "rhsusf_ANPVS_14";};};
+				if (BRPVP_bornWithItems) then {if (hmd player isEqualTo "") then {player linkItem "NVGoggles";};};
 			};
 		};
 
@@ -1089,6 +1043,9 @@ if (BRPVP_infantryDay) then {
 		};
 	};
 };
+
+//SET MEISTER PLAYER LIGHTS
+if (player getVariable "brpvp_is_master") then {([player]+BRPVP_meisterLightData) remoteExec ["BRPVP_shinePlayerCode",0];};
 
 if !(getPlayerUID player in BRPVP_openingPlayers) then {
 	BRPVP_openingPlayers pushBack getPlayerUID player;

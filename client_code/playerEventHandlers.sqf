@@ -169,7 +169,7 @@ BRPVP_doInconcious = {
 	if (!isNull findDisplay 602) then {(findDisplay 602) closeDisplay 1;};
 
 	//RELEASE CARRYING BOX
-	_b = player getVariable ["brpvp_box_carry",objNull];
+	private _b = player getVariable ["brpvp_box_carry",objNull];
 	if (!isNull _b) then {
 		BRPVP_boxCarryAction = false;
 		player setVariable ["brpvp_box_carry",objNull,[clientOwner,2]];
@@ -177,7 +177,7 @@ BRPVP_doInconcious = {
 		[_b,_cargo,ASLToATL getPosASL player] remoteExecCall ["BRPVP_transferCargoCargoB",_b];
 		_cargo setPosASL getPosASL player;
 	};
-	_model = player getVariable ["brpvp_box_carry_model",objNull];
+	private _model = player getVariable ["brpvp_box_carry_model",objNull];
 	if (!isNull _model) then {
 		detach _model;
 		deleteVehicle _model;
@@ -211,7 +211,7 @@ BRPVP_doInconcious = {
 	if (BRPVP_itemMagnetOn) then {player spawn BRPVP_itemMagnetOff;};
 
 	//REMOVE DEAD BODY FROM VEHICLE
-	_vehicle = objectParent player;
+	private _vehicle = objectParent player;
 	if (!isNull _vehicle) then {
 		if (BRPVP_deathInVehTime isEqualTo -1) then {BRPVP_deathInVehTime = time;};
 		if (ASLToAGL getPosASL _vehicle select 2 < 0.35) then {
@@ -229,7 +229,7 @@ BRPVP_doInconcious = {
 	};
 	
 	//RECORD TURRET KILL
-	_turret = BRPVP_lastOfensor getVariable ["brpvp_turret",objNull];
+	private _turret = BRPVP_lastOfensor getVariable ["brpvp_turret",objNull];
 	if (!isNull _turret && typeOf BRPVP_lastOfensor in ["B_Soldier_VR_F","C_Soldier_VR_F"] && _turret getVariable ["id_bd",-1] >= 0) then {
 		private _flag = _turret call BRPVP_nearestFlagInside; //(FIO)
 		private _line = [
@@ -244,7 +244,7 @@ BRPVP_doInconcious = {
 	};
 
 	//DISABLE GENERAL MESSAGE
-	_killer = BRPVP_mensagemDeKillArray select 4;
+	private _killer = BRPVP_mensagemDeKillArray select 4;
 	if (!BRPVP_starvedToDeath) then {
 		if (player isEqualTo _killer || isNull _killer) then {
 			[player getVariable ["nm","no_name"],{systemChat format [localize "str_disable_message_alone",_this];}] remoteExecCall ["call",BRPVP_allNoServer];
@@ -283,7 +283,7 @@ BRPVP_doInconcious = {
 	BRPVP_wasBotKill = _killer getVariable ["ifz",-1] isEqualTo -1 && _killer isKindOf "CaManBase" && _killer getVariable ["id_bd",-1] isEqualTo -1 && !(typeOf _killer in ["B_Soldier_VR_F","C_Soldier_VR_F"]);
 	
 	//SET PENALT ON KILLER IF NEWER PLAYER
-	_newerKilledByPlayer = false;
+	private _newerKilledByPlayer = false;
 	if (_killer call BRPVP_isPlayer) then {
 		private _isMyGroup = _killer in units group player;
 		private _iTrustHin = (_killer getVariable ["id_bd",-1]) in (player getVariable ["amg",[]]);
@@ -420,7 +420,7 @@ BRPVP_doInconcious = {
 
 	[_ivh,BRPVP_possOtherPlayer && BRPVP_possItemUsed in ["BRPVP_possession","BRPVP_possessionStrong"],BRPVP_uberBadEnd,BRPVP_hauntDeath,weaponsItems player] spawn {
 		params ["_ivh","_possOtherAi","_uberBadEnd","_hauntDeath","_allWeapons"];
-		_dd = 0;
+		private _dd = 0;
 		if (BRPVP_starvedToDeath) then {
 			if (_possOtherAi) then {
 				waitUntil {!BRPVP_possOtherPlayer};
@@ -604,21 +604,21 @@ BRPVP_doInconcious = {
 			publicVariable "BRPVP_mensagemDeKillTxtSend";
 
 			//DELETA QUADRICICLO SE ELE ESTIVER VAZIO
-			_qdcl = player getVariable ["qdcl",objNull];
+			private _qdcl = player getVariable ["qdcl",objNull];
 			if (!isNull _qdcl) then {if (crew _qdcl isEqualTo []) then {deleteVehicle _qdcl;};};
 
 			//PUT HAND MONEY IN SUITCASE
-			_mny = player getVariable ["mny",0];
+			private _mny = player getVariable ["mny",0];
 			if (_mny > 0) then {
 				player setVariable ["mny",0,true];
-				_suitCase = "Land_Suitcase_F" createVehicle BRPVP_posicaoFora;
+				private _suitCase = "Land_Suitcase_F" createVehicle BRPVP_posicaoFora;
 				_suitCase setVariable ["mny",_mny,true];
 				_suitCase setPosWorld ((getPosWorld player) vectorAdd [0,0,1.5]);
 				_suitCase call BRPVP_putProtectionIfPVE;
 			};
 
 			//FECHA VAULT SE ESTIVER ABERTA
-			_vault = player getVariable ["wh",objNull];
+			private _vault = player getVariable ["wh",objNull];
 			if (!isNull _vault) then {call BRPVP_vaultRecolhe;};
 
 			//SALVA AMIGOS, ESTATISTICAS ETC DO PLAYER NO BANCO DE DADOS PARA A PROXIMA VIDA
@@ -743,10 +743,8 @@ BRPVP_pehHandleDamage = {
 	params ["_atacado","_parte","_dano","_ofensor","_projectile","_hitIndex","_instigator","_hitPoint"];
 	private _fd = player getHitPointDamage _hitPoint;
 	if (_atacado getVariable ["dd",-1] <= 0) then {
-		private ["_dltDano","_selfAttack"];
-
 		//FRANTA TREATMENT
-		_isFranta = typeOf _ofensor isEqualTo "Land_Can_V2_F" && _projectile isEqualTo "HelicopterExploBig";
+		private _isFranta = typeOf _ofensor isEqualTo "Land_Can_V2_F" && _projectile isEqualTo "HelicopterExploBig";
 		if (_isFranta) then {_ofensor = _instigator;};
 
 		//ATOMIC BOMB TREATMENT
@@ -755,28 +753,28 @@ BRPVP_pehHandleDamage = {
 			_atacado setVariable ["brpvp_atomic_bomb_death",false];
 		};
 
-		_dTime = diag_tickTime;
-		_damTokem = player getVariable ["brpvp_dam_tokem",0];
+		private _dTime = diag_tickTime;
+		private _damTokem = player getVariable ["brpvp_dam_tokem",0];
 		if (_dTime-_damTokem > 0.02) then {
 			player setVariable ["brpvp_dam_tokem",_dTime];
 
 			//CHECK IF RUNNING OVER IN SAFEZONE			
 			if (isNull _instigator && {!isNull _ofensor && _ofensor call BRPVP_isPlayer && !(_ofensor isEqualTo _atacado) && _projectile isEqualTo ""}) then {
-				_ofensorId = _ofensor getVariable ["id_bd",-1];
-				_atacadoAmg = _atacado getVariable ["amg",[]];
-				_trust = _ofensorId in _atacadoAmg;
+				private _ofensorId = _ofensor getVariable ["id_bd",-1];
+				private _atacadoAmg = _atacado getVariable ["amg",[]];
+				private _trust = _ofensorId in _atacadoAmg;
 				if (_atacado getVariable "god" && !_trust) then {
-					_noColl = _atacado getVariable ["brpvp_safe_no_collision",[]];
-					_vehOfensor = vehicle _ofensor;
+					private _noColl = _atacado getVariable ["brpvp_safe_no_collision",[]];
+					private _vehOfensor = vehicle _ofensor;
 					_noColl pushBack _vehOfensor;
 					_atacado setVariable ["brpvp_safe_no_collision",_noColl];
 					_vehOfensor disableCollisionWith _atacado;
 				};
 			};
 
-			_fromMoto = _ofensor call BRPVP_isMotorizedNoTurret;
-			_typeMoto = typeOf _ofensor;
-			_moto = _ofensor;
+			private _fromMoto = _ofensor call BRPVP_isMotorizedNoTurret;
+			private _typeMoto = typeOf _ofensor;
+			private _moto = _ofensor;
 			_ofensor = if (isNull _instigator) then {
 				private _ec = effectiveCommander _ofensor;
 				if (isNull _ec) then {_ofensor} else {_ec};
@@ -784,13 +782,13 @@ BRPVP_pehHandleDamage = {
 				_instigator
 			};
 			
-			_oIsBob = typeOf _ofensor isEqualto "C_Driver_1_F";
-			_selfAttack = _ofensor isEqualTo _atacado;
-			_veh = objectParent player;
+			private _oIsBob = typeOf _ofensor isEqualto "C_Driver_1_F";
+			private _selfAttack = _ofensor isEqualTo _atacado;
+			private _veh = objectParent player;
 
 			//DAMAGE MULT
-			_pIsPVE = player getVariable ["brpvp_pve_inside",0] > 0 && player getVariable ["brpvp_in_pvp_zone",0] isEqualTo 0;
-			_oIsPVE = if (_fromMoto) then {
+			private _pIsPVE = player getVariable ["brpvp_pve_inside",0] > 0 && player getVariable ["brpvp_in_pvp_zone",0] isEqualTo 0;
+			private _oIsPVE = if (_fromMoto) then {
 				{_moto distance2D (_x select 0) < _x select 1} count BRPVP_pveMainAreas > 0 && {_moto distance2D (_x select 0) < _x select 1} count BRPVP_pvpAreas isEqualTo 0
 			} else {
 				if (_oIsBob) then {
@@ -799,7 +797,7 @@ BRPVP_pehHandleDamage = {
 					_ofensor getVariable ["brpvp_pve_inside",0] > 0 && _ofensor getVariable ["brpvp_in_pvp_zone",0] isEqualTo 0
 				};
 			};
-			_pveMult = if (_pIsPVE || _oIsPVE) then {
+			private _pveMult = if (_pIsPVE || _oIsPVE) then {
 				_isPlayer = _ofensor getVariable ["id_bd",-1] > -1 || _oIsBob;
 				if (!_isPlayer || _selfAttack || (player in BRPVP_pveBanditObjList && _pIsPVE) || (_ofensor in BRPVP_pveBanditObjList && _oIsPVE) || _isFranta) then {
 					1
@@ -812,29 +810,29 @@ BRPVP_pehHandleDamage = {
 			};
 
 			//ARTY DELAYED NO DAMAGE
-			_delayedArtyMult = 1;
+			private _delayedArtyMult = 1;
 			if (diag_tickTime-(player getVariable ["brpvp_no_arty_damage",0]) < 1) then {
-				_case1 = _selfAttack && _hitPoint isEqualTo "hithead";
-				_case2 = isNull _ofensor;
-				_case3 = _moto isEqualTo vehicle player && isNull _instigator && _projectile isEqualTo "";
+				private _case1 = _selfAttack && _hitPoint isEqualTo "hithead";
+				private _case2 = isNull _ofensor;
+				private _case3 = _moto isEqualTo vehicle player && isNull _instigator && _projectile isEqualTo "";
 				if (_case1 || _case2 || _case3) then {_delayedArtyMult = 0;};
 			};
 			
 			//DAMAGE FROM VEH WITH DAMAGE OFF DAY
-			_voUAV = _ofensor call BRPVP_controlingUAV;
-			_vo = if (isNull _voUAV) then {objectParent _ofensor} else {_voUAV};
-			_vehDamOffDay = if (typeOf _vo in BRPVP_noDamageVehList) then {
+			private _voUAV = _ofensor call BRPVP_controlingUAV;
+			private _vo = if (isNull _voUAV) then {objectParent _ofensor} else {_voUAV};
+			private _vehDamOffDay = if (typeOf _vo in BRPVP_noDamageVehList) then {
 				0
 			} else {
 				if (typeOf objectParent _atacado in BRPVP_noDamageVehList && _ofensor call BRPVP_isPlayerC) then {0} else {1};
 			};
 			
 			//FROM BASE NO RAID DAY
-			_baseMult = 1;
+			private _baseMult = 1;
 			if (!isNull _ofensor && isNull (_ofensor getVariable ["brpvp_turret",objNull])) then {
 				if (!BRPVP_raidServerIsRaidDay) then {
-					_aInBase = [_atacado,BRPVP_noRaidDayBaseExtension] call BRPVP_checkOnFlagStateExtraRadius > 0 && ASLToAGL getPosASL _atacado select 2 <= BRPVP_maxBuildHeight+75;
-					_oInBase = [_ofensor,BRPVP_noRaidDayBaseExtension] call BRPVP_checkOnFlagStateExtraRadius > 0 && ASLToAGL getPosASL _ofensor select 2 <= BRPVP_maxBuildHeight+75;
+					private _aInBase = [_atacado,BRPVP_noRaidDayBaseExtension] call BRPVP_checkOnFlagStateExtraRadius > 0 && ASLToAGL getPosASL _atacado select 2 <= BRPVP_maxBuildHeight+75;
+					private _oInBase = [_ofensor,BRPVP_noRaidDayBaseExtension] call BRPVP_checkOnFlagStateExtraRadius > 0 && ASLToAGL getPosASL _ofensor select 2 <= BRPVP_maxBuildHeight+75;
 					if !((_aInBase && _oInBase) || !(_aInBase || _oInBase)) then {
 						[_aInBase,false] call BRPVP_cantHurtFromBaseMsg;
 						if (_ofensor call BRPVP_isPlayer) then {[_oInBase,true] remoteExecCall ["BRPVP_cantHurtFromBaseMsg",_ofensor];};
@@ -844,19 +842,19 @@ BRPVP_pehHandleDamage = {
 			};
 
 			//IS TURRET BASE TEST
-			_vehOfensor = vehicle _ofensor;
-			_vehOfensorId = _vehOfensor getVariable ["id_bd",-1];
-			_baseTestMult = 1;
+			private _vehOfensor = vehicle _ofensor;
+			private _vehOfensorId = _vehOfensor getVariable ["id_bd",-1];
+			private _baseTestMult = 1;
 			if (_vehOfensor isKindOf "StaticWeapon" && _vehOfensorId > 0 && (player getVariable ["brpvp_base_test",0]) > 0) then {_baseTestMult = if (_vehOfensor call BRPVP_checaAcesso) then {0} else {1};};
 			
-			_t50Lvl2Mult = [1,0] select (typeOf _instigator in ["B_Soldier_VR_F","C_Soldier_VR_F"] && _projectile in [BRPVP_autoTurretHmgLvl2Rocket,BRPVP_autoTurretHmgLvl2Penetrator] && !isNull _veh);
-			_colisionMult = [1,[1,0] select (_projectile isEqualTo "")] select (BRPVP_constantRunOn || !BRPVP_srunBeachDamage || player getVariable ["brpvp_halo_no_coll",false] || player getVariable ["brpvp_no_colision",false] || player getVariable ["brpvp_no_colision_ubadend",false] || player getVariable ["brpvp_no_colision_cam_base",false]);
-			_adminMult = [1,0] select ((_ofensor getVariable ["brpvp_player_mode",""]) in ["admin","moderator"] && !BRPVP_adminsModeratorsCanKillPlayersWithWeapons && !(_ofensor isEqualTo _atacado));
-			_godModeMult = [1,0] select (player getVariable "god" || player getVariable "brpvp_god_admin" || player getVariable "brpvp_extra_protection");
-			_adminFlyMult = [1,0] select ((BRPVP_flyA || BRPVP_flyB || BRPVP_flyC || BRPVP_flyOnOffAdmin) && !BRPVP_flyOnOff);
-			_PVPAreaMult = [1,0] select (_atacado call BRPVP_inPVPArea && {!(_ofensor call BRPVP_inPVPArea)});
-			_vehCollisionMult = [1,0] select (!isNull _veh && _veh isKindOF "LandVehicle" && _projectile isEqualTo "");
-			_baseFriendsMult = [1,[0,1] select ((((_atacado getVariable "brpvp_mafiwao") select 0) arrayIntersect ((_ofensor getVariable "brpvp_mafiwao") select 0)) isEqualTo [])] select (typeOf _ofensor isEqualTo BRPVP_playerModel);
+			private _t50Lvl2Mult = [1,0] select (typeOf _instigator in ["B_Soldier_VR_F","C_Soldier_VR_F"] && _projectile in [BRPVP_autoTurretHmgLvl2Rocket,BRPVP_autoTurretHmgLvl2Penetrator] && !isNull _veh);
+			private _colisionMult = [1,[1,0] select (_projectile isEqualTo "")] select (BRPVP_constantRunOn || !BRPVP_srunBeachDamage || player getVariable ["brpvp_halo_no_coll",false] || player getVariable ["brpvp_no_colision",false] || player getVariable ["brpvp_no_colision_ubadend",false] || player getVariable ["brpvp_no_colision_cam_base",false]);
+			private _adminMult = [1,0] select ((_ofensor getVariable ["brpvp_player_mode",""]) in ["admin","moderator"] && !BRPVP_adminsModeratorsCanKillPlayersWithWeapons && !(_ofensor isEqualTo _atacado));
+			private _godModeMult = [1,0] select (player getVariable "god" || player getVariable "brpvp_god_admin" || player getVariable "brpvp_extra_protection");
+			private _adminFlyMult = [1,0] select ((BRPVP_flyA || BRPVP_flyB || BRPVP_flyC || BRPVP_flyOnOffAdmin) && !BRPVP_flyOnOff);
+			private _PVPAreaMult = [1,0] select (_atacado call BRPVP_inPVPArea && {!(_ofensor call BRPVP_inPVPArea)});
+			private _vehCollisionMult = [1,0] select (!isNull _veh && _veh isKindOF "LandVehicle" && _projectile isEqualTo "");
+			private _baseFriendsMult = [1,[0,1] select ((((_atacado getVariable "brpvp_mafiwao") select 0) arrayIntersect ((_ofensor getVariable "brpvp_mafiwao") select 0)) isEqualTo [])] select (typeOf _ofensor isEqualTo BRPVP_playerModel);
 			BRPVP_damageMultEh = (player getVariable ["brpvp_no_col_safe_repel",1])*_baseFriendsMult*_t50Lvl2Mult*_delayedArtyMult*_vehDamOffDay*_baseTestMult*_adminMult*_pveMult*_baseMult*_adminFlyMult*_godModeMult*_PVPAreaMult*_vehCollisionMult*_colisionMult/BRPVP_playerLifeMultiplier;
 			//diag_log str [BRPVP_damageMultEh,_baseFriendsMult,_t50Lvl2Mult,_delayedArtyMult,_vehDamOffDay,_baseTestMult,_adminMult,_pveMult,_baseMult,_adminFlyMult,_godModeMult,_PVPAreaMult,_vehCollisionMult,_colisionMult,BRPVP_playerLifeMultiplier];
 
@@ -867,7 +865,7 @@ BRPVP_pehHandleDamage = {
 			if (isNull _ofensor) then {
 				if (_projectile in ["HelicopterExploBig","Sh_105mm_HEAT_MP","B_25mm"]) then {
 					if (ZB_agnts isEqualTo []) then {
-						_zombies = player nearEntities [BRPVP_zombieMotherClass,125];
+						private _zombies = player nearEntities [BRPVP_zombieMotherClass,125];
 						if !(_zombies isEqualTo []) then {BRPVP_lastOfensor = _zombies select 0;};
 					} else {
 						BRPVP_lastOfensor = ZB_agnts select 0;
@@ -902,16 +900,16 @@ BRPVP_pehHandleDamage = {
 			_ofensor = if (isNull _instigator) then {effectiveCommander _ofensor} else {_instigator};
 			_selfAttack = _ofensor isEqualTo _atacado;
 		};
-		_partIsGeneral = _hitPoint isEqualTo "";
-		_partIsHead = _hitPoint isEqualTo "hithead";
+		private _partIsGeneral = _hitPoint isEqualTo "";
+		private _partIsHead = _hitPoint isEqualTo "hithead";
 
 		//ALL TIME DAMAGE ADJUST
 		if (!(player call BRPVP_pAlive) && BRPVP_deathInVehTime isEqualTo -1 && {!isNull objectParent player}) then {BRPVP_deathInVehTime = time;};
-		_deathInVeh = if (time-BRPVP_deathInVehTime < 0.5) then {0} else {1};
+		private _deathInVeh = if (time-BRPVP_deathInVehTime < 0.5) then {0} else {1};
 
 		//ADJUST DAMAGE
-		_damageNow = if (_partIsGeneral) then {damage _atacado} else {_atacado getHitPointDamage _hitPoint};
-		_dltDano = (_dano-_damageNow)*BRPVP_damageMultEh*_deathInVeh;
+		private _damageNow = if (_partIsGeneral) then {damage _atacado} else {_atacado getHitPointDamage _hitPoint};
+		private _dltDano = (_dano-_damageNow)*BRPVP_damageMultEh*_deathInVeh;
 		_dano = _damageNow+_dltDano;
 
 		//RECORD HEAD SHOT
@@ -1049,11 +1047,11 @@ BRPVP_followBullet = {
 };
 player addEventHandler ["FiredMan",{call BRPVP_pehFiredMan;}];
 BRPVP_pehFiredMan = {
-	_weapon = _this select 1;
-	_muzzle = _this select 2;
-	_ammo = _this select 4;
-	_magazine = _this select 5;
-	_bala = _this select 6;
+	private _weapon = _this select 1;
+	private _muzzle = _this select 2;
+	private _ammo = _this select 4;
+	private _magazine = _this select 5;
+	private _bala = _this select 6;
 	private _balaDeleted = false;
 	private _veh = objectParent player;
 
@@ -1198,7 +1196,7 @@ BRPVP_pehFiredMan = {
 		};
 
 		//ZOMBIE DISTRACT OBJECTS
-		_find = BRPVP_zombieDistractAmmo find (typeOf _bala);
+		private _find = BRPVP_zombieDistractAmmo find (typeOf _bala);
 		if (_find > -1) then {[_find,_bala] spawn BRPVP_trowAttractZombie;};
 
 		//DETECT MINERVA SHOT
@@ -1315,15 +1313,15 @@ BRPVP_pehGetInMan = {
 	if (_veiculo isKindOf "Motorcycle" || _veiculo isKindOf "Car" || _veiculo isKindOf "Tank") then {0 spawn BRPVP_avoidTurretCollision;};
 
 	//CAN'T ENTER WHILE HULKING
-	_hlk = player getVariable ["brpvp_hulk_objs",[]];
+	private _hlk = player getVariable ["brpvp_hulk_objs",[]];
 	if !(_hlk isEqualTo []) then {
 		[localize "str_cant_while_hulking",-5] call BRPVP_hint;
 		moveOut player;
 	};
 
 	//HIDE SHIFT+E BOX
-	_box = player getVariable ["brpvp_box_carry",objNull];
-	_model = player getVariable ["brpvp_box_carry_model",objNull];
+	private _box = player getVariable ["brpvp_box_carry",objNull];
+	private _model = player getVariable ["brpvp_box_carry_model",objNull];
 	if (!isNull _box) then {[_box,true] remoteExecCall ["hideObjectGlobal",2];};
 	if (!isNull _model) then {[_model,true] remoteExecCall ["hideObjectGlobal",2];};
 
@@ -1339,14 +1337,14 @@ BRPVP_pehGetInMan = {
 
 	//CAR ALARM
 	if !(_veiculo call BRPVP_checaAcesso) then {
-		_alarmIsOn = _veiculo getVariable ["brpvp_alarm_is_on",false];
+		private _alarmIsOn = _veiculo getVariable ["brpvp_alarm_is_on",false];
 		if (!_alarmIsOn) then {
 			_veiculo setVariable ["brpvp_alarm_is_on",true,true];
 			_veiculo spawn {
-				_veiculo = _this;
-				_alarmCount = 0;
+				private _veiculo = _this;
+				private _alarmCount = 0;
 				waitUntil {
-					_sample = [selectRandom ["car_alarm_01","car_alarm_02","car_alarm_03"],600];
+					private _sample = [selectRandom ["car_alarm_01","car_alarm_02","car_alarm_03"],600];
 					[_veiculo,_sample] remoteExecCall ["say3d",BRPVP_allNoServer];
 					_alarmCount = _alarmCount+1;
 					sleep 1;
@@ -1367,9 +1365,9 @@ BRPVP_pehGetInMan = {
 	
 	//ADD SLING LOAD EVENT HANDLER
 	if (_ocup isEqualTo "driver") then {
-		_typeOf = typeOf _veiculo;
+		private _typeOf = typeOf _veiculo;
 		if (isNumber (configFile >> "CfgVehicles" >> _typeOf >> "slingLoadMaxCargoMass")) then {
-			_sligLimit = getNumber (configFile >> "CfgVehicles" >> _typeOf >> "slingLoadMaxCargoMass");
+			private _sligLimit = getNumber (configFile >> "CfgVehicles" >> _typeOf >> "slingLoadMaxCargoMass");
 			if (_sligLimit > 0) then {
 				BRPVP_slingEventHandlerOn = true;
 				_veiculo addEventHandler ["RopeAttach",{
@@ -1398,7 +1396,7 @@ BRPVP_pehGetInMan = {
 	if (_veiculo getVariable ["brpvp_fedidex",false]) then {[localize "str_fedidex_del_alert"] call BRPVP_hint;};
 
 	//MESSAGE IF TRANSPORT MISSION VEHICLE
-	_transVeh = _veiculo getVariable ["brpvp_trans_mission",0];
+	private _transVeh = _veiculo getVariable ["brpvp_trans_mission",0];
 	if (_transVeh > 0) then {[format [localize "str_trans_veh_msg",_transVeh],-6] call BRPVP_hint;};
 
 	//DISABLE ADMIN FLY
@@ -1412,7 +1410,7 @@ BRPVP_pehGetInMan = {
 	//PROTECT AIR VEHICLE
 	if (_ocup isEqualTo "driver" && {_veiculo isKindOf "Air"}) then {
 		_veiculo spawn {
-			_init = time;
+			private _init = time;
 			waitUntil {local _this || time-_init > 2};
 			if (local _this) then {_this call BRPVP_setAirGodMode;};
 		};
@@ -1427,7 +1425,7 @@ BRPVP_pehGetInMan = {
 	//REMOVE AUTO MAGUS TIME
 	if !(typeOf _veiculo in BRPVP_vantVehiclesClass) then {
 		if (_veiculo getVariable ["id_bd",-1] > -1) then {
-			_havePlayer = false;
+			private _havePlayer = false;
 			{if (_x call BRPVP_isPlayer) exitWith {_havePlayer = true;};} forEach (crew _veiculo-[player]);
 			if (!_havePlayer) then {_veiculo setVariable ["brpvp_auto_magus_time",-1,2];};
 		};
@@ -1472,8 +1470,8 @@ BRPVP_pehGetOutMan = {
 	params ["_unit","_role","_vehicle","_turret"];
 
 	//SHOW SHIFT+E BOX
-	_box = player getVariable ["brpvp_box_carry",objNull];
-	_model = player getVariable ["brpvp_box_carry_model",objNull];
+	private _box = player getVariable ["brpvp_box_carry",objNull];
+	private _model = player getVariable ["brpvp_box_carry_model",objNull];
 	if (!isNull _box) then {[_box,false] remoteExecCall ["hideObjectGlobal",2];};
 	if (!isNull _model) then {[_model,false] remoteExecCall ["hideObjectGlobal",2];};
 
@@ -1543,7 +1541,7 @@ BRPVP_pehGetOutMan = {
 	};
 
 	//SET SIMULATION DISABLE TIME IF EMPTY
-	_havePlayer = false; 
+	private _havePlayer = false; 
 	{if (_x call BRPVP_isPlayer) exitWith {_havePlayer = true;};} forEach (crew _vehicle-[player]);
 	if (!_havePlayer) then {
 		if (_vehicle getVariable ["brpvp_delete_when_possible",false]) then {
@@ -1576,11 +1574,11 @@ BRPVP_pehGetOutMan = {
 	if (local _vehicle && {_vehicle isKindOf "Air"}) then {
 		_vehicle call BRPVP_setAirGodMode;
 		_vehicle spawn {
-			_veh = _this;
-			_init = time;
+			private _veh = _this;
+			private _init = time;
 			waitUntil {
 				sleep 0.5;
-				_exit = vectorMagnitude velocity _veh < 0.25 || time-_init > 30 || !local _veh;
+				private _exit = vectorMagnitude velocity _veh < 0.25 || time-_init > 30 || !local _veh;
 				if (!_exit) then {_veh call BRPVP_setAirGodMode;};
 				_exit
 			};
@@ -1612,8 +1610,8 @@ BRPVP_pehGetOutMan = {
 //PLAYER SEATSWITCHEDMAN EH
 player addEventHandler ["SeatSwitchedMan",{call BRPVP_pehSeatSwitchedMan;}];
 BRPVP_pehSeatSwitchedMan = {
-	_ocup = assignedVehicleRole player select 0;
-	_veiculo = _this select 2;
+	private _ocup = assignedVehicleRole player select 0;
+	private _veiculo = _this select 2;
 	if (currentPilot _veiculo isEqualTo player) then {_ocup = "driver";};
 
 	player setVariable ["brpvp_veh_pos",_veiculo worldToModel ASLToAGL getPosASL player];
@@ -1633,9 +1631,9 @@ BRPVP_pehSeatSwitchedMan = {
 
 	if (_ocup isEqualTo "driver") then {
 		//ADD SLING LOAD EVENT HANDLER
-		_typeOf = typeOf _veiculo;
+		private _typeOf = typeOf _veiculo;
 		if (isNumber (configFile >> "CfgVehicles" >> _typeOf >> "slingLoadMaxCargoMass")) then {
-			_sligLimit = getNumber (configFile >> "CfgVehicles" >> _typeOf >> "slingLoadMaxCargoMass");
+			private _sligLimit = getNumber (configFile >> "CfgVehicles" >> _typeOf >> "slingLoadMaxCargoMass");
 			if (_sligLimit > 0) then {
 				BRPVP_slingEventHandlerOn = true;
 				_veiculo addEventHandler ["RopeAttach",{
@@ -1683,7 +1681,7 @@ BRPVP_pehSeatSwitchedMan = {
 	//PROTECT AIR VEHICLE
 	if (_ocup isEqualTo "driver" && {_veiculo isKindOf "Air"}) then {
 		_veiculo spawn {
-			_init = time;
+			private _init = time;
 			waitUntil {local _this || time-_init > 2};
 			if (local _this) then {_this call BRPVP_setAirGodMode;};
 		};
@@ -1699,8 +1697,8 @@ BRPVP_putLast = "";
 BRPVP_putRepeat = 0;
 player addEventHandler ["Put",{call BRPVP_pehPut;}];
 BRPVP_pehPut = {
-	_cont = _this select 1;
-	_item = _this select 2;
+	private _cont = _this select 1;
+	private _item = _this select 2;
 	BRPVP_takePutLastTime = time;
 	
 	//DISABLE DELETE ON RESTART
@@ -1741,12 +1739,12 @@ BRPVP_takeLast = "";
 BRPVP_takeRepeat = 0;
 player addEventHandler ["Take",{call BRPVP_pehTake;}];
 BRPVP_pehTake = {
-	_cont = _this select 1;
-	_item = _this select 2;
+	private _cont = _this select 1;
+	private _item = _this select 2;
 	BRPVP_takePutLastTime = time;
 
 	if (_item in (BRPVP_moneyItems select 0)) then {
-		_addMny = (BRPVP_moneyItems select 1) select (BRPVP_moneyItems select 0 find _item);
+		private _addMny = (BRPVP_moneyItems select 1) select (BRPVP_moneyItems select 0 find _item);
 		player setVariable ["mny",(player getVariable "mny")+_addMny,true];
 		"negocio" call BRPVP_playSound;
 		_item spawn {
@@ -1756,7 +1754,7 @@ BRPVP_pehTake = {
 		call BRPVP_atualizaDebug;
 	};
 
-	_wh_usos = _cont getVariable ["ml_takes",-1];
+	private _wh_usos = _cont getVariable ["ml_takes",-1];
 	if (_wh_usos >= 0) then {_cont setVariable ["ml_takes",_wh_usos+1,true];};
 
 	//DISABLE DELETE ON RESTART

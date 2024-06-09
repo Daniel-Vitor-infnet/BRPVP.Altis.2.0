@@ -1569,7 +1569,7 @@ BRPVP_setNewAiUnitOutOfAiArray = {
 	//BRPVP_siegeMissionNext = 0;
 	//BRPVP_bravoPointNext = 0;
 	//BRPVP_specForceNext = 0;
-	//BRPVP_carrierMissionNext = serverTime+(BRPVP_carrierMissDelayTime+floor random BRPVP_carrierMissRandomTime);
+	//BRPVP_carrierMissionNext = 0;
 	//BRPVP_pmissActualAiUnits = [];
 	//BRPVP_pmissObjects = [];
 	//BRPVP_pmissObjectsToDel = [];
@@ -1833,19 +1833,7 @@ BRPVP_setNewAiUnitOutOfAiArray = {
 
 				//SET AS ULFAN
 				if (random 1 <= BRPVP_ulfanSoldierPercentage && isNull objectParent _bot && !(_bot getVariable ["brpvp_uber_attack",false]) && _bot getVariable ["brpvp_can_ulfanize",true]) then {
-					_bot enableStamina false;
-					_bot setUnitLoadout selectRandom BRPVP_ulfanSoldierLoadouts;
-					_bot remoteExecCall ["BRPVP_sBotAllUnitsObjsAdd",0];
-					_bot setVariable ["brpvp_is_ulfan",true,true];
-					_bot setVariable ["brpvp_ss_immune_mult",0,true];
-					_bot setVariable ["brpvp_no_possession",true,true];
-					_bot setVariable ["brpvp_lst",0];
-					_bot setVariable ["brpvp_no_head_hit",0];
-					_bot setVariable ["brpvp_wrong_player",objNull];
-					[_bot,BRPVP_ulfanSoldierSpeed] remoteExecCall ["setAnimSpeedCoef",0];
-					[_bot,["Fired",{call BRPVP_sBotFired;}]] remoteExecCall ["addEventHandler",_bot];
-					[_bot,["aimingAccuracy",BRPVP_ulfanSoldierSkill select 0]] remoteExecCall ["setSkill",_bot];
-					[_bot,BRPVP_ulfanSoldierSkill select 1] remoteExecCall ["setSkill",_bot];
+					_bot remoteExecCall ["BRPVP_ulfanizeAiUnit",_bot];
 				};
 
 				//MINERVA AI

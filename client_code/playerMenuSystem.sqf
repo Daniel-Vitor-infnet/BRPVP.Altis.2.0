@@ -8242,20 +8242,20 @@ BRPVP_menu = [
 		private _anywere = BRPVP_openPersonalVaultAnywhere;
 		private _vaultPrice = if (_placeOk) then {BRPVP_vaultPrice} else {if (_anywere) then {BRPVP_vaultPriceOutPlace} else {BRPVP_vaultPriceOutPlaceNoPerk};};
 
-		_vOpt = if (BRPVP_vaultLigada) then {
+		private _vOpt = if (BRPVP_vaultLigada) then {
 			localize "str_personal_vault_act_cls"
 		} else {
 			BRPVP_vaultNumberRun = BRPVP_vaultNumber max (player getVariable ["brpvp_vaults_xp",0]);
 			if (BRPVP_vaultNumberRun <= 1) then {format [localize "str_personal_vault",round (_vaultPrice/1000)]} else {localize "str_personal_vault_select"};
 		};
-		_shd = player getVariable ["brpvp_personal_shield",objNull];
-		_sOpt = if (isNull _shd) then {format [localize "str_personal_shield",round (BRPVP_personalShieldPrice/1000)]} else {localize "str_personal_shield_act_cls"};
-		_bsh = BRPVP_personalBush;
-		_bOpt = if (isNull _bsh) then {format [localize "str_personal_bush",round (BRPVP_personalBushPrice/1000)]} else {localize "str_personal_bush_act_cls"};
-		_twr = player getVariable ["brpvp_personal_tower",objNull];
-		_tOpt = if (isNull _twr) then {format [localize "str_personal_tower",round (BRPVP_personalTowerPrice/1000)]} else {localize "str_personal_tower_act_cls"};
-		_stv = player getVariable ["brpvp_personal_stv",objNull];
-		_tvOpt = if (isNull _stv) then {format [localize "str_personal_stv",round (BRPVP_personalSmartTvPrice/1000)]} else {localize "str_personal_stv_act_cls"};
+		private _shd = player getVariable ["brpvp_personal_shield",objNull];
+		private _sOpt = if (isNull _shd) then {format [localize "str_personal_shield",round (BRPVP_personalShieldPrice/1000)]} else {localize "str_personal_shield_act_cls"};
+		private _bsh = BRPVP_personalBush;
+		private _bOpt = if (isNull _bsh) then {format [localize "str_personal_bush",round (BRPVP_personalBushPrice/1000)]} else {localize "str_personal_bush_act_cls"};
+		private _twr = player getVariable ["brpvp_personal_tower",objNull];
+		private _tOpt = if (isNull _twr) then {format [localize "str_personal_tower",round (BRPVP_personalTowerPrice/1000)]} else {localize "str_personal_tower_act_cls"};
+		private _stv = player getVariable ["brpvp_personal_stv",objNull];
+		private _tvOpt = if (isNull _stv) then {format [localize "str_personal_stv",round (BRPVP_personalSmartTvPrice/1000)]} else {localize "str_personal_stv_act_cls"};
 		BRPVP_menuOpcoes = [_vOpt,_sOpt,_bOpt,_tOpt,_tvOpt,localize "str_set_vault_tip"];
 		BRPVP_menuExecutaParam = ["vault","shield","bush","tower","stv","vtip"];
 		BRPVP_menuExecutaFuncao = {
@@ -8263,14 +8263,14 @@ BRPVP_menu = [
 			if (_this isEqualTo "vault") then {
 				if (BRPVP_vaultNumberRun <= 1 || BRPVP_vaultLigada) then {
 					if (isNull objectParent player) then {
-						_tempo = BRPVP_vaultAcaoTempo-time;
+						private _tempo = BRPVP_vaultAcaoTempo-time;
 						if (_tempo > 0) then {
 							[format [localize "str_vault_cant",(round _tempo) max 1],0] call BRPVP_hint;
 						} else {
 							if (BRPVP_vaultLigada) then {
 								if (isNull BRPVP_holderVault) then {
 									if (time-BRPVP_vaultAcaoTempo > 3) then {
-										_txt = "[BRPVP VAULT OPEN PROBLEM] Vault no open problem ocurred!";
+										private _txt = "[BRPVP VAULT OPEN PROBLEM] Vault no open problem ocurred!";
 										diag_log _txt;
 										[player,_txt] remoteExecCall ["BRPVP_clientLogOnServer",2];
 									};
@@ -8290,7 +8290,7 @@ BRPVP_menu = [
 										private _anywere = BRPVP_openPersonalVaultAnywhere;
 										private _vaultPrice = if (_placeOk) then {BRPVP_vaultPrice} else {if (_anywere) then {BRPVP_vaultPriceOutPlace} else {BRPVP_vaultPriceOutPlaceNoPerk};};
 
-										_mny = player getVariable ["brpvp_mny_bank",0];
+										private _mny = player getVariable ["brpvp_mny_bank",0];
 										if (_mny >= _vaultPrice) then {
 											"buttom_on" call BRPVP_playSound;
 											BRPVP_vaultAcaoTempo = time+1;
@@ -8321,30 +8321,30 @@ BRPVP_menu = [
 			} else {
 				if (_this isEqualTo "shield") then {
 					if (time > BRPVP_personalShieldTime) then {
-						_objOn = player getVariable ["brpvp_personal_shield",objNull];
+						private _objOn = player getVariable ["brpvp_personal_shield",objNull];
 						if (isNull _objOn) then {
 							if (BRPVP_safeZone) then {
 								"erro" call BRPVP_playSound;
 							} else {
-								_posPlayer = getPosASL player;
+								private _posPlayer = getPosASL player;
 								_posPlayer set [2,(_posPlayer select 2)+1];
-								_ang = getDir player;
-								_posShd = [(_posPlayer select 0)+2*sin _ang,(_posPlayer select 1)+2*cos _ang,_posPlayer select 2];
-								_lis = lineIntersectsSurfaces [_posShd,_posShd vectorAdd [0,0,-3.5],objNull,objNull,true,1,"GEOM","NONE"];
+								private _ang = getDir player;
+								private _posShd = [(_posPlayer select 0)+2*sin _ang,(_posPlayer select 1)+2*cos _ang,_posPlayer select 2];
+								private _lis = lineIntersectsSurfaces [_posShd,_posShd vectorAdd [0,0,-3.5],objNull,objNull,true,1,"GEOM","NONE"];
 								if (_lis isNotEqualTo [] && {!((_lis select 0 select 2) call BRPVP_isMotorized) && !((_lis select 0 select 2) isKindOf "CaManBase")}) then {
-									_pos = _lis select 0 select 0;
-									_vu = vectorNormalized ((_lis select 0 select 1) vectorAdd [0,0,1.5]);
-									_spaceOk = true;
+									private _pos = _lis select 0 select 0;
+									private _vu = vectorNormalized ((_lis select 0 select 1) vectorAdd [0,0,1.5]);
+									private _spaceOk = true;
 									{
-										_h = _x;
+										private _h = _x;
 										{
-											_posCheck = _pos vectorAdd [_x*sin _ang,_x*cos _ang,0] vectorAdd [0,0,_h];
-											_vec = _posCheck vectorDiff _posPlayer;
-											_vecR = (vectorNormalized (_vec vectorCrossProduct _vu)) vectorMultiply 2;
-											_vecL = (vectorNormalized (_vu vectorCrossProduct _vec)) vectorMultiply 2;
-											_lisR = lineIntersectsSurfaces [_posPlayer,_posCheck vectorAdd _vecR,player,objNull,true,1,"GEOM","NONE"];
-											_lisL = lineIntersectsSurfaces [_posPlayer,_posCheck vectorAdd _vecL,player,objNull,true,1,"GEOM","NONE"];
-											_lisM = lineIntersectsSurfaces [_posPlayer,_posCheck,player,objNull,true,1,"GEOM","NONE"];
+											private _posCheck = _pos vectorAdd [_x*sin _ang,_x*cos _ang,0] vectorAdd [0,0,_h];
+											private _vec = _posCheck vectorDiff _posPlayer;
+											private _vecR = (vectorNormalized (_vec vectorCrossProduct _vu)) vectorMultiply 2;
+											private _vecL = (vectorNormalized (_vu vectorCrossProduct _vec)) vectorMultiply 2;
+											private _lisR = lineIntersectsSurfaces [_posPlayer,_posCheck vectorAdd _vecR,player,objNull,true,1,"GEOM","NONE"];
+											private _lisL = lineIntersectsSurfaces [_posPlayer,_posCheck vectorAdd _vecL,player,objNull,true,1,"GEOM","NONE"];
+											private _lisM = lineIntersectsSurfaces [_posPlayer,_posCheck,player,objNull,true,1,"GEOM","NONE"];
 											if !(_lisR isEqualTo [] && _lisM isEqualTo [] && _lisL isEqualTo []) exitWith {
 												_spaceOk = false;
 												break
@@ -8352,16 +8352,16 @@ BRPVP_menu = [
 										} forEach [-0.2,0,0.2];
 									} forEach [0.8,1,1.25,1.5];
 									if (_spaceOk) then {
-										_mny = player getVariable ["brpvp_mny_bank",0];
+										private _mny = player getVariable ["brpvp_mny_bank",0];
 										if (_mny >= BRPVP_personalShieldPrice) then {
 											player setVariable ["brpvp_mny_bank",_mny-BRPVP_personalShieldPrice,true];
 											call BRPVP_atualizaDebug;
-											_shield = createVehicle ["Land_Concrete_SmallWall_4m_F",BRPVP_posicaoFora,[],0,"CAN_COLLIDE"];
+											private _shield = createVehicle ["Land_Concrete_SmallWall_4m_F",BRPVP_posicaoFora,[],0,"CAN_COLLIDE"];
 											_shield setDir getDir player;
 											_shield setPosASL (_pos vectorAdd [0,0,0.56]);
 											_shield addEventHandler ["HandleDamage",{call BRPVP_personalShieldHDEH;}];
 											_shield setVectorUp _vu;
-											_params = [_shield,[format ["<t color='#B05050'>%1</t>",localize "str_remove_personal_shield"],{deleteVehicle (_this select 0);},[],2,false,false,"","_target distanceSqr player < 9"]];
+											private _params = [_shield,[format ["<t color='#B05050'>%1</t>",localize "str_remove_personal_shield"],{deleteVehicle (_this select 0);},[],2,false,false,"","_target distanceSqr player < 9"]];
 											_params remoteExecCall ["addAction",BRPVP_allNoServer,true];
 											player setVariable ["brpvp_personal_shield",_shield,[2,clientOwner]];
 											[player,["drilling",200]] remoteExecCall ["say3D",BRPVP_allNoServer];
@@ -8392,7 +8392,7 @@ BRPVP_menu = [
 					if (_this isEqualTo "bush") then {
 						if (isNull objectParent player) then {
 							if (isNull BRPVP_personalBush) then {
-								_mny = player getVariable ["brpvp_mny_bank",0];
+								private _mny = player getVariable ["brpvp_mny_bank",0];
 								if (_mny >= BRPVP_personalBushPrice) then {
 									player setVariable ["brpvp_mny_bank",_mny-BRPVP_personalBushPrice,true];
 									call BRPVP_atualizaDebug;
@@ -8493,23 +8493,23 @@ BRPVP_menu = [
 						};
 					} else {
 						if (_this isEqualTo "tower") then {
-							_objOn = player getVariable ["brpvp_personal_tower",objNull];
+							private _objOn = player getVariable ["brpvp_personal_tower",objNull];
 							if (isNull _objOn) then {
 								if (BRPVP_safeZone) then {
 									"erro" call BRPVP_playSound;
 								} else {
-									_posPlayer = getPosASL player;
+									private _posPlayer = getPosASL player;
 									_posPlayer set [2,(_posPlayer select 2)+1.5];
-									_ang = getDir player;
-									_posTwr = [(_posPlayer select 0)+5*sin _ang,(_posPlayer select 1)+5*cos _ang,_posPlayer select 2];
-									_lis = lineIntersectsSurfaces [_posPlayer,_posTwr,player,objNull];
-									_ok = true;
+									private _ang = getDir player;
+									private _posTwr = [(_posPlayer select 0)+5*sin _ang,(_posPlayer select 1)+5*cos _ang,_posPlayer select 2];
+									private _lis = lineIntersectsSurfaces [_posPlayer,_posTwr,player,objNull];
+									private _ok = true;
 									if (_lis isEqualTo []) then {
 										{
 											for "_i" from 1 to 6 do {
-												_a = _i*60;
-												_p = [(_posTwr select 0)+5*sin _a,(_posTwr select 1)+5*cos _a,_posTwr select 2] vectorAdd [0,0,_x];
-												_lis = lineIntersectsSurfaces [_posTwr,_p,player,objNull];
+												private _a = _i*60;
+												private _p = [(_posTwr select 0)+5*sin _a,(_posTwr select 1)+5*cos _a,_posTwr select 2] vectorAdd [0,0,_x];
+												private _lis = lineIntersectsSurfaces [_posTwr,_p,player,objNull];
 												if (count _lis > 0) exitWith {_ok = false;};
 											};
 											if (!_ok) exitWith {};
@@ -8518,16 +8518,16 @@ BRPVP_menu = [
 										_ok = false;
 									};
 									if (_ok) then {
-										_mny = player getVariable ["brpvp_mny_bank",0];
+										private _mny = player getVariable ["brpvp_mny_bank",0];
 										if (_mny >= BRPVP_personalTowerPrice) then {
 											player setVariable ["brpvp_mny_bank",_mny-BRPVP_personalTowerPrice,true];
 											call BRPVP_atualizaDebug;
-											_pos = [player,5,getDir player] call BIS_fnc_relPos;
+											private _pos = [player,5,getDir player] call BIS_fnc_relPos;
 											if (ASLToAGL getPosASL player select 2 > 0.1) then {
 												_pos set [2,getPosASL player select 2];
 												_pos = ASLToAGL _pos;
 											};
-											_tower = createVehicle ["Land_Cargo_Patrol_V1_F",ASLToATL AGLToASL _pos,[],0,"CAN_COLLIDE"];
+											private _tower = createVehicle ["Land_Cargo_Patrol_V1_F",ASLToATL AGLToASL _pos,[],0,"CAN_COLLIDE"];
 											_tower setVariable ["brpvp_can_loot",false,true];
 											_tower setVariable ["brpvp_no_lars",true,2];
 											_tower setDir (180+getDir player);
@@ -8560,7 +8560,7 @@ BRPVP_menu = [
 							};
 						} else {
 							if (_this isEqualTo "stv") then {
-								_objOn = player getVariable ["brpvp_personal_stv",objNull];
+								private _objOn = player getVariable ["brpvp_personal_stv",objNull];
 								if (isNull _objOn) then {
 									private _pp = if (stance player isEqualTo "STAND") then {(getPosASL player vectorAdd eyePos player) vectorMultiply 0.5} else {eyePos player};
 									private _pd = getDir player;
@@ -8569,11 +8569,11 @@ BRPVP_menu = [
 									private _lisBase = lineIntersectsSurfaces [_ppf,_ppf vectorAdd [0,0,-3],player,objNull,true,1,"GEOM","NONE"];
 									if (_lis isEqualTo [] && _lisBase isNotEqualTo []) then {
 										private _base = ASLToATL (_lisBase select 0 select 0);
-										_mny = player getVariable ["brpvp_mny_bank",0];
+										private _mny = player getVariable ["brpvp_mny_bank",0];
 										if (_mny >= BRPVP_personalSmartTvPrice) then {
 											player setVariable ["brpvp_mny_bank",_mny-BRPVP_personalSmartTvPrice,true];
 											call BRPVP_atualizaDebug;
-											_stv = createVehicle ["Land_Billboard_F",_base vectorAdd [0,0,-0.75],[],0,"CAN_COLLIDE"];
+											private _stv = createVehicle ["Land_Billboard_F",_base vectorAdd [0,0,-0.75],[],0,"CAN_COLLIDE"];
 											_stv setDir getDir player;
 											_stv setVectorUp [0,0,1];
 											_stv setVariable ["id_bd",-(player getVariable "id_bd")-10,true];
@@ -11666,21 +11666,26 @@ BRPVP_menu = [
 				};
 			};
 		} forEach (BRPVP_secCamAll-[objNull]);
-		BRPVP_menuOpcoes = _menuOpcoesMy+_menuOpcoesOthers;
-		BRPVP_menuExecutaParam = _menuExecutaParamMy+_menuExecutaParamOthers;
+		BRPVP_menuOpcoes = _menuOpcoesMy+_menuOpcoesOthers+[localize "str_menu12_opt2"];
+		BRPVP_menuExecutaParam = _menuExecutaParamMy+_menuExecutaParamOthers+["cancel"];
 		BRPVP_menuExecutaFuncao = {
-			if (isNull _this) then {
-				"erro" call BRPVP_playSound;
+			if (_this isEqualTo "cancel") then {
+				BRPVP_menuExtraLigado = false;
+				hintSilent "";
 			} else {
-				[_this] remoteExecCall ["BRPVP_secCamRemoveArray",0];
-				private _bomb = "APERSTripMine_Wire_Ammo" createVehicle ASLToAGL getPosASL _this;
-				_bomb setdamage 1;
-				(_this getVariable ["brpvp_cam_id",-1]) remoteExecCall ["BRPVP_secCamRemoveDb",2];
-				[0.5,[_this]] remoteExec ["BRPVP_disconnectDeathSignalCamera",call BRPVP_playersList];
-				[_this,true] remoteExecCall ["hideObjectGlobal",2]; 
-				_this spawn {uiSleep 0.5;deleteVehicle _this;};				
-				[localize "str_seccam_destroyed",-3] call BRPVP_hint;
-				205 call BRPVP_menuMuda;
+				if (isNull _this) then {
+					"erro" call BRPVP_playSound;
+				} else {
+					[_this] remoteExecCall ["BRPVP_secCamRemoveArray",0];
+					private _bomb = "APERSTripMine_Wire_Ammo" createVehicle ASLToAGL getPosASL _this;
+					_bomb setdamage 1;
+					(_this getVariable ["brpvp_cam_id",-1]) remoteExecCall ["BRPVP_secCamRemoveDb",2];
+					[0.5,[_this]] remoteExec ["BRPVP_disconnectDeathSignalCamera",call BRPVP_playersList];
+					[_this,true] remoteExecCall ["hideObjectGlobal",2]; 
+					_this spawn {uiSleep 0.5;deleteVehicle _this;};				
+					[localize "str_seccam_destroyed",-3] call BRPVP_hint;
+					205 call BRPVP_menuMuda;
+				};
 			};
 		};
 		BRPVP_menuVoltar = {
@@ -12276,6 +12281,7 @@ BRPVP_menu = [
 					hintSilent "";
 					[player,["voodoo_maker",600]] remoteExecCall ["say3D",BRPVP_allNoServer];
 				} else {
+					"erro" call BRPVP_playSound;
 					220 call BRPVP_menuMuda;
 				};
 			};

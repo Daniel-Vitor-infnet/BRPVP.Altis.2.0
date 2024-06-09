@@ -313,12 +313,6 @@ BRPVP_serverLoopCode = {
 				profileNamespace setVariable ["BRPVP_SVP_atomicBombHiddenBigFloors",BRPVP_atomicBombHiddenBigFloors];
 				saveProfileNamespace;
 			};
-
-			//RECALC PLAYERS PATRIMONY
-			0 spawn {
-				BRPVP_playersPatrimony = call BRPVP_calcPatrimonyOnServerUsingDB;
-				publicVariable "BRPVP_playersPatrimony";
-			};
 		};
 
 		//CRIA MISSAO
@@ -387,6 +381,12 @@ BRPVP_serverLoopCode = {
 			//DELETE GRASS CUT OBJECT
 			{if (serverTime-(_x getVariable "brpvp_cut_time") > BRPVP_grassCutTime) then {deleteVehicle _x;};} forEach BRPVP_grassCutObjs;
 			BRPVP_grassCutObjs = BRPVP_grassCutObjs-[objNull];
+
+			//RECALC PLAYERS PATRIMONY
+			0 spawn {
+				BRPVP_playersPatrimony = call BRPVP_calcPatrimonyOnServerUsingDB;
+				publicVariable "BRPVP_playersPatrimony";
+			};
 		};
 
 		//MASS SAVE
@@ -576,13 +576,13 @@ BRPVP_serverLoopCode = {
 		};
 
 		//ATUALIZA CONTAGEM
-		BRPVP_SL_contaA = BRPVP_SL_contaA + 1;
-		BRPVP_SL_contaB = BRPVP_SL_contaB + 1;
-		BRPVP_SL_contaC = BRPVP_SL_contaC + 1;
-		BRPVP_SL_contaD = BRPVP_SL_contaD + 1;
-		BRPVP_SL_contaE = BRPVP_SL_contaE + 1;
-		BRPVP_SL_contaF = BRPVP_SL_contaF + 1;
-		BRPVP_SL_contaG = BRPVP_SL_contaG + 1;
-		BRPVP_SL_contaH = BRPVP_SL_contaH + 1;
+		BRPVP_SL_contaA = BRPVP_SL_contaA+1;
+		BRPVP_SL_contaB = BRPVP_SL_contaB+1;
+		BRPVP_SL_contaC = BRPVP_SL_contaC+1;
+		BRPVP_SL_contaD = BRPVP_SL_contaD+1;
+		BRPVP_SL_contaE = BRPVP_SL_contaE+1;
+		BRPVP_SL_contaF = BRPVP_SL_contaF+1;
+		BRPVP_SL_contaG = BRPVP_SL_contaG+1;
+		BRPVP_SL_contaH = BRPVP_SL_contaH+1;
 	};
 };

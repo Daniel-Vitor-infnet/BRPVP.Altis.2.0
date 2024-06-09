@@ -257,7 +257,8 @@ BRPVP_specialItemsOrder = [
 	"BRPVP_miraculousEyeDrop",
 	"BRPVP_antiAtomicBomb", //140
 	"BRPVP_mammothAmmo",
-	"BRPVP_voodooDoll"
+	"BRPVP_voodooDoll",
+	"BRPVP_goldBars"
 ];
 
 //SPECIAL ITEMS GROUP
@@ -405,7 +406,8 @@ BRPVP_specialItemsGroup = [
 	localize "str_spec_itm_group_equip", //140
 	localize "str_spec_itm_group_equip",
 	localize "str_spec_itm_group_thief",
-	localize "str_spec_itm_group_thief"
+	localize "str_spec_itm_group_thief",
+	localize "str_spec_itm_group_craft"
 ];
 
 BRPVP_specialItemsFreeOfFlag = [
@@ -550,6 +552,7 @@ BRPVP_specialItemsFreeOfFlag = [
 	true,
 	true,
 	true, //140
+	true,
 	true,
 	true,
 	true
@@ -700,6 +703,7 @@ BRPVP_specialItemsRemoveTime = [
 	0, //140
 	0,
 	0,
+	0,
 	0
 ];
 //SPECIAL ITEMS NAMES
@@ -847,7 +851,8 @@ BRPVP_specialItemsNames = [
 	localize "str_item_anti_atomic_bomb", //140
 	localize "str_item_mammoth_ammo",
 	localize "str_player_launch_super",
-	localize "str_voodoo_doll"
+	localize "str_voodoo_doll",
+	localize "str_item_gold_bars"
 ];
 
 //SPECIAL ITEMS IMAGES
@@ -995,7 +1000,8 @@ BRPVP_specialItemsImages = [
 	"BRP_imagens\anti_atomic_bomb.paa", //140
 	"BRP_imagens\mammoth_ammo.paa",
 	"BRP_imagens\player_launch_super.paa",
-	"BRP_imagens\voodoo_doll.paa"
+	"BRP_imagens\voodoo_doll.paa",
+	"BRP_imagens\gold_bars.paa"
 ];
 
 BRPVP_traderWeaponItemsName = [];

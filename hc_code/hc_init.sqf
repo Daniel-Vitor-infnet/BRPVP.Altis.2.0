@@ -491,7 +491,7 @@ BRPVP_botDaExp = {
 	//ADD SPECIAL ITEMS
 	_extraChance = _bot getVariable ["brpvp_extra_chance",1];
 	_spcItems = _extraChance call BRPVP_createRandomBlueTankItems;
-	if !(_spcItems isEqualTo []) then {
+	if (_spcItems isNotEqualTo []) then {
 		_veh = objectParent _bot;
 		_pos = if (isNull _veh) then {[_bot,1,getDir _bot+selectRandom [90,-90]] call BIS_fnc_relPos} else {[_bot,5,getDir _veh+selectRandom [90,-90]] call BIS_fnc_relPos};
 		_pos = [_pos select 0,_pos select 1,(ASLToAGL getPosASL _bot select 2)+1];
@@ -1567,7 +1567,7 @@ BRPVP_setNewAiUnitOutOfAiArray = {
 	BRPVP_siegeMissionNext = 0;
 	BRPVP_bravoPointNext = 0;
 	BRPVP_specForceNext = 0;
-	BRPVP_carrierMissionNext = serverTime+(BRPVP_carrierMissDelayTime+floor random BRPVP_carrierMissRandomTime);
+	BRPVP_carrierMissionNext = 0;
 	BRPVP_pmissActualAiUnits = [];
 	BRPVP_pmissObjects = [];
 	BRPVP_pmissObjectsToDel = [];
@@ -1823,19 +1823,7 @@ BRPVP_setNewAiUnitOutOfAiArray = {
 
 				//SET AS ULFAN
 				if (random 1 <= BRPVP_ulfanSoldierPercentage && isNull objectParent _bot && !(_bot getVariable ["brpvp_uber_attack",false]) && _bot getVariable ["brpvp_can_ulfanize",true]) then {
-					_bot enableStamina false;
-					_bot setUnitLoadout selectRandom BRPVP_ulfanSoldierLoadouts;
-					_bot remoteExecCall ["BRPVP_sBotAllUnitsObjsAdd",0];
-					_bot setVariable ["brpvp_is_ulfan",true,true];
-					_bot setVariable ["brpvp_ss_immune_mult",0,true];
-					_bot setVariable ["brpvp_no_possession",true,true];
-					_bot setVariable ["brpvp_lst",0];
-					_bot setVariable ["brpvp_no_head_hit",0];
-					_bot setVariable ["brpvp_wrong_player",objNull];
-					[_bot,BRPVP_ulfanSoldierSpeed] remoteExecCall ["setAnimSpeedCoef",0];
-					[_bot,["Fired",{call BRPVP_sBotFired;}]] remoteExecCall ["addEventHandler",_bot];
-					[_bot,["aimingAccuracy",BRPVP_ulfanSoldierSkill select 0]] remoteExecCall ["setSkill",_bot];
-					[_bot,BRPVP_ulfanSoldierSkill select 1] remoteExecCall ["setSkill",_bot];
+					_bot remoteExecCall ["BRPVP_ulfanizeAiUnit",_bot];
 				};
 
 				//MINERVA AI

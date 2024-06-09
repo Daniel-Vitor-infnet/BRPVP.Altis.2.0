@@ -1123,7 +1123,7 @@ BRPVP_layerNearestCases = BRPVP_posCheckAllLayers apply {-1};
 	BRPVP_autoOpenDoorHistoricDoors = [];
 	BRPVP_autoOpenDoorPerkCode = {
 		if (isNull objectParent player && player call BRPVP_pAlive) then {
-			private _vec = getCameraViewDirection player vectorMultiply 6;
+			private _vec = getCameraViewDirection player vectorMultiply 5;
 			private _posCam = AGLToASL positionCameraToWorld [0,0,0];
 			private _lis = lineIntersectsSurfaces [_posCam,_posCam vectorAdd _vec,player,objNull,true,1,"GEOM","VIEW"];
 			if (_lis isNotEqualTo []) then {
@@ -1143,7 +1143,7 @@ BRPVP_layerNearestCases = BRPVP_posCheckAllLayers apply {-1};
 									};
 								} forEach ("true" configClasses (configFile >> "CfgVehicles" >> _class >> "AnimationSources"));
 								if (_openList isNotEqualTo []) then {
-									{_object animateSource [_x,1];} forEach _openList;
+									{_object animateSource [_x,1,BRPVP_autoOpenDoorSpeed];} forEach _openList;
 									BRPVP_autoOpenDoorPerkHistoric pushBackUnique _object;
 								};
 							};
@@ -1174,10 +1174,10 @@ BRPVP_layerNearestCases = BRPVP_posCheckAllLayers apply {-1};
 								if (_idx isEqualTo -1) then {
 									BRPVP_autoOpenDoorHistoricObj pushBack _object;
 									BRPVP_autoOpenDoorHistoricDoors pushBack [_dn];
-									_object animateSource [_dn,1];
+									_object animateSource [_dn,1,BRPVP_autoOpenDoorSpeed];
 								} else {
 									if (BRPVP_autoOpenDoorHistoricDoors select _idx find _dn isEqualTo -1) then {
-										_object animateSource [_dn,1];
+										_object animateSource [_dn,1,BRPVP_autoOpenDoorSpeed];
 										BRPVP_autoOpenDoorHistoricDoors select _idx pushBack _dn;
 									};
 								};
@@ -2159,30 +2159,30 @@ BRPVP_layerNearestCases = BRPVP_posCheckAllLayers apply {-1};
 			{
 				_object = _x;
 				if (!isNull _object) then {
-					_isTouchingGround = istouchingGround _object || position _object select 2 < 0.25;
-					_velocityMag = vectorMagnitude velocity _object;
-					_objectTypeOf = typeOf _object;
-					_isDrone = _objectTypeOf in BRPVP_vantVehiclesClass;
-					_objectDisplayName = if (_objectTypeOf isEqualTo "") then {str _object} else {getText (configFile >> "CfgVehicles" >> _objectTypeOf >> "displayName") call BRPVP_escapeForStructuredTextFast};
-					_objectHaveAccess = _object call BRPVP_checaAcesso;
-					_isSimpleObject = isSimpleObject _object;
-					_objectDistance = _object distance player;
-					_inVeh = !isNull objectParent player;
-					_isMan = _object isKindOf "CAManBase";
-					_isPlayer = (typeOf _object) isEqualTo BRPVP_playerModel;
-					_objectIsMotorized = _object call BRPVP_isMotorized;
-					_objectIsStaticWeapon = _object isKindOf "StaticWeapon";
-					_objectIsMotorizedNotStatic = _objectIsMotorized && !_objectIsStaticWeapon;
-					_isAlive = _object call BRPVP_pAlive;
-					_ruin = (_object isKindOf "Ruins_F" && (_object getVariable ["id_bd",-1]) > -1) || (_objectIsMotorizedNotStatic && !_isAlive);
-					_isMine = (_object getVariable ["own",-1]) isEqualTo (player getVariable ["id_bd",-1]) && (_object getVariable ["own",-1] > -1);
-					_isDb = _object getVariable ["id_bd",-1] isNotEqualTo -1;
-					_isGodModeHouseDb = _object getVariable ["brpvp_map_god_mode_house_id",-1] > -1;
-					_haveOwner = _object getVariable ["own",-1] > -1;
-					_isBox = _object isKindOf "ReammoBox_F";
-					_veryNear = player distanceSqr _object <= 4;
-					_objectIsHolder = _objectTypeOf in ["GroundWeaponHolder","WeaponHolderSimulated"];
-					_isMyBase = BRPVP_myBaseState isEqualTo 2;
+					private _isTouchingGround = istouchingGround _object || position _object select 2 < 0.25;
+					private _velocityMag = vectorMagnitude velocity _object;
+					private _objectTypeOf = typeOf _object;
+					private _isDrone = _objectTypeOf in BRPVP_vantVehiclesClass;
+					private _objectDisplayName = if (_objectTypeOf isEqualTo "") then {str _object} else {getText (configFile >> "CfgVehicles" >> _objectTypeOf >> "displayName") call BRPVP_escapeForStructuredTextFast};
+					private _objectHaveAccess = _object call BRPVP_checaAcesso;
+					private _isSimpleObject = isSimpleObject _object;
+					private _objectDistance = _object distance player;
+					private _inVeh = !isNull objectParent player;
+					private _isMan = _object isKindOf "CAManBase";
+					private _isPlayer = (typeOf _object) isEqualTo BRPVP_playerModel;
+					private _objectIsMotorized = _object call BRPVP_isMotorized;
+					private _objectIsStaticWeapon = _object isKindOf "StaticWeapon";
+					private _objectIsMotorizedNotStatic = _objectIsMotorized && !_objectIsStaticWeapon;
+					private _isAlive = _object call BRPVP_pAlive;
+					private _ruin = (_object isKindOf "Ruins_F" && (_object getVariable ["id_bd",-1]) > -1) || (_objectIsMotorizedNotStatic && !_isAlive);
+					private _isMine = (_object getVariable ["own",-1]) isEqualTo (player getVariable ["id_bd",-1]) && (_object getVariable ["own",-1] > -1);
+					private _isDb = _object getVariable ["id_bd",-1] > -1;
+					private _isGodModeHouseDb = _object getVariable ["brpvp_map_god_mode_house_id",-1] > -1;
+					private _haveOwner = _object getVariable ["own",-1] > -1;
+					private _isBox = _object isKindOf "ReammoBox_F";
+					private _veryNear = player distanceSqr _object <= 4;
+					private _objectIsHolder = _objectTypeOf in ["GroundWeaponHolder","WeaponHolderSimulated"];
+					private _isMyBase = BRPVP_myBaseState isEqualTo 2;
 
 					//VENDEDORES ITENS
 					_actionVar = "brpvp_act_0";

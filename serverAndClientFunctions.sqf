@@ -660,7 +660,367 @@ BRPVP_craftsNoBaseFrom = [
 //===========================================================================================================
 //== SPECIAL CODE END
 //===========================================================================================================
+BRPVP_meisterSetHitVehicle = {
+	params ["_veh","_dam","_array","_player"];
+	_veh setDamage (damage _veh+_dam);
+	{_veh setHitIndex [_forEachIndex,_x+_dam,true,_player,_player];} forEach _array;
+};
+BRPVP_ulfanizeAiUnit = {
+	private _bot = _this;
+	_bot enableStamina false;
+	_bot setUnitLoadout selectRandom BRPVP_ulfanSoldierLoadouts;
+	_bot remoteExecCall ["BRPVP_sBotAllUnitsObjsAdd",0];
+	_bot setVariable ["brpvp_is_ulfan",true,true];
+	_bot setVariable ["brpvp_ss_immune_mult",0,true];
+	_bot setVariable ["brpvp_no_possession",true,true];
+	_bot setVariable ["brpvp_lst",0];
+	_bot setVariable ["brpvp_no_head_hit",0];
+	_bot setVariable ["brpvp_wrong_player",objNull];
+	_bot addEventHandler ["Fired",{call BRPVP_sBotFired;}];
+	_bot setSkill ["aimingAccuracy",BRPVP_ulfanSoldierSkill select 0];
+	_bot setSkill (BRPVP_ulfanSoldierSkill select 1);
+	[_bot,BRPVP_ulfanSoldierSpeed] remoteExecCall ["setAnimSpeedCoef",0];
+};
+BRPVP_calcFullLights = {
+	if (BRPVP_blindHandle isEqualTo -1) then {
+		private _priority = 1500;
+		while {BRPVP_blindHandle = ppEffectCreate ["ColorCorrections",_priority];BRPVP_blindHandle < 0} do {_priority = _priority+1;};
+		BRPVP_blindHandle ppEffectEnable true;
+	};
 
+	0 spawn {
+		private _frySoundArray = ["fry1","fry2","fry3","fry4","fry5"];
+		private _frySoundArrayNow = _frySoundArray call BIS_fnc_arrayShuffle;
+		private _lightHurtSoundLast = 0;
+		private _lightHurtEyesAcumulated = 0;
+		private _lightHurtBodyAcumulated = 0;
+
+		//private _lightHurtEyesMinPerc = 0.7;
+		//private _lightHurtBodyMinPerc = 0.85;
+		private _lightHurtEyesMinPerc = 2;
+		private _lightHurtBodyMinPerc = 2;
+
+		private _lightHurtBlindTime = 1.25;
+		private _lightHurtDeadTime = 2.5;
+		private _roadToBlind = [0,1] select (player getVariable ["brpvp_blind",false]);
+
+		waitUntil {
+			if (BRPVP_atomicBombInitBlind && _roadToBlind < 1) then {_roadToBlind = (_roadToBlind+4/diag_fps) min 1;};
+
+			//LIGHT DAMAGE
+			//private _perc = 0;
+			//{_perc = _perc+_x;} forEach BRPVP_lightBlindPlayerPerc;
+			//_perc = _perc min 1;
+
+			//private _percBodyHurt = 0;
+			//{_percBodyHurt = _percBodyHurt+_x;} forEach BRPVP_lightBlindBodyPlayerPerc;
+			//_percBodyHurt = _percBodyHurt min 1;
+
+			//call BRPVP_lightHurtEyes;
+			//call BRPVP_lightHurtBody;
+			//call BRPVP_lightHurtFrySound;
+
+			private _percCam = 0;
+			{_percCam = _percCam+_x;} forEach BRPVP_lightBlindCamPerc;
+			_percCam = (_percCam^2 min 1)*0.5;
+
+			private _a = 1-_percCam;
+			private _b1 = (1-_roadToBlind*(1-0.0625))+_percCam*(0.8-_roadToBlind*0.7);
+			private _b2 = 1+0.75*_roadToBlind+_percCam*(1-_roadToBlind);
+			private _c1 = _percCam+0.299*(1-_percCam);
+			private _c2 = _percCam+0.587*(1-_percCam);
+			private _c3 = _percCam+0.114*(1-_percCam);
+			private _d1 = 0.25*_roadToBlind;
+			private _e1 = -0.75*_roadToBlind;
+
+			BRPVP_blindHandle ppEffectAdjust [_b1,_b2,_e1,[_d1,0,0,_d1],[1,1,1,_a],[_c1,_c2,_c3,_a],[-1,-1,0,0,0,0,0]];
+			BRPVP_blindHandle ppEffectCommit 0;
+
+			{
+				_x params ["_light","_intensity","_limit","_lowLimit","_attenuation"];
+				private _atte = if (_attenuation isEqualTo []) then {[_lowLimit-(1-_intensity)*_lowLimit,0,(20-10*_intensity)/(_limit-_lowLimit),0]} else {_attenuation};
+				_light setLightIntensity (sqrt(_intensity)*BRPVP_ABombLightMaxIntensity);
+				_light setLightAttenuation _atte;
+			} forEach BRPVP_ABombLightObjs;
+
+			BRPVP_lightBlindRunning isEqualTo 0
+		};
+		if !(player getVariable ["brpvp_blind",false]) then {
+			BRPVP_blindHandle ppEffectEnable false;
+			ppEffectDestroy BRPVP_blindHandle;
+			BRPVP_blindHandle = -1;
+		};
+		{deleteVehicle (_x select 0);} forEach BRPVP_ABombLightObjs;
+		BRPVP_ABombLightObjs = [];
+	};
+};
+BRPVP_flashFlareMeisterArray1 = ["_flare","_posASL","_distPercFlareMult","_init","_obj","_fgMult"];
+BRPVP_flashFlareMeister = {
+	if (!BRPVP_normalFlareStop) then {
+		params BRPVP_flashFlareMeisterArray1;
+		private _vel = velocity vehicle _obj;
+		private _tm = 0.125+(1/diag_fps)/2;
+		private _mult = 1.5;
+		_flare setPosASL ((getPosASLVisual _obj vectorAdd [0,0,1.4]) vectorAdd (_vel vectorMultiply _tm));
+		if (_obj getVariable ["dd",-1] isEqualTo -1) then {
+			_flare setLightColor [0.784,0.537,1];
+			_flare setLightAmbient [0.784,0.537,1];
+		} else {
+			_flare setLightColor [1,0.522,0];
+			_flare setLightAmbient [1,0.522,0];
+			_mult = 0.75;
+		};
+		uiSleep 0.1;
+		if (!BRPVP_normalFlareStop) then {
+			waitUntil {
+				if (BRPVP_normalFlareStop) exitWith {true};
+				private _delta = diag_tickTime-_init;
+				private _perc = (_delta/0.2) min 1;
+				_flare setLightFlareSize (_perc*_distPercFlareMult*_mult*_fgMult);
+				_flare setLightIntensity (50*_perc);
+				_perc isEqualTo 1;
+			};
+		};
+		if (!BRPVP_normalFlareStop) then {
+			waitUntil {
+				if (BRPVP_normalFlareStop) exitWith {true};
+				private _delta = diag_tickTime-_init;
+				private _perc = (_delta/0.3) min 2.5;
+				_flare setLightFlareSize (((1-_perc) max 0)*_distPercFlareMult*_mult*_fgMult);
+				_flare setLightIntensity (50*(1-_perc/2.5));
+				_perc isEqualTo 2.5;
+			};
+		};
+	};
+};
+BRPVP_flashFlareMeisterHouseShock = {
+	params BRPVP_flashFlareMeisterArray1;
+	private _mult = 1.5;
+	_flare setPosASL (getPosASLVisual _obj vectorAdd [0,0,1.4]);
+	_flare setLightColor [0.784,0.537,1];
+	_flare setLightAmbient [0.784,0.537,1];
+	uiSleep 0.1;
+	waitUntil {
+		private _delta = diag_tickTime-_init;
+		private _perc = (_delta/0.4) min 1;
+		_flare setLightFlareSize (_perc*_distPercFlareMult*_mult*_fgMult);
+		_flare setLightIntensity (150*_perc);
+		_perc isEqualTo 1;
+	};
+	waitUntil {
+		private _delta = diag_tickTime-_init;
+		private _perc = (_delta/0.6) min 2.5;
+		_flare setLightFlareSize (((1-_perc) max 0)*_distPercFlareMult*_mult*_fgMult);
+		_flare setLightIntensity (150*(1-_perc/2.5));
+		_perc isEqualTo 2.5;
+	};
+	BRPVP_normalFlareStop = false;
+};
+BRPVP_normalFlareStop = false;
+BRPVP_shinePlayerCode = {
+	if (hasInterface) then {
+		params ["_obj","_limit","_lowLimit","_lightMult","_lightIntensity","_attenuation"];
+		private _shinePlayerCodeIndex = _obj getVariable ["brpvp_shine_index",0];
+		_obj setVariable ["brpvp_shine_index",_shinePlayerCodeIndex+1];
+		private _shinePlayerCodeIndexNow = _shinePlayerCodeIndex+1;
+		private _toRun = {alive _obj && _obj getVariable ["brpvp_is_master",false] && _obj getVariable ["sok",false] && _obj getVariable ["brpvp_shine_index",0] isEqualTo _shinePlayerCodeIndexNow};
+		waitUntil {
+			private _realLimit = _limit-_lowLimit;
+			private _isMe = _obj isEqualTo player;
+			waitUntil {
+				uiSleep 0.001;
+				!call _toRun || {(vectorMagnitude (getPosASLVisual _obj vectorAdd [0,0,1] vectorDiff AGLToASL positionCameraToWorld [0,0,0])-_lowLimit) max 0 < _realLimit}
+			};
+			if (_isMe) then {_lightMult = _lightMult*0.75;};
+
+			private _light = "#lightpoint" createVehicleLocal [0,0,0];
+			_light setPosASL getPosASLVisual _obj;
+			_light setLightColor [1,1,1];
+			_light setLightAmbient [1,1,1];
+			_light setLightUseFlare false;
+			_light setLightIntensity 0;
+			_light setLightDayLight true;
+			_light setLightAttenuation [0,0,200,0];
+			_light lightAttachObject [_obj,[0,0,5]];
+
+			private _flare = "#lightpoint" createVehicleLocal [0,0,0];
+			_flare setPosASL getPosASLVisual _obj;
+			_flare setLightColor [0.784,0.537,1];
+			_flare setLightAmbient [0.784,0.537,1];
+			_flare setLightIntensity 0;
+			_flare setLightDayLight true;
+			_flare setLightAttenuation [1,0,1,0];
+			_flare setLightUseFlare true;
+			_flare setLightFlareMaxDistance _limit;
+
+			private _lightBlindRunningIdx = -1;
+			BRPVP_lightBlindRunning = BRPVP_lightBlindRunning+1;
+			if (BRPVP_lightBlindRunning isEqualTo 1) then {
+				BRPVP_lightBlindRunningIdx = 0;
+				_lightBlindRunningIdx = BRPVP_lightBlindRunningIdx;
+				BRPVP_atomicBombInitBlind = false;
+				BRPVP_atomicBombPlayerIsDeadBy = false;
+
+				BRPVP_lightBlindCamPerc = [0];
+				BRPVP_lightBlindPlayerPerc = [0];
+				BRPVP_lightBlindBodyPlayerPerc = [0];
+				BRPVP_ABombLightObjs = [[_light,_lightIntensity,_limit,_lowLimit,_attenuation]];
+
+				call BRPVP_calcFullLights;
+			} else {
+				BRPVP_lightBlindRunningIdx = BRPVP_lightBlindRunningIdx+1;
+				_lightBlindRunningIdx = BRPVP_lightBlindRunningIdx;
+				BRPVP_lightBlindCamPerc set [_lightBlindRunningIdx,0];
+				BRPVP_lightBlindPlayerPerc set [_lightBlindRunningIdx,0];
+				BRPVP_lightBlindBodyPlayerPerc set [_lightBlindRunningIdx,0];
+				BRPVP_ABombLightObjs set [_lightBlindRunningIdx,[_light,_lightIntensity,_limit,_lowLimit,_attenuation]];
+			};
+
+			private _density = 2;
+			private _flareCycleLim = 2;
+			private _flareCycle = random _flareCycleLim;
+			private _flareInit = diag_tickTime;
+			private _minDistLight = 125;
+
+			//START SHINE
+			private _eTime = 2.5;
+			private _init = diag_tickTime;
+			waitUntil {
+				private _posASL = getPosASLVisual _obj vectorAdd [0,0,1];
+				private _posCam = AGLToASL positionCameraToWorld [0,0,0];
+				private _dist = vectorMagnitude (_posASL vectorDiff _posCam);
+				private _realDist = (_dist-_lowLimit) max 0;
+				private _viewVec = AGLToASL positionCameraToWorld [0,0,1] vectorDiff _posCam;
+				private _vecToBomb = vectorNormalized (_posASL vectorDiff _posCam) vectorMultiply 25;
+
+				private _distPerc = (1-(_realDist min _realLimit)/_realLimit)^4;
+				private _anglePerc = 1-acos (_viewVec vectorCos _vecToBomb)/180;
+				private _timePerc = ((diag_tickTime-_init)/_eTime) min 1;
+				private _blockPerc = 1;
+
+				private _isSpec = _obj isEqualTo BRPVP_spectedPlayer;
+				private _lowType = (_isMe || _isSpec) && {ASLToAGL _posCam distance _obj < 12};
+				private _perc = _timePerc*_blockPerc*(_distPerc+_anglePerc)/2;
+				BRPVP_lightBlindCamPerc set [_lightBlindRunningIdx,_perc*_lightMult];
+				private _nearPerc = ((_minDistLight-_dist) max 0)/_minDistLight;
+				(BRPVP_ABombLightObjs select _lightBlindRunningIdx) set [1,_lightIntensity*_timePerc*(_nearPerc^2)*([1,0.35] select _lowType)];
+				
+				private _fgMult = [1,0.125] select _lowType;
+				_flareCycleLim = [2,5] select _lowType;
+				private _distPercFlare = _dist/_limit;
+				private _distPercFlareMult = ((_timePerc*(_distPercFlare)^(1/2)*_anglePerc)*30) max 5;
+				private _bang = _obj getVariable ["brpvp_meister_flare_bang",-1];
+				if (_bang isEqualTo -1) then {
+					if (diag_tickTime-_flareInit > _flareCycle) then {
+						_flareCycle = random _flareCycleLim+0.5;
+						_flareInit = diag_tickTime;
+						//[_flare,_posASL,_distPercFlareMult,_flareInit,_obj,_fgMult] spawn BRPVP_flashFlareMeister;
+					};
+				} else {
+					BRPVP_normalFlareStop = true;
+					[_flare,_posASL,_distPercFlareMult,diag_tickTime,_obj,_bang] spawn BRPVP_flashFlareMeisterHouseShock;
+					_flareCycle = random _flareCycleLim+2;
+					_obj setVariable ["brpvp_meister_flare_bang",-1];
+				};
+
+				_timePerc >= 1
+			};
+
+			//MANTAIN
+			if (call _toRun) then {
+				waitUntil {
+					private _posASL = getPosASLVisual _obj vectorAdd [0,0,1];
+					private _posCam = AGLToASL positionCameraToWorld [0,0,0];
+					private _dist = vectorMagnitude (_posASL vectorDiff _posCam);
+					private _realDist = (_dist-_lowLimit) max 0;
+					private _viewVec = AGLToASL positionCameraToWorld [0,0,1] vectorDiff _posCam;
+					private _vecToBomb = vectorNormalized (_posASL vectorDiff _posCam) vectorMultiply 25;
+
+					private _distPerc = (1-(_realDist min _realLimit)/_realLimit)^4;
+					private _anglePerc = 1-acos (_viewVec vectorCos _vecToBomb)/180;
+					private _blockPerc = 1;
+
+					private _isSpec = _obj isEqualTo BRPVP_spectedPlayer;
+					private _lowType = (_isMe || _isSpec) && {ASLToAGL _posCam distance _obj < 12};
+					private _perc = _blockPerc*(_distPerc+_anglePerc)/2;
+					BRPVP_lightBlindCamPerc set [_lightBlindRunningIdx,_perc*_lightMult];
+					private _nearPerc = ((_minDistLight-_dist) max 0)/_minDistLight;
+					(BRPVP_ABombLightObjs select _lightBlindRunningIdx) set [1,_lightIntensity*(_nearPerc^2)*([1,0.35] select _lowType)];
+
+					private _fgMult = [1,0.125] select _lowType;
+					_flareCycleLim = [2,5] select _lowType;
+					private _distPercFlare = _dist/_limit;
+					private _distPercFlareMult = (((_distPercFlare)^(1/2)*_anglePerc)*30) max 5;
+					private _bang = _obj getVariable ["brpvp_meister_flare_bang",-1];
+					if (_bang isEqualTo -1) then {
+						if (diag_tickTime-_flareInit > _flareCycle) then {
+							_flareCycle = random _flareCycleLim+0.5;
+							_flareInit = diag_tickTime;
+							[_flare,_posASL,_distPercFlareMult,_flareInit,_obj,_fgMult] spawn BRPVP_flashFlareMeister;
+						};
+					} else {
+						BRPVP_normalFlareStop = true;
+						[_flare,_posASL,_distPercFlareMult,diag_tickTime,_obj,_bang] spawn BRPVP_flashFlareMeisterHouseShock;
+						_flareCycle = random _flareCycleLim+2;
+						_obj setVariable ["brpvp_meister_flare_bang",-1];
+					};
+
+					(_realDist > _realLimit) || !call _toRun
+				};
+			};
+
+			//VANISH
+			private _eTime = 2.5;
+			private _init = diag_tickTime;
+			waitUntil {
+				private _posASL = getPosASLVisual _obj vectorAdd [0,0,1];
+				private _posCam = AGLToASL positionCameraToWorld [0,0,0];
+				private _dist = vectorMagnitude (_posASL vectorDiff _posCam);
+				private _realDist = (_dist-_lowLimit) max 0;
+				private _viewVec = AGLToASL positionCameraToWorld [0,0,1] vectorDiff _posCam;
+				private _vecToBomb = vectorNormalized (_posASL vectorDiff _posCam) vectorMultiply 25;
+
+				private _distPerc = (1-(_realDist min _realLimit)/_realLimit)^4;
+				private _anglePerc = 1-acos (_viewVec vectorCos _vecToBomb)/180;
+				private _timePerc = ((diag_tickTime-_init)/_eTime) min 1;
+				private _blockPerc = 1;
+
+				private _isSpec = _obj isEqualTo BRPVP_spectedPlayer;
+				private _lowType = (_isMe || _isSpec) && {ASLToAGL _posCam distance _obj < 12};
+				private _perc = (1-_timePerc)*_blockPerc*(_distPerc+_anglePerc)/2;
+				BRPVP_lightBlindCamPerc set [_lightBlindRunningIdx,_perc*_lightMult];
+				private _nearPerc = ((_minDistLight-_dist) max 0)/_minDistLight;
+				(BRPVP_ABombLightObjs select _lightBlindRunningIdx) set [1,_lightIntensity*(1-_timePerc)*(_nearPerc^2)*([1,0.35] select _lowType)];
+
+				private _fgMult = [1,0.125] select _lowType;
+				_flareCycleLim = [2,5] select _lowType;
+				private _distPercFlare = _dist/_limit;
+				private _distPercFlareMult = (((1-_timePerc)*(_distPercFlare)^(1/2)*_anglePerc)*30) max 5;
+				private _bang = _obj getVariable ["brpvp_meister_flare_bang",-1];
+				if (_bang isEqualTo -1) then {
+					if (diag_tickTime-_flareInit > _flareCycle) then {
+						_flareCycle = random _flareCycleLim+0.5;
+						_flareInit = diag_tickTime;
+						//[_flare,_posASL,_distPercFlareMult,_flareInit,_obj,_fgMult] spawn BRPVP_flashFlareMeister;
+					};
+				} else {
+					BRPVP_normalFlareStop = true;
+					[_flare,_posASL,_distPercFlareMult,diag_tickTime,_obj,_bang] spawn BRPVP_flashFlareMeisterHouseShock;
+					_flareCycle = random _flareCycleLim+2;
+					_obj setVariable ["brpvp_meister_flare_bang",-1];
+				};
+
+				_timePerc >= 1
+			};
+
+			deleteVehicle _light;
+			deleteVehicle _flare;
+			BRPVP_lightBlindRunning = BRPVP_lightBlindRunning-1;
+
+			!call _toRun
+		};
+	};
+};
 //PVEH FUNCTIONS SERVER
 BRPVP_vrObjectSetTexturesOnOthers = {
 	params ["_id","_class","_color1","_color2"];
@@ -1515,6 +1875,10 @@ BRPVP_angleBetweenSignal = {
 };
 BRPVP_applyForceLocal = {
 	params ["_veh","_player"];
+
+	//SET VEH LOCAL TO PLAYER IF POSSIBLE
+	if (owner _veh isNotEqualTo owner _player) then {if (isNull currentPilot _veh) then {_veh setOwner (owner _player);};};
+
 	if (!simulationEnabled _veh) then {
 		_veh enableSimulationGlobal true;
 		waitUntil {simulationEnabled _veh};
@@ -7112,6 +7476,9 @@ BRPVP_addZombieLootCreateWH = {
 		_weaponHolder setVariable ["brpvp_zombie_loot_time",time,true];
 	};
 };
+BRPVP_zedsHitSoundsLast = 0;
+BRPVP_zedsHitSounds = +BRPVP_zedsHitSoundsCfg;
+BRPVP_zedsHitSoundsCycleNow = 0;
 BRPVP_zombieHDEH = {
 	params ["_zombie","_part","_damage","_attacker","_projectile","_hitIndex","_instigator","_hitPoint"];
 	if (isNull (_zombie getVariable ["klr",objNull])) then {
@@ -7161,6 +7528,18 @@ BRPVP_zombieHDEH = {
 						};
 					};
 					[_zombie,["mobius_damage",250]] remoteExecCall ["say3D",BRPVP_allNoServer];
+				};
+			};
+
+			//ZED HIT SOUND
+			if (time-BRPVP_zedsHitSoundsLast > BRPVP_zedsHitSoundsCycleNow) then {
+				BRPVP_zedsHitSoundsLast = time;
+				BRPVP_zedsHitSoundsCycleNow = BRPVP_zedsHitSoundsCycleMin+random BRPVP_zedsHitSoundsCycleRandom;
+				private _hsChance = [0.5,0.75] select (_damage > 4);
+				if (random 1 < _hsChance) then {
+					private _hitSound = if (_isMobius) then {selectRandom ["zed_hit_11","zed_hit_13","zed_hit_14","zed_hit_16","zed_hit_17","zed_hit_18"]} else {if (BRPVP_zedsHitSounds isEqualTo []) then {BRPVP_zedsHitSounds = +BRPVP_zedsHitSoundsCfg;selectRandom BRPVP_zedsHitSounds} else {selectRandom BRPVP_zedsHitSounds};};
+					[_zombie,[_hitSound,500]] remoteExecCall ["say3D",0];
+					BRPVP_zedsHitSounds deleteAt (BRPVP_zedsHitSounds find _hitSound);
 				};
 			};
 		};
@@ -8094,11 +8473,12 @@ KK_fnc_positionToString = {
 //==============================================
 BRPVP_nabs = 0.6;
 BRPVP_pabs = 0.6;
-BRPVP_aabps = 0.75; //EXTRA CHANGE
+BRPVP_aabps = 0.9; //EXTRA CHANGE
 BRPVP_aasc = 0.5; //EXTRA CHANGE
 BRPVP_aarc = 1.75;
 BRPVP_setParticleParamsPride = {
 	params ["_source","_class","_change"];
+	private _aw = wind vectorMultiply 1;
 
 	//HEAD BOMBA ATOMICA
 	if (_change isEqualTo "ba_head") then {
@@ -8113,25 +8493,25 @@ BRPVP_setParticleParamsPride = {
 			getText (configFile >> "CfgCloudlets" >> _class >> "animationName"),
 			getText (configFile >> "CfgCloudlets" >> _class >> "particleType"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "timerPeriod"),
-			25, //getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
+			35, //getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
 			[0,0,0], //pos3D
-			[0,0,50*BRPVP_pabs*BRPVP_aasc], //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
+			[0,0,60*BRPVP_pabs*BRPVP_aasc] vectorAdd _aw, //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "rotationVelocity"),
 			1, //getNumber (configFile >> "CfgCloudlets" >> _class >> "weight"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "volume"),
-			0.0125*BRPVP_aarc, //getNumber (configFile >> "CfgCloudlets" >> _class >> "rubbing"),
+			0.01675*BRPVP_aarc, //getNumber (configFile >> "CfgCloudlets" >> _class >> "rubbing"),
 			[80*BRPVP_pabs*BRPVP_aabps,110*BRPVP_pabs*BRPVP_aabps], //getArray (configFile >> "CfgCloudlets" >> _class >> "size"),
 			[
 				[0.4,0.4,0.4,0.250],
 				[0.4,0.4,0.4,0.500],
-				[0.4,0.4,0.4,0.600],
-				[0.4,0.4,0.4,0.600],
-				[0.4,0.4,0.4,0.600],
-				[0.4,0.4,0.4,0.600],
-				[0.4,0.4,0.4,0.600],
-				[0.4,0.4,0.4,0.600],
-				[0.4,0.4,0.4,0.600],
-				[0.4,0.4,0.4,0.600],
+				[0.4,0.4,0.4,0.650],
+				[0.4,0.4,0.4,0.650],
+				[0.4,0.4,0.4,0.650],
+				[0.4,0.4,0.4,0.650],
+				[0.4,0.4,0.4,0.650],
+				[0.4,0.4,0.4,0.650],
+				[0.4,0.4,0.4,0.650],
+				[0.4,0.4,0.4,0.650],
 				[0.4,0.4,0.4,0.500],
 				[0.4,0.4,0.4,0.300],
 				[0.4,0.4,0.4,0.000]
@@ -8174,9 +8554,9 @@ BRPVP_setParticleParamsPride = {
 			getText (configFile >> "CfgCloudlets" >> _class >> "animationName"),
 			getText (configFile >> "CfgCloudlets" >> _class >> "particleType"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "timerPeriod"),
-			15, //getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
+			21, //getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
 			[0,0,0], //pos3D
-			[0,0,50*BRPVP_pabs*BRPVP_aasc], //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
+			[0,0,50*BRPVP_pabs*BRPVP_aasc] vectorAdd _aw, //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "rotationVelocity"),
 			1, //getNumber (configFile >> "CfgCloudlets" >> _class >> "weight"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "volume"),
@@ -8185,11 +8565,11 @@ BRPVP_setParticleParamsPride = {
 			[
 				[0.4,0.4,0.4,0.200],
 				[0.4,0.4,0.4,0.500],
-				[0.4,0.4,0.4,0.600],
-				[0.4,0.4,0.4,0.600],
-				[0.4,0.4,0.4,0.600],
-				[0.4,0.4,0.4,0.600],
-				[0.4,0.4,0.4,0.600],
+				[0.4,0.4,0.4,0.650],
+				[0.4,0.4,0.4,0.650],
+				[0.4,0.4,0.4,0.650],
+				[0.4,0.4,0.4,0.650],
+				[0.4,0.4,0.4,0.650],
 				[0.4,0.4,0.4,0.450],				
 				[0.4,0.4,0.4,0.300],
 				[0.4,0.4,0.4,0.005]
@@ -8232,9 +8612,9 @@ BRPVP_setParticleParamsPride = {
 			getText (configFile >> "CfgCloudlets" >> _class >> "animationName"),
 			getText (configFile >> "CfgCloudlets" >> _class >> "particleType"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "timerPeriod"),
-			25, //getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
+			17, //getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
 			[0,0,0], //pos3D
-			getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
+			getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity") vectorAdd _aw,
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "rotationVelocity"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "weight"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "volume"),
@@ -8290,9 +8670,9 @@ BRPVP_setParticleParamsPride = {
 			getText (configFile >> "CfgCloudlets" >> _class >> "animationName"),
 			getText (configFile >> "CfgCloudlets" >> _class >> "particleType"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "timerPeriod"),
-			9, //getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
+			2, //getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
 			[0,0,0], //pos3D
-			getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
+			getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity") vectorAdd _aw,
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "rotationVelocity"),
 			0, //getNumber (configFile >> "CfgCloudlets" >> _class >> "weight"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "volume"),
@@ -8322,7 +8702,7 @@ BRPVP_setParticleParamsPride = {
 
 		//ORIGINAL [5,[5,1,5],[5,1,5],20,0.3,[0,0,0,0],0,0,0,0]
 		_source setParticleRandom [
-			1, //getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTimeVar"),
+			0, //getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTimeVar"),
 			[1,0.2,1], //getArray (configFile >> "CfgCloudlets" >> _class >> "positionVar"),
 			[1,0.2,1], //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocityVar"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "rotationVelocityVar"),
@@ -8350,7 +8730,7 @@ BRPVP_setParticleParamsPride = {
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "timerPeriod"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
 			[0,0,0], //pos3D
-			[0,0,0], //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
+			[0,0,0] vectorAdd _aw, //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "rotationVelocity"),
 			1, //getNumber (configFile >> "CfgCloudlets" >> _class >> "weight"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "volume"),
@@ -8397,7 +8777,7 @@ BRPVP_setParticleParamsPride = {
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "timerPeriod"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
 			[0,0,0], //pos3D
-			[0,0,0], //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
+			[0,0,0] vectorAdd _aw, //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "rotationVelocity"),
 			1, //getNumber (configFile >> "CfgCloudlets" >> _class >> "weight"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "volume"),
@@ -8444,7 +8824,7 @@ BRPVP_setParticleParamsPride = {
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "timerPeriod"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
 			[0,0,0], //pos3D
-			[0,0,0], //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
+			[0,0,0] vectorAdd _aw, //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "rotationVelocity"),
 			1, //getNumber (configFile >> "CfgCloudlets" >> _class >> "weight"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "volume"),
@@ -8478,6 +8858,7 @@ BRPVP_setParticleParamsPride = {
 };
 BRPVP_setParticleParams = {
 	params ["_source","_class","_change"];
+	private _aw = wind vectorMultiply 1;
 
 	//HEAD BOMBA ATOMICA
 	if (_change isEqualTo "ba_head") then {
@@ -8492,27 +8873,27 @@ BRPVP_setParticleParams = {
 			getText (configFile >> "CfgCloudlets" >> _class >> "animationName"),
 			getText (configFile >> "CfgCloudlets" >> _class >> "particleType"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "timerPeriod"),
-			25, //getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
+			35, //getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
 			[0,0,0], //pos3D
-			[0,0,50*BRPVP_nabs*BRPVP_aasc], //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
+			[0,0,60*BRPVP_nabs*BRPVP_aasc] vectorAdd _aw, //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "rotationVelocity"),
 			1, //getNumber (configFile >> "CfgCloudlets" >> _class >> "weight"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "volume"),
-			0.0175*BRPVP_aarc, //getNumber (configFile >> "CfgCloudlets" >> _class >> "rubbing"),
-			[80*BRPVP_nabs*BRPVP_aabps,100*BRPVP_nabs*BRPVP_aabps], //getArray (configFile >> "CfgCloudlets" >> _class >> "size"),
+			0.0185*BRPVP_aarc, //getNumber (configFile >> "CfgCloudlets" >> _class >> "rubbing"),
+			[70*BRPVP_nabs*BRPVP_aabps,90*BRPVP_nabs*BRPVP_aabps], //getArray (configFile >> "CfgCloudlets" >> _class >> "size"),
 			[
 				(([139/255,069/255,019/255] vectorMultiply 0.800) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.200))+[0.250],
 				(([139/255,069/255,019/255] vectorMultiply 0.500) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.500))+[0.500],
-				(([139/255,069/255,019/255] vectorMultiply 0.300) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.700))+[0.600],
-				(([139/255,069/255,019/255] vectorMultiply 0.200) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.800))+[0.600],
-				(([139/255,069/255,019/255] vectorMultiply 0.150) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.850))+[0.600],
-				(([139/255,069/255,019/255] vectorMultiply 0.100) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.900))+[0.600],
-				(([139/255,069/255,019/255] vectorMultiply 0.050) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.950))+[0.600],
+				(([139/255,069/255,019/255] vectorMultiply 0.300) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.700))+[0.750],
+				(([139/255,069/255,019/255] vectorMultiply 0.200) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.800))+[0.750],
+				(([139/255,069/255,019/255] vectorMultiply 0.150) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.850))+[0.750],
+				(([139/255,069/255,019/255] vectorMultiply 0.100) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.900))+[0.750],
+				(([139/255,069/255,019/255] vectorMultiply 0.050) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.950))+[0.750],
+				[0.5,0.5,0.5,0.750],
+				[0.5,0.5,0.5,0.750],
+				[0.5,0.5,0.5,0.750],
 				[0.5,0.5,0.5,0.600],
-				[0.5,0.5,0.5,0.600],
-				[0.5,0.5,0.5,0.600],
-				[0.5,0.5,0.5,0.500],
-				[0.6,0.6,0.6,0.300],
+				[0.6,0.6,0.6,0.400],
 				[0.8,0.8,0.8,0.000]
 			], //getArray (configFile >> "CfgCloudlets" >> _class >> "color"),
 			getArray (configFile >> "CfgCloudlets" >> _class >> "animationSpeed"),
@@ -8527,11 +8908,11 @@ BRPVP_setParticleParams = {
 
 		//ORIGINAL [0.5,[0.2,0.2,0.2],[0.1,0.1,0.1],20,1,[0,0,0,0],0.2,0.05,360,0]
 		_source setParticleRandom [
-			getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTimeVar"),
-			getArray (configFile >> "CfgCloudlets" >> _class >> "positionVar"),
+			0,//getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTimeVar"),
+			[0,0,0],//getArray (configFile >> "CfgCloudlets" >> _class >> "positionVar"),
 			[0,0,0], //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocityVar"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "rotationVelocityVar"),
-			0.2, //getNumber (configFile >> "CfgCloudlets" >> _class >> "sizeVar"),
+			0, //getNumber (configFile >> "CfgCloudlets" >> _class >> "sizeVar"),
 			getArray (configFile >> "CfgCloudlets" >> _class >> "colorVar"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "randomDirectionPeriodVar"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "randomDirectionIntensityVar"),
@@ -8553,24 +8934,24 @@ BRPVP_setParticleParams = {
 			getText (configFile >> "CfgCloudlets" >> _class >> "animationName"),
 			getText (configFile >> "CfgCloudlets" >> _class >> "particleType"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "timerPeriod"),
-			15, //getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
+			20, //getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
 			[0,0,0], //pos3D
-			[0,0,50*BRPVP_nabs*BRPVP_aasc], //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
+			[0,0,40*BRPVP_nabs*BRPVP_aasc] vectorAdd _aw, //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "rotationVelocity"),
 			1, //getNumber (configFile >> "CfgCloudlets" >> _class >> "weight"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "volume"),
 			0.01*BRPVP_aarc, //getNumber (configFile >> "CfgCloudlets" >> _class >> "rubbing"),
-			[60*BRPVP_nabs*BRPVP_aabps,80*BRPVP_nabs*BRPVP_aabps], //getArray (configFile >> "CfgCloudlets" >> _class >> "size"),
+			[50*BRPVP_nabs*BRPVP_aabps,70*BRPVP_nabs*BRPVP_aabps], //getArray (configFile >> "CfgCloudlets" >> _class >> "size"),
 			[
 				(([139/255,069/255,019/255] vectorMultiply 0.800) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.200))+[0.200],
 				(([139/255,069/255,019/255] vectorMultiply 0.500) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.500))+[0.500],
-				(([139/255,069/255,019/255] vectorMultiply 0.300) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.700))+[0.600],
-				(([139/255,069/255,019/255] vectorMultiply 0.200) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.800))+[0.600],
-				(([139/255,069/255,019/255] vectorMultiply 0.150) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.850))+[0.600],
-				(([139/255,069/255,019/255] vectorMultiply 0.100) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.900))+[0.600],
-				(([139/255,069/255,019/255] vectorMultiply 0.050) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.950))+[0.600],
-				[0.5,0.5,0.5,0.450],
-				[0.6,0.6,0.6,0.300],
+				(([139/255,069/255,019/255] vectorMultiply 0.300) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.700))+[0.750],
+				(([139/255,069/255,019/255] vectorMultiply 0.200) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.800))+[0.750],
+				(([139/255,069/255,019/255] vectorMultiply 0.150) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.850))+[0.750],
+				(([139/255,069/255,019/255] vectorMultiply 0.100) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.900))+[0.750],
+				(([139/255,069/255,019/255] vectorMultiply 0.050) vectorAdd ([0.5,0.5,0.5] vectorMultiply 0.950))+[0.750],
+				[0.5,0.5,0.5,0.750],
+				[0.6,0.6,0.6,0.400],
 				[0.8,0.8,0.8,0.005]
 			], //getArray (configFile >> "CfgCloudlets" >> _class >> "color"),
 			getArray (configFile >> "CfgCloudlets" >> _class >> "animationSpeed"),
@@ -8611,9 +8992,9 @@ BRPVP_setParticleParams = {
 			getText (configFile >> "CfgCloudlets" >> _class >> "animationName"),
 			getText (configFile >> "CfgCloudlets" >> _class >> "particleType"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "timerPeriod"),
-			25, //getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
+			20, //getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
 			[0,0,0], //pos3D
-			getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
+			getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity") vectorAdd _aw,
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "rotationVelocity"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "weight"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "volume"),
@@ -8669,9 +9050,9 @@ BRPVP_setParticleParams = {
 			getText (configFile >> "CfgCloudlets" >> _class >> "animationName"),
 			getText (configFile >> "CfgCloudlets" >> _class >> "particleType"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "timerPeriod"),
-			9, //getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
+			2, //getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
 			[0,0,0], //pos3D
-			getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
+			getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity") vectorAdd _aw,
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "rotationVelocity"),
 			0, //getNumber (configFile >> "CfgCloudlets" >> _class >> "weight"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "volume"),
@@ -8701,7 +9082,7 @@ BRPVP_setParticleParams = {
 
 		//ORIGINAL [5,[5,1,5],[5,1,5],20,0.3,[0,0,0,0],0,0,0,0]
 		_source setParticleRandom [
-			1, //getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTimeVar"),
+			0, //getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTimeVar"),
 			[1,0.2,1], //getArray (configFile >> "CfgCloudlets" >> _class >> "positionVar"),
 			[1,0.2,1], //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocityVar"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "rotationVelocityVar"),
@@ -8729,7 +9110,7 @@ BRPVP_setParticleParams = {
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "timerPeriod"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
 			[0,0,0], //pos3D
-			[0,0,0], //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
+			[0,0,0] vectorAdd _aw, //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "rotationVelocity"),
 			1, //getNumber (configFile >> "CfgCloudlets" >> _class >> "weight"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "volume"),
@@ -8776,7 +9157,7 @@ BRPVP_setParticleParams = {
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "timerPeriod"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
 			[0,0,0], //pos3D
-			[0,0,0], //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
+			[0,0,0] vectorAdd _aw, //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "rotationVelocity"),
 			1, //getNumber (configFile >> "CfgCloudlets" >> _class >> "weight"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "volume"),
@@ -8823,7 +9204,7 @@ BRPVP_setParticleParams = {
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "timerPeriod"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "lifeTime"),
 			[0,0,0], //pos3D
-			[0,0,0], //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
+			[0,0,0] vectorAdd _aw, //getArray (configFile >> "CfgCloudlets" >> _class >> "moveVelocity"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "rotationVelocity"),
 			1, //getNumber (configFile >> "CfgCloudlets" >> _class >> "weight"),
 			getNumber (configFile >> "CfgCloudlets" >> _class >> "volume"),
@@ -8891,11 +9272,11 @@ BRPVP_lightBlock = {
 	private _totalDist = 0;
 	_helper setPosASL (_posCam vectorAdd _vecToBomb);
 	_helper setVectorDirAndUp [vectorNormalized _vecToBomb,_vUp];
-	for "_r" from 0 to (_rad+0.1) step _radStep do {
+	for "_r" from 0 to _rad step _radStep do {
 		private _peri = 2*pi*_r+0.01;
 		private _pts = ceil (_peri*_density);
-		private _aStep = 360/_pts;
-		for "_a" from 0 to (360+0.1) step _aStep do {
+		private _aStep = (360/_pts)+0.01;
+		for "_a" from 0 to 360 step _aStep do {
 			_vPos = _helper modelToWorldWorld [_r*sin _a,0,_r*cos _a];
 			private _lis = lineIntersectsSurfaces [_posCam,_vPos,player];
 			if (_lis isEqualTo []) then {
@@ -8908,7 +9289,8 @@ BRPVP_lightBlock = {
 			_totalPts = _totalPts+1;
 		};
 	};
-	_totalDist/_totalPts
+	if (_totalPts == 0) then {diag_log str ["AAAAAAAAAAAAAA_01 _totalPts: ",_totalPts];};
+	_totalDist/(_totalPts max 1)
 };
 BRPVP_blastBlock = {
 	params ["_helper","_player","_posASL","_pos","_vecToBomb","_rad","_radSteps","_density"];
@@ -9034,7 +9416,7 @@ BRPVP_lightBlindRunning = 0;
 BRPVP_ABombLightMaxIntensity = 50;
 BRPVP_lightBlind = {
 	if (hasInterface) then {
-		params ["_posASL","_limit","_lowLimit","_playerId","_player"];
+		params ["_posASL","_limit","_lowLimit","_playerId","_player","_attenuation"];
 
 		private _light = "#lightpoint" createVehicleLocal [0,0,0];
 		_light setPosASL _posASL;
@@ -9056,90 +9438,19 @@ BRPVP_lightBlind = {
 			BRPVP_lightBlindCamPerc = [0];
 			BRPVP_lightBlindPlayerPerc = [0];
 			BRPVP_lightBlindBodyPlayerPerc = [0];
-			BRPVP_ABombLightObjs = [[_light,0]];
+			BRPVP_ABombLightObjs = [[_light,0,_limit,_lowLimit,_attenuation]];
 
-			if (BRPVP_blindHandle isEqualTo -1) then {
-				private _priority = 1500;
-				while {BRPVP_blindHandle = ppEffectCreate ["ColorCorrections",_priority];BRPVP_blindHandle < 0} do {_priority = _priority+1;};
-				BRPVP_blindHandle ppEffectEnable true;
-			};
-
-			_this spawn {
-				params ["_posASL","_limit","_lowLimit","_playerId","_player"];
-
-				private _frySoundArray = ["fry1","fry2","fry3","fry4","fry5"];
-				private _frySoundArrayNow = _frySoundArray call BIS_fnc_arrayShuffle;
-				private _lightHurtSoundLast = 0;
-				private _lightHurtEyesAcumulated = 0;
-				private _lightHurtBodyAcumulated = 0;
-
-				//private _lightHurtEyesMinPerc = 0.7;
-				//private _lightHurtBodyMinPerc = 0.85;
-				private _lightHurtEyesMinPerc = 2;
-				private _lightHurtBodyMinPerc = 2;
-
-				private _lightHurtBlindTime = 1.25;
-				private _lightHurtDeadTime = 2.5;
-				private _roadToBlind = [0,1] select (player getVariable ["brpvp_blind",false]);
-
-				waitUntil {
-					if (BRPVP_atomicBombInitBlind && _roadToBlind < 1) then {_roadToBlind = (_roadToBlind+4/diag_fps) min 1;};
-
-					private _perc = 0;
-					{_perc = _perc+_x;} forEach BRPVP_lightBlindPlayerPerc;
-					_perc = _perc min 1;
-
-					private _percBodyHurt = 0;
-					{_percBodyHurt = _percBodyHurt+_x;} forEach BRPVP_lightBlindBodyPlayerPerc;
-					_percBodyHurt = _percBodyHurt min 1;
-
-					call BRPVP_lightHurtEyes;
-					call BRPVP_lightHurtBody;
-					call BRPVP_lightHurtFrySound;
-
-					private _percCam = 0;
-					{_percCam = _percCam+_x;} forEach BRPVP_lightBlindCamPerc;
-					_percCam = _percCam min 1;
-
-					private _a = 1-_percCam;
-					private _b1 = (1-_roadToBlind*(1-0.0625))+_percCam*(0.8-_roadToBlind*0.7);
-					private _b2 = 1+0.75*_roadToBlind+_percCam*(1-_roadToBlind);
-					private _c1 = _percCam+0.299*(1-_percCam);
-					private _c2 = _percCam+0.587*(1-_percCam);
-					private _c3 = _percCam+0.114*(1-_percCam);
-					private _d1 = 0.25*_roadToBlind;
-					private _e1 = -0.75*_roadToBlind;
-
-					diag_log str ["AAAAAAAAAAAA_01",[_b1,_b2,_e1,[_d1,0,0,_d1],[1,1,1,_a],[_c1,_c2,_c3,_a],[-1,-1,0,0,0,0,0]]];
-					BRPVP_blindHandle ppEffectAdjust [_b1,_b2,_e1,[_d1,0,0,_d1],[1,1,1,_a],[_c1,_c2,_c3,_a],[-1,-1,0,0,0,0,0]];
-					BRPVP_blindHandle ppEffectCommit 0;
-
-					{
-						_x params ["_light","_intensity"];
-						_light setLightIntensity (sqrt(_intensity)*BRPVP_ABombLightMaxIntensity);
-						_light setLightAttenuation [_lowLimit-(1-_intensity)*_lowLimit,0,(20-10*_intensity)/(_limit-_lowLimit),0];
-					} forEach BRPVP_ABombLightObjs;
-
-					BRPVP_lightBlindRunning isEqualTo 0
-				};
-				if !(player getVariable ["brpvp_blind",false]) then {
-					BRPVP_blindHandle ppEffectEnable false;
-					ppEffectDestroy BRPVP_blindHandle;
-					BRPVP_blindHandle = -1;
-				};
-				{deleteVehicle (_x select 0);} forEach BRPVP_ABombLightObjs;
-				BRPVP_ABombLightObjs = [];
-			};
+			call BRPVP_calcFullLights;
 		} else {
 			BRPVP_lightBlindRunningIdx = BRPVP_lightBlindRunningIdx+1;
 			_lightBlindRunningIdx = BRPVP_lightBlindRunningIdx;
 			BRPVP_lightBlindCamPerc set [_lightBlindRunningIdx,0];
 			BRPVP_lightBlindPlayerPerc set [_lightBlindRunningIdx,0];
 			BRPVP_lightBlindBodyPlayerPerc set [_lightBlindRunningIdx,0];
-			BRPVP_ABombLightObjs set [_lightBlindRunningIdx,[_light,0]];
+			BRPVP_ABombLightObjs set [_lightBlindRunningIdx,[_light,0,_limit,_lowLimit,_attenuation]];
 		};
 
-		private _realLimit = _limit-_lowLimit;
+		private _realLimit = if (_limit-_lowLimit == 0) then {_limit} else {_limit-_lowLimit};
 		private _density = 1.5;
 		private _helper = createSimpleObject ["Land_Matches_F",[0,0,0],true];
 		_helper hideObject true;
@@ -9160,12 +9471,12 @@ BRPVP_lightBlind = {
 				private _distPerc = (1-(_realDist min _realLimit)/_realLimit)^3;
 				private _anglePerc = (1-acos (_viewVec vectorCos _vecToBomb)/180)^3;
 				private _timePerc = (((diag_tickTime-_init)/_eTime) min 1)^(1/1.5);
-				private _blockPerc = sqrt(([_helper,_posASL,_posCam,_vecToBomb,5,1,_density] call BRPVP_lightBlock)/25);
+				//private _blockPerc = sqrt(([_helper,_posASL,_posCam,_vecToBomb,5,1,_density] call BRPVP_lightBlock)/25);
+				private _blockPerc = 1;
 
 				private _perc = _timePerc*_blockPerc*(_distPerc+_anglePerc)/2;
 				BRPVP_lightBlindCamPerc set [_lightBlindRunningIdx,_perc];
 				(BRPVP_ABombLightObjs select _lightBlindRunningIdx) set [1,_timePerc];
-				//diag_log ["AB LIGHT BLAST",(round (_perc*100))/100,BRPVP_ABombLightObjs];
 				if (ASLToAGL _posCam distance player < 100) then {
 					private _percBodyHurt = sqrt(_timePerc*_distPerc)*sqrt(1*_blockPerc);
 					BRPVP_lightBlindPlayerPerc set [_lightBlindRunningIdx,_perc];
@@ -9177,7 +9488,8 @@ BRPVP_lightBlind = {
 					private _distPerc = (1-((vectorMagnitude (_posASL vectorDiff _posCam)-_lowLimit) max 0 min _realLimit)/_realLimit)^3;
 					private _anglePerc = (1-acos (eyeDirection _player vectorCos _vecToBomb)/180)^3;
 					private _timePerc = (((diag_tickTime-_init)/_eTime) min 1)^(1/1.5);
-					private _blockPerc = sqrt(([_helper,_posASL,_posCam,_vecToBomb,5,1,_density/2] call BRPVP_lightBlock)/25);
+					//private _blockPerc = sqrt(([_helper,_posASL,_posCam,_vecToBomb,5,1,_density/2] call BRPVP_lightBlock)/25);
+					private _blockPerc = 1;
 
 					private _perc = _timePerc*_blockPerc*(_distPerc+_anglePerc)/2;
 					private _percBodyHurt = sqrt(_timePerc*_distPerc)*sqrt(1*_blockPerc);
@@ -9203,12 +9515,12 @@ BRPVP_lightBlind = {
 				private _distPerc = (1-(_realDist min _realLimit)/_realLimit)^3;
 				private _anglePerc = (1-acos (_viewVec vectorCos _vecToBomb)/180)^3;
 				private _timePerc = ((diag_tickTime-_init)/_eTime) min 1;
-				private _blockPerc = sqrt(([_helper,_posASL,_posCam,_vecToBomb,5,1,_density] call BRPVP_lightBlock)/25);
+				//private _blockPerc = sqrt(([_helper,_posASL,_posCam,_vecToBomb,5,1,_density] call BRPVP_lightBlock)/25);
+				private _blockPerc = 1;
 
 				private _perc = (1-_timePerc*0)*_blockPerc*(_distPerc+_anglePerc)/2;
 				BRPVP_lightBlindCamPerc set [_lightBlindRunningIdx,_perc];
 				(BRPVP_ABombLightObjs select _lightBlindRunningIdx) set [1,1-_timePerc*0];
-				//diag_log ["AB MANTAIN ON EXPLOSION 1",(round (_perc*100))/100,BRPVP_ABombLightObjs];
 				if (ASLToAGL _posCam distance player < 100) then {
 					private _percBodyHurt = sqrt((1-_timePerc*0)*_distPerc)*sqrt(1*_blockPerc);
 					BRPVP_lightBlindPlayerPerc set [_lightBlindRunningIdx,_perc];
@@ -9220,7 +9532,8 @@ BRPVP_lightBlind = {
 					private _distPerc = (1-((vectorMagnitude (_posASL vectorDiff _posCam)-_lowLimit) max 0 min _realLimit)/_realLimit)^3;
 					private _anglePerc = (1-acos (eyeDirection _player vectorCos _vecToBomb)/180)^3;
 					private _timePerc = ((diag_tickTime-_init)/_eTime) min 1;
-					private _blockPerc = sqrt(([_helper,_posASL,_posCam,_vecToBomb,5,1,_density/2] call BRPVP_lightBlock)/25);
+					//private _blockPerc = sqrt(([_helper,_posASL,_posCam,_vecToBomb,5,1,_density/2] call BRPVP_lightBlock)/25);
+					private _blockPerc = 1;
 
 					private _perc = (1-_timePerc*0)*_blockPerc*(_distPerc+_anglePerc)/2;
 					private _percBodyHurt = sqrt((1-_timePerc*0)*_distPerc)*sqrt(1*_blockPerc);
@@ -9246,12 +9559,12 @@ BRPVP_lightBlind = {
 				private _distPerc = (1-(_realDist min _realLimit)/_realLimit)^3;
 				private _anglePerc = (1-acos (_viewVec vectorCos _vecToBomb)/180)^3;
 				private _timePerc = ((diag_tickTime-_init)/_eTime) min 1;
-				private _blockPerc = sqrt(([_helper,_posASL,_posCam,_vecToBomb,5,1,_density] call BRPVP_lightBlock)/25);
+				//private _blockPerc = sqrt(([_helper,_posASL,_posCam,_vecToBomb,5,1,_density] call BRPVP_lightBlock)/25);
+				private _blockPerc = 1;
 
 				private _perc = (1-_timePerc*0.4)*_blockPerc*(_distPerc+_anglePerc)/2;
 				BRPVP_lightBlindCamPerc set [_lightBlindRunningIdx,_perc];
 				(BRPVP_ABombLightObjs select _lightBlindRunningIdx) set [1,(1-_timePerc*0.4)];
-				//diag_log ["AB EXPLOSION 1 ENDING",(round (_perc*100))/100,BRPVP_ABombLightObjs];
 				if (ASLToAGL _posCam distance player < 100) then {
 					private _percBodyHurt = sqrt((1-_timePerc*0.4)*_distPerc)*sqrt(1*_blockPerc);
 					BRPVP_lightBlindPlayerPerc set [_lightBlindRunningIdx,_perc];
@@ -9263,7 +9576,8 @@ BRPVP_lightBlind = {
 					private _distPerc = (1-((vectorMagnitude (_posASL vectorDiff _posCam)-_lowLimit) max 0 min _realLimit)/_realLimit)^3;
 					private _anglePerc = (1-acos (eyeDirection _player vectorCos _vecToBomb)/180)^3;
 					private _timePerc = ((diag_tickTime-_init)/_eTime) min 1;
-					private _blockPerc = sqrt(([_helper,_posASL,_posCam,_vecToBomb,5,1,_density/2] call BRPVP_lightBlock)/25);
+					//private _blockPerc = sqrt(([_helper,_posASL,_posCam,_vecToBomb,5,1,_density/2] call BRPVP_lightBlock)/25);
+					private _blockPerc = 1;
 
 					private _perc = (1-_timePerc*0.4)*_blockPerc*(_distPerc+_anglePerc)/2;
 					private _percBodyHurt = sqrt((1-_timePerc*0.4)*_distPerc)*sqrt(1*_blockPerc);
@@ -9289,12 +9603,12 @@ BRPVP_lightBlind = {
 				private _distPerc = (1-(_realDist min _realLimit)/_realLimit)^3;
 				private _anglePerc = (1-acos (_viewVec vectorCos _vecToBomb)/180)^3;
 				private _timePerc = sqrt(((diag_tickTime-_init)/_eTime) min 1);
-				private _blockPerc = sqrt(([_helper,_posASL,_posCam,_vecToBomb,5,1,_density] call BRPVP_lightBlock)/25);
+				//private _blockPerc = sqrt(([_helper,_posASL,_posCam,_vecToBomb,5,1,_density] call BRPVP_lightBlock)/25);
+				private _blockPerc = 1;
 
 				private _perc = (0.6-_timePerc*0.6)*_blockPerc*(_distPerc+_anglePerc)/2;
 				BRPVP_lightBlindCamPerc set [_lightBlindRunningIdx,_perc];
 				(BRPVP_ABombLightObjs select _lightBlindRunningIdx) set [1,(0.6-_timePerc*0.6)];
-				//diag_log ["AB VANISH",(round (_perc*100))/100,BRPVP_ABombLightObjs];
 				if (ASLToAGL _posCam distance player < 100) then {
 					private _percBodyHurt = sqrt((0.6-_timePerc*0.6)*_distPerc)*sqrt(1*_blockPerc);
 					BRPVP_lightBlindPlayerPerc set [_lightBlindRunningIdx,_perc];
@@ -9306,7 +9620,8 @@ BRPVP_lightBlind = {
 					private _distPerc = (1-((vectorMagnitude (_posASL vectorDiff _posCam)-_lowLimit) max 0 min _realLimit)/_realLimit)^3;
 					private _anglePerc = (1-acos (eyeDirection _player vectorCos _vecToBomb)/180)^3;
 					private _timePerc = sqrt(((diag_tickTime-_init)/_eTime) min 1);
-					private _blockPerc = sqrt(([_helper,_posASL,_posCam,_vecToBomb,5,1,_density/2] call BRPVP_lightBlock)/25);
+					//private _blockPerc = sqrt(([_helper,_posASL,_posCam,_vecToBomb,5,1,_density/2] call BRPVP_lightBlock)/25);
+					private _blockPerc = 1;
 
 					private _perc = (0.6-_timePerc*0.6)*_blockPerc*(_distPerc+_anglePerc)/2;
 					private _percBodyHurt = sqrt((0.6-_timePerc*0.6)*_distPerc)*sqrt(1*_blockPerc);
@@ -9319,6 +9634,7 @@ BRPVP_lightBlind = {
 		};
 
 		deleteVehicle _helper;
+		deleteVehicle _light;
 		BRPVP_lightBlindRunning = BRPVP_lightBlindRunning-1;
 	};
 };
@@ -9391,8 +9707,8 @@ BRPVP_earthQuake = {
 		deleteVehicle _obj;
 	};
 };
-BRPVP_atomicBombSmokeMult = 1.075;
-BRPVP_atomicBombSmokeMultPride = 0.925;
+BRPVP_atomicBombSmokeMult = 0.85;
+BRPVP_atomicBombSmokeMultPride = 0.7;
 BRPVP_atomicBombCodeAllClients = {
 	params ["_posASL","_playerId","_player","_type"];
 	private _posAGL = ASLToAGL _posASL;
@@ -9403,20 +9719,21 @@ BRPVP_atomicBombCodeAllClients = {
 	if (_type isEqualTo "normal") then {
 		private _smokeMult = BRPVP_atomicBombSmokeMult;
 
-		//EXECUTAR SOM, TREMER E CEGAR A LUZ
+		//RUN SOUND, SHAKE AND BLIND LIGHT
 		[_posAGL,_hObj,3000,45] spawn BRPVP_earthQuake;
-		[_posASL,4000,1000,_playerId,_player] spawn BRPVP_lightBlind;
+		[_posASL,4000,1000,_playerId,_player,[]] spawn BRPVP_lightBlind;
 
 		//BOMB PARTICLES
 		["HeavyBombExp1",_type,false,_posAGL,"ba_explo1",0.05,0.05,25,25,[0,0,0],[0,0,0],1,1] call BRPVP_createAnimatedParticle;
 		["BombDust",_type,true,_posAGL vectorAdd [0,0,7.5],"ba_dust",0.01,0.0025,0,100,[0,0,7.5],[0,0,7.5],0.5,1] call BRPVP_createAnimatedParticle;
-		["BombDust",_type,true,_posAGL,"ba_dust",0.001/_smokeMult,0.002/_smokeMult,0*BRPVP_nabs,600*BRPVP_nabs,[0,0,7.5],[0,0,0],4,1/2.5] call BRPVP_createAnimatedParticle;
+		["BombDust",_type,true,_posAGL,"ba_dust",0.0015/_smokeMult,0.001/_smokeMult,0*BRPVP_nabs,500*BRPVP_nabs,[0,0,7.5],[0,0,0],3.5,1/2.5] call BRPVP_createAnimatedParticle;
 		["HeavyBombExp1",_type,true,_posAGL,"ba_explo2",0.05,0.05,0,0,[0,0,0],[0,0,0],10,1] call BRPVP_createAnimatedParticle;
-		["HeavyBombSmk2",_type,true,_posAGL,"ba_head",0.02/_smokeMult,0.01/_smokeMult,0,250*BRPVP_nabs,[0,0,0],[0,0,0],10,1/3] call BRPVP_createAnimatedParticle;
+		["HeavyBombSmk2",_type,true,_posAGL,"ba_head",0.0175/_smokeMult,0.01/_smokeMult,0,175*BRPVP_nabs,[0,0,0],[0,0,0],7.5,1/3] call BRPVP_createAnimatedParticle;
 		[_posAGL,_smokeMult,_type] spawn {
 			params ["_posAGL","_smokeMult","_type"];
 			uiSleep 4;
-			["HeavyBombSmk2",_type,true,_posAGL,"ba_caule",0.05/_smokeMult,0.03/_smokeMult,37.5*BRPVP_nabs,47.5*BRPVP_nabs,[0,0,0],[0,0,0],20,1] call BRPVP_createAnimatedParticle;
+			["HeavyBombSmk2",_type,true,_posAGL,"ba_caule",0.05/_smokeMult,0.04/_smokeMult,00*BRPVP_nabs,30*BRPVP_nabs,[0,0,0],[0,0,0],18,1] call BRPVP_createAnimatedParticle;
+			["HeavyBombSmk2",_type,true,_posAGL,"ba_caule",0.04/_smokeMult,0.03/_smokeMult,30*BRPVP_nabs,60*BRPVP_nabs,[0,0,0],[0,0,0],18,1] call BRPVP_createAnimatedParticle;
 			uiSleep 1;
 			["HeavyBombSmk3",_type,true,_posAGL,"ba_floor",0.02/_smokeMult,0.01/_smokeMult,40*BRPVP_nabs,180*BRPVP_nabs,[0,0,5],[0,0,0],5,1] call BRPVP_createAnimatedParticle;
 			uiSleep 5;
@@ -9427,18 +9744,19 @@ BRPVP_atomicBombCodeAllClients = {
 
 		//RUN SOUND, SHAKE AND BLIND LIGHT
 		[_posAGL,_hObj,4500,60] spawn BRPVP_earthQuake;
-		[_posASL,6000,1500,_playerId,_player] spawn BRPVP_lightBlind;
+		[_posASL,6000,1500,_playerId,_player,[]] spawn BRPVP_lightBlind;
 
 		//BOMB PARTICLES
 		["HeavyBombExp1",_type,false,_posAGL,"ba_explo1",0.05,0.05,25,25,[0,0,0],[0,0,0],1,1] call BRPVP_createAnimatedParticle;
 		["BombDust",_type,true,_posAGL vectorAdd [0,0,7.5],"ba_dust",0.01,0.0025,0,100,[0,0,7.5],[0,0,7.5],0.5,1] call BRPVP_createAnimatedParticle;
-		["BombDust",_type,true,_posAGL,"ba_dust",0.001/_smokeMult,0.002/_smokeMult,0*BRPVP_pabs,600*BRPVP_pabs,[0,0,7.5],[0,0,0],4,1/2.5] call BRPVP_createAnimatedParticle;
+		["BombDust",_type,true,_posAGL,"ba_dust",0.0015/_smokeMult,0.001/_smokeMult,0*BRPVP_pabs,600*BRPVP_pabs,[0,0,7.5],[0,0,0],4,1/2.5] call BRPVP_createAnimatedParticle;
 		["HeavyBombExp1",_type,true,_posAGL,"ba_explo2",0.05,0.05,0,0,[0,0,0],[0,0,0],10,1] call BRPVP_createAnimatedParticle;
-		["HeavyBombSmk2",_type,true,_posAGL,"ba_head",0.01/_smokeMult,0.005/_smokeMult,0,375*BRPVP_pabs,[0,0,0],[0,0,0],12.5,1/3] call BRPVP_createAnimatedParticle;
+		["HeavyBombSmk2",_type,true,_posAGL,"ba_head",0.01/_smokeMult,0.0075/_smokeMult,0,225*BRPVP_pabs,[0,0,0],[0,0,0],7.5,1/3] call BRPVP_createAnimatedParticle;
 		[_posAGL,_smokeMult,_type] spawn {
 			params ["_posAGL","_smokeMult","_type"];
 			uiSleep 4;
-			["HeavyBombSmk2",_type,true,_posAGL,"ba_caule",0.025/_smokeMult,0.015/_smokeMult,50*BRPVP_pabs,70*BRPVP_pabs,[0,0,0],[0,0,0],20,1] call BRPVP_createAnimatedParticle;
+			["HeavyBombSmk2",_type,true,_posAGL,"ba_caule",0.025/_smokeMult,0.020/_smokeMult,00*BRPVP_pabs,45*BRPVP_pabs,[0,0,0],[0,0,0],18,1] call BRPVP_createAnimatedParticle;
+			["HeavyBombSmk2",_type,true,_posAGL,"ba_caule",0.020/_smokeMult,0.015/_smokeMult,45*BRPVP_pabs,90*BRPVP_pabs,[0,0,0],[0,0,0],18,1] call BRPVP_createAnimatedParticle;
 			uiSleep 1;
 			["HeavyBombSmk3",_type,true,_posAGL,"ba_floor",0.005/_smokeMult,0.0025/_smokeMult,50*BRPVP_pabs,270*BRPVP_pabs,[0,0,5],[0,0,0],5,1] call BRPVP_createAnimatedParticle;
 			uiSleep 5;
@@ -9910,7 +10228,7 @@ BRPVP_spawnAtomicBomb = {
 	uiSleep 3;
 	for "_i" from 1 to 4 do {ASLToAGL _posASL remoteExecCall ["BRPVP_createAtomicBombBlueTankItems",2];};
 };
-BRPVP_spawnAtomicBombCheckParticles = {
+BRPVP_spawnAtomicBombCountParticles = {
 	params ["_posASL","_player",["_wait",2],["_type","normal"]];
 	private _playerId = _player getVariable ["id_bd",-1];
 
@@ -9925,12 +10243,30 @@ BRPVP_spawnAtomicBombCheckParticles = {
 
 	//COUNT MAX PARTICLES
 	private _max = 0;
+	private _sum = 0;
 	private _init = diag_tickTime;
+	private _count = 0;
+	private _lim1 = 250;
+	private _lim2 = 500;
+	private _lim3 = 750;
+	private _lim4 = 1000;
+	private _countGood1 = 0;
+	private _countGood2 = 0;
+	private _countGood3 = 0;
+	private _countGood4 = 0;
+	private _runTime = 40;
 	waitUntil {
-		private _count = count (8 allObjects 3);
-		if (_count > _max) then {_max = _count;};			
-		systemChat str _max;
-		diag_tickTime-_init > 30
+		private _particles = count (8 allObjects 3);
+		private _delta = diag_tickTime-_init;
+		if (_particles > _max) then {_max = _particles;};
+		if (_particles <= _lim1) then {_countGood1 = _countGood1+1;};
+		if (_particles <= _lim2) then {_countGood2 = _countGood2+1;};
+		if (_particles <= _lim3) then {_countGood3 = _countGood3+1;};
+		if (_particles <= _lim4) then {_countGood4 = _countGood4+1;};
+		_count = _count+1;
+		_sum = _sum+_particles;
+		systemChat str [_max,_particles,round (_sum/_count),str _lim1+": "+str round (_delta*((_count-_countGood1)/_count)),str _lim2+": "+str round (_delta*((_count-_countGood2)/_count)),str _lim3+": "+str round (_delta*((_count-_countGood3)/_count)),str _lim4+": "+str round (_delta*((_count-_countGood4)/_count))];
+		_delta > _runTime
 	};
 };
 
@@ -10283,7 +10619,7 @@ BRPVP_peterAtomicBombCodeAllClients = {
 	[_abSize,"HeavyBombExp1",_type,false,_posAGL,"ba_explo",0.01,0.075,0,0,[0,0,0],[0,0,0],2.5,1] call BRPVP_peterCreateAnimatedParticle;
 	[_abSize,"BombDust",_type,true,_posAGL,"ba_dust",0.005,0.002,0,750,[0,0,7.5],[0,0,0],4,1/2.5] call BRPVP_peterCreateAnimatedParticle;
 	[_abSize,"BombDust",_type,true,_posAGL,"ba_dust_big",0.005,0.0025,0,300,[0,0,7.5],[0,0,0],1.5,1/2.5] call BRPVP_peterCreateAnimatedParticle;
-	[_abSize,"HeavyBombSmk2",_type,true,_posAGL,"ba_head",0.01/_smokeMult,0.0075/_smokeMult,25,250,[0,0,0],[0,0,0],10,1/2.25] call BRPVP_peterCreateAnimatedParticle;
+	[_abSize,"HeavyBombSmk2",_type,true,_posAGL,"ba_head",0.01/_smokeMult,0.0075/_smokeMult,0,225,[0,0,0],[0,0,0],10,1/2.25] call BRPVP_peterCreateAnimatedParticle;
 };
 BRPVP_peterAtomicBombCodeOneTime = {
 	params ["_posASL","_playerId","_player","_bombParams"];

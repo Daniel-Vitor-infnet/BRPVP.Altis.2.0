@@ -32,8 +32,7 @@ _spawnLoot = {
 		[_holder,_itemsAllJoined] call BRPVP_addLoot;
 		_count = _count + 1;
 	} forEach _items;
-	BRPVP_lootActiveAdd = [_obj,count _items];
-	publicVariableServer "BRPVP_lootActiveAdd";
+	[_obj,count _items] remoteExecCall ["BRPVP_lootActiveAdd",2];
 };
 _getLootType = {
 	if (BRPVP_lootBuildingsWeak find _this > -1) then {

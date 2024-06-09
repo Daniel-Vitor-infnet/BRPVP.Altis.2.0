@@ -268,9 +268,6 @@ _tableLinesBuildings = _tableLinesBuildings apply {_x select 1};
 						_veiculo setVariable ["id_bd",_veiculoId,true];
 						_veiculo setVariable ["own",_owner,true];
 						_holes pushBack _veiculo;
-
-						//EXEC OBJECT CODE
-						if (_exec isNotEqualTo "") then {_execAll pushBack [_veiculo,_exec];};
 					} else {
 						//VEHICLE OR BUILDING CONFIGURATION
 						if (_mapa) then {_veiculo setVariable ["mapa",true,true];};
@@ -289,9 +286,6 @@ _tableLinesBuildings = _tableLinesBuildings apply {_x select 1};
 
 						//ADICIONA CARGA DO CARRO
 						[_veiculo,_carga] call BRPVP_putItemsOnCargo;
-
-						//EXEC OBJECT CODE
-						if (_exec isNotEqualTo "") then {_execAll pushBack [_veiculo,_exec];};
 
 						//ADICIONA CASAS
 						if (_modelo isEqualTo "Land_Airport_01_hangar_F") then {
@@ -313,6 +307,8 @@ _tableLinesBuildings = _tableLinesBuildings apply {_x select 1};
 							(_players select _idxPlayer) set [3,(_players select _idxPlayer select 3)+_price];
 						};
 					};
+					//EXEC OBJECT CODE
+					if (_exec isNotEqualTo "") then {_execAll pushBack [_veiculo,_exec];};
 				};
 			};
 		};
@@ -326,7 +322,7 @@ _tableLinesBuildings = _tableLinesBuildings apply {_x select 1};
 
 	//VR PAINT PATRIMONY
 	private _isVr = typeOf _obj in BRPVP_vrObjectsClasses;
-	if (_isVr) then {
+	if (_isVr && _txt find "'] call BRPVP_vrObjectSetTextures;" isNotEqualTo -1) then {
 		private _owner = _obj getVariable "own";
 		if (_owner isNotEqualTo -1) then {
 			private _idxPlayer = _playersId find _owner;
