@@ -97,13 +97,14 @@ BRPVP_mobiusZombiesPercentage = 0.025; //DEFAULT: 25 IN EACH 1000 ZOMBIES ARE MO
 BRPVP_mobiusZombiesLife = 15;
 BRPVP_mobiusZombiesAmmoRepeat = 20;
 
-BRPVP_zombieKillRewardBase = 300; //THIS IS THE BASIC REWARD (FOR ZOMBIES LEVEL 1). REWARD = ZOMBIE LEVEL * BRPVP_zombieKillRewardBase.
+BRPVP_zombieKillRewardBase = 10; //ESSA É A RECOMPENSA BÁSICA (PARA ZUMBIS DE NÍVEL 1). REWARD = ZOMBIE LEVEL * BRPVP_zombieKillRewardBase.
 
-//MAX ZOMBIES ARROUND
-BRPVP_zombieMaxLocalPerPlayer = 5;
-BRPVP_zombieMaxLocal = 10;
 
-//ZOMBIE DISTRACTION
+//ZUMBIS MÁXIMOS AO REDOR
+BRPVP_zombieMaxLocalPerPlayer = 5; // Zumbie Máximo local por jogador
+BRPVP_zombieMaxLocal = 15; // Zumbie Max Local
+
+//DISTRAÇÃO DE ZUMBIS
 BRPVP_zombieDistanceFromSmokeToCatchAttention = 50;
 BRPVP_zombieDistractAmmo = [
 	//SLUG
