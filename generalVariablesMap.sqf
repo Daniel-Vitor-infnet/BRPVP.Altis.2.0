@@ -447,7 +447,7 @@ BRPVP_travelingAidPlaces = [
 BRPVP_carrierMissPosLim = [750,1250];
 BRPVP_carrierMissPosBorder = 1000;
 
-//RANDOM RESPAWN
+//RANDOM RESPAWN spawn
 BRPVP_useRandomRespawnAllways = false;
 BRPVP_useRandomRespawnWhenSuicide = false;
 BRPVP_useRandomRespawnPlacesToChoose = 10;
@@ -474,29 +474,29 @@ BRPVP_AISkill = [
 //TERRAIN GRID QUALITY
 BRPVP_terrainGridConfig = [["Low",[30,30,15]],["Normal",[25,25,12.5]],["High",[12.5,12.5,6.25]],["Super",[6.25,6.25,6.25]],["Are you Crazy?",[3.125,3.125,3.125]]];
 
-//ON FOOT DISTANCES
+//DISTÂNCIAS A PÉ (visão)
 BRPVP_viewDist = 1500;
 BRPVP_viewObjsDist = 1500;
 BRPVP_viewDistList =     [500,750,1000,1250,1500,2000,2500,3000,4000,5000,6000,7000,8000,9000,10000,11000,12000,13000,14000,15000];
 BRPVP_viewObjsDistList = [500,750,1000,1250,1500,2000,2500,3000,4000,5000,6000,7000,8000,9000,10000,11000,12000,13000,14000,15000];
 
-//ON FLY DISTANCES
+//DISTÂNCIAS DE VÔO (visão)
 BRPVP_viewDistFly = 3000;
 BRPVP_viewObjsDistFly = 3000;
 BRPVP_viewDistListFly =     [1000,1500,2000,2500,3000,4000,5000,6000,7000,8000,9000,10000,11000,12000,13000,14000,15000];
 BRPVP_viewObjsDistListFly = [1000,1500,2000,2500,3000,4000,5000,6000,7000,8000,9000,10000,11000,12000,13000,14000,15000];
 
-//MONEY SPOT
-BRPVP_moneyOnHandToSpot = 3000000;
-BRPVP_spotPositionError = 500; //IN METERS
-BRPVP_spotPositionErrorService = 750; //IN METERS
+//Dinheiro Spot
+BRPVP_moneyOnHandToSpot = 50000;
+BRPVP_spotPositionError = 500; //Em metros
+BRPVP_spotPositionErrorService = 750; //Em metros
 
 //BOMB MISSION
-BRPVP_bombMissionAmount = 1;
-BRPVP_bombMissionMoneyForLoot = 2000000;
+BRPVP_bombMissionAmount = 1; // bomba Missão Valor (Eu acho)
+BRPVP_bombMissionMoneyForLoot = 100000;
 BRPVP_bombMissionMoneyForLootTry = [3,4,5];
 BRPVP_bombMissionSpecialLootQtt = 15;
-BRPVP_bombMissionSuitCases = [2000000,2000000];
+BRPVP_bombMissionSuitCases = [100000,100000];
 BRPVP_bombMissionClasses = ["Land_i_Barracks_V2_F","Land_u_Barracks_V2_F","Land_dp_bigTank_F","Land_i_House_Small_03_V1_F","Land_FuelStation_01_shop_F"];
 BRPVP_bombMissionClassesTurrets = [
 	[
@@ -543,8 +543,8 @@ BRPVP_blackTradersPlaces = [
 //PVE
 BRPVP_pveNoPveInRaidDaysFull = false;
 BRPVP_pveDaysWithNoSuperJumpWhenHack = 1;
-BRPVP_pveAllowSuperJump = true;
-BRPVP_pveMakeAllMapPve = false;
+BRPVP_pveAllowSuperJump = false; // Pulo da área PVE
+BRPVP_pveMakeAllMapPve = false; // Tornar o mapa PVE por completo
 BRPVP_pveMainAreasAll = [
 	[[[08529,12963,0],5000,"PVE1",10/*MUST BE 10*/]],
 	[[[12198,19523,0],5000,"PVE2",10/*MUST BE 10*/]],
@@ -611,7 +611,7 @@ BRPVP_busServiceStopPoints = [
 	[[19538.5,15446.7,0],147.08],
 	[[12539.1,14347.3,0],159.53]
 ];
-BRPVP_busServiceMaximumDistPrice = 50000;
+BRPVP_busServiceMaximumDistPrice = 20000; //Ônibus, Distância máxima Preço
 
 //LEST WEST WALL SEGMENTS
 BRPVP_lestWestWallSegments = [
@@ -842,9 +842,9 @@ BRPVP_dismantleAreasTrader = [
 	[[16659.6,17270.5,0.00],000], //NEW V140
 	[[10940.7,18947.7,0.25],305]  //NEW V140
 ];
-BRPVP_distanceToRespawnWaitZero = 3000; //IN METERS
-BRPVP_distanceToRespawnWaitZeroIfPlayerKill = 6000; //IN METERS
-BRPVP_personalSpawnCountLimit = 5;
+BRPVP_distanceToRespawnWaitZero = 3000; //Em metros RESPAWN
+BRPVP_distanceToRespawnWaitZeroIfPlayerKill = 6000; //Em metros
+BRPVP_personalSpawnCountLimit = 5; // limite De Contagem De Reaparecimento Pessoal de corpos (eu acho)
 BRPVP_autoTurretFireRange = [200,400,800,1500]; //MAXIMUM FIRE DISTANCES ON FOOT, ON LAND VEHICLE, ON HELIS OR SHIPS AND ON JETS/PLANES
 BRPVP_autoTurretFireRangeForgive = [600,1000,2000,2500]; //FORGIVE DISTANCE
 BRPVP_sellTerrainPlaces = [

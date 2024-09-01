@@ -4698,13 +4698,14 @@
 				<German>Du kannst Spieler innerhalb eines PVP-Bereichs nicht verletzen</German>
 			</Key>
 			<Key ID="str_quad_time">
-				<Original>This quadricycle will remains for %1 seconds!</Original>
-				<English>This quadricycle will remains for %1 seconds!</English>
-				<Portuguese>Este quadriciclo dura %1 segundos!</Portuguese>
-				<Russian>Квадроцикл исчезнет через %1 секунд!</Russian>
-				<Chinesesimp>这辆初始沙滩车只会存在 %1 秒!</Chinesesimp>
-				<Chinese>这辆初始沙滩车只会存在 %1 秒!</Chinese>
-				<German>Dieses Spawn-Fahrzeug wird in %1 sekunden Verschwinden!!!</German>
+                <Original>Este veículo dura %1 segundos!</Original>
+                <English>This vehicle lasts %1 seconds!</English>
+                <Portuguese>Este veículo dura %1 segundos!</Portuguese>
+                <Russian>Этот транспорт исчезнет через %1 секунд!</Russian>
+                <Chinesesimp>这辆车将持续 %1 秒!</Chinesesimp>
+                <Chinese>这辆车将持续 %1 秒!</Chinese>
+                <German>Dieses Fahrzeug wird in %1 Sekunden verschwinden!</German>
+                <France>Ce véhicule dure %1 secondes!</France>
 			</Key>
 			<Key ID="str_radar_deactived">
 				<Original>Radar deactived...</Original>
@@ -15432,6 +15433,95 @@
 				<Polish>Gold Bars</Polish>
 				<Czech>Gold Bars</Czech>
 				<Italian>Gold Bars</Italian>
+			</Key>
+			<Key ID="staff">
+				<Original>Staff</Original>
+                <English>Staff</English>
+                <Portuguese>Staff</Portuguese>
+                <Russian>Персонал</Russian>
+                <Chinesesimp>员工</Chinesesimp>
+                <Chinese>員工</Chinese>
+                <German>Personal</German>
+                <France>Personnel</France>
+			</Key>
+			<Key ID="classicos">
+				<Original>Clássicos</Original>
+                <English>Classics</English>
+                <Portuguese>Clássicos</Portuguese>
+                <Russian>Классические</Russian>
+                <Chinesesimp>经典</Chinesesimp>
+                <Chinese>經典</Chinese>
+                <German>Klassisch</German>
+                <France>Classiques</France>
+			</Key>
+			<Key ID="esportivos">
+				<Original>Esportivos</Original>
+                <English>Sportive</English>
+                <Portuguese>Esportivos</Portuguese>
+                <Russian>Спортивный</Russian>
+                <Chinesesimp>运动</Chinesesimp>
+                <Chinese>運動</Chinese>
+                <German>Sportlich</German>
+                <France>Sportif</France>
+			</Key>
+			<Key ID="pesados">
+				<Original>Pesados</Original>
+                <English>Heavy</English>
+                <Portuguese>Pesados</Portuguese>
+                <Russian>Тяжелые</Russian>
+                <Chinesesimp>重型</Chinesesimp>
+                <Chinese>重型</Chinese>
+                <German>Schwer</German>
+                <France>Lourds</France>
+			</Key>
+			<Key ID="descaracterizados">
+				<Original>Descaracterizados</Original>
+                <English>Unmarked</English>
+                <Portuguese>Descaracterizados</Portuguese>
+                <Russian>Немаркированные</Russian>
+                <Chinesesimp>未标记</Chinesesimp>
+                <Chinese>未標記</Chinese>
+                <German>Unmarkiert</German>
+                <France>Non marqués</France>
+			</Key>
+			<Key ID="helicoptero">
+				<Original>Helicóptero</Original>
+                <English>Helicopter</English>
+                <Portuguese>Helicóptero</Portuguese>
+                <Russian>Вертолёт</Russian>
+                <Chinesesimp>直升机</Chinesesimp>
+                <Chinese>直升機</Chinese>
+                <German>Hubschrauber</German>
+                <France>Hélicoptère</France>
+			</Key>
+			<Key ID="civil">
+				<Original>Civilian</Original>
+				<English>Civilian</English>
+				<Portuguese>Civil</Portuguese>
+				<Russian>Гражданский</Russian>
+				<Chinesesimp>民用</Chinesesimp>
+				<Chinese>民用</Chinese>
+				<German>Zivilist</German>
+			</Key>
+			<Key ID="passeio">
+				<Original>Passeio</Original>
+                <English>Leisure</English>
+                <Portuguese>Passeio</Portuguese>
+                <Russian>Прогулка</Russian>
+                <Chinesesimp>休闲</Chinesesimp>
+                <Chinese>休閒</Chinese>
+                <German>Freizeit</German>
+                <France>Promenade</France>
+			</Key>
+			<Key ID="simples">
+				<Original>Simples</Original>
+                <English>Simple</English>
+                <Portuguese>Simples</Portuguese>
+                <Russian>Простой</Russian>
+                <Chinesesimp>简单</Chinesesimp>
+                <Chinese>簡單</Chinese>
+                <German>Einfach</German>
+                <France>Simple</France>
 			</Key>
 		</Container>
 	</Package>

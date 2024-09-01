@@ -9719,11 +9719,11 @@ BRPVP_atomicBombCodeAllClients = {
 	if (_type isEqualTo "normal") then {
 		private _smokeMult = BRPVP_atomicBombSmokeMult;
 
-		//RUN SOUND, SHAKE AND BLIND LIGHT
+		//EXECUTAR SOM, TREMER E CEGAR A LUZ
 		[_posAGL,_hObj,3000,45] spawn BRPVP_earthQuake;
 		[_posASL,4000,1000,_playerId,_player,[]] spawn BRPVP_lightBlind;
 
-		//BOMB PARTICLES
+		//Bomba Particulas
 		["HeavyBombExp1",_type,false,_posAGL,"ba_explo1",0.05,0.05,25,25,[0,0,0],[0,0,0],1,1] call BRPVP_createAnimatedParticle;
 		["BombDust",_type,true,_posAGL vectorAdd [0,0,7.5],"ba_dust",0.01,0.0025,0,100,[0,0,7.5],[0,0,7.5],0.5,1] call BRPVP_createAnimatedParticle;
 		["BombDust",_type,true,_posAGL,"ba_dust",0.0015/_smokeMult,0.001/_smokeMult,0*BRPVP_nabs,500*BRPVP_nabs,[0,0,7.5],[0,0,0],3.5,1/2.5] call BRPVP_createAnimatedParticle;
